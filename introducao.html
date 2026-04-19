@@ -8,6 +8,7 @@
     * {
       box-sizing: border-box;
       margin: 0;
+      padding: 0;
       font-family: 'Segoe UI', 'Arial', 'Verdana', sans-serif;
     }
 
@@ -30,6 +31,7 @@
       overflow: hidden;
       padding: 24px 20px 30px;
       border: 1px solid #d0e0c0;
+      position: relative;
     }
 
     h1 {
@@ -43,15 +45,30 @@
       padding-left: 18px;
     }
 
-    .identification-panel {
-      background: #e9f3e6;
-      padding: 18px 16px 14px;
-      border-radius: 20px;
-      margin-bottom: 26px;
+    /* Sistema de telas com display none/block */
+    #identificationScreen {
+      display: block;
+    }
+
+    #quizScreen {
+      display: none;
+    }
+
+    #identificationScreen.hidden {
+      display: none;
+    }
+
+    #quizScreen.visible {
+      display: block;
+    }
+
+    /* Tela de Identificação */
+    .identification-screen {
+      padding: 10px 0;
     }
 
     .field-group {
-      margin-bottom: 14px;
+      margin-bottom: 20px;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
@@ -61,14 +78,14 @@
     .field-group label {
       font-weight: 600;
       color: #1e3a2f;
-      min-width: 70px;
-      font-size: 1rem;
+      min-width: 90px;
+      font-size: 1.1rem;
     }
 
     .field-group input, .field-group select {
       flex: 1;
-      padding: 12px 14px;
-      border: 1px solid #bcd0b0;
+      padding: 14px 16px;
+      border: 1.5px solid #bcd0b0;
       border-radius: 40px;
       font-size: 1rem;
       background: white;
@@ -81,6 +98,21 @@
       box-shadow: 0 0 0 3px rgba(46, 125, 94, 0.2);
     }
 
+    .btn-start-container {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .error-message {
+      color: #a12f2f;
+      font-size: 0.9rem;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      padding-left: 100px;
+      min-height: 24px;
+    }
+
+    /* Tela do Quiz */
     .progress-area {
       margin: 8px 0 18px;
     }
@@ -143,6 +175,10 @@
       color: #1e3a2f;
       font-weight: 500;
       box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .option-item:hover {
+      background: #e9f3e6;
     }
 
     .option-item.selected {
@@ -268,63 +304,68 @@
       text-align: center;
     }
 
-    .attempt-info {
-      font-size: 0.9rem;
-      color: #3b5c48;
-      margin-top: 8px;
-    }
-
-    /* responsivo extra */
     @media (max-width: 500px) {
       .quiz-wrapper { padding: 16px 12px; }
       h1 { font-size: 1.4rem; }
       .question-text { font-size: 1.15rem; }
       button { width: 100%; }
+      .field-group label { min-width: 70px; }
+      .error-message { padding-left: 80px; }
     }
   </style>
 </head>
 <body>
-<div class="quiz-wrapper" id="quizApp">
+<div class="quiz-wrapper">
   <h1>🌍 Questões Ambientais<br><span style="font-size:0.9rem; font-weight:normal;">Conexões entre Sociedade, Consumo e Natureza</span></h1>
 
-  <!-- Área de identificação -->
-  <div class="identification-panel" id="idPanel">
-    <div class="field-group">
-      <label>👤 Nome*</label>
-      <input type="text" id="studentName" placeholder="Seu nome completo" autocomplete="off">
-    </div>
-    <div class="field-group">
-      <label>📚 Turma</label>
-      <select id="classSelect">
-        <option value="3 ADM">3 ADM</option>
-        <option value="2 RH">2 RH</option>
-        <option value="2 M AMB">2 M AMB</option>
-      </select>
-    </div>
-    <div class="field-group">
-      <label>📅 Bimestre</label>
-      <select id="bimestreSelect">
-        <option value="1 Bimestre">1 Bimestre</option>
-        <option value="2 Bimestre">2 Bimestre</option>
-        <option value="3 Bimestre">3 Bimestre</option>
-        <option value="4 Bimestre">4 Bimestre</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- barra de progresso -->
-  <div class="progress-area">
-    <div class="progress-bar-bg">
-      <div class="progress-fill" id="progressFill"></div>
-    </div>
-    <div class="progress-text">
-      <span id="currentQDisplay">Questão 1 de 20</span>
-      <span id="attemptDisplay">Tentativa: 1</span>
+  <!-- TELA 1: IDENTIFICAÇÃO -->
+  <div id="identificationScreen">
+    <div class="identification-screen">
+      <div class="field-group">
+        <label>👤 Nome*</label>
+        <input type="text" id="studentName" placeholder="Seu nome completo" autocomplete="off">
+      </div>
+      <div id="nameError" class="error-message"></div>
+      
+      <div class="field-group">
+        <label>📚 Turma</label>
+        <select id="classSelect">
+          <option value="3 ADM">3 ADM</option>
+          <option value="2 RH">2 RH</option>
+          <option value="2 M AMB">2 M AMB</option>
+        </select>
+      </div>
+      
+      <div class="field-group">
+        <label>📅 Bimestre</label>
+        <select id="bimestreSelect">
+          <option value="1 Bimestre">1 Bimestre</option>
+          <option value="2 Bimestre">2 Bimestre</option>
+          <option value="3 Bimestre">3 Bimestre</option>
+          <option value="4 Bimestre">4 Bimestre</option>
+        </select>
+      </div>
+      
+      <div class="btn-start-container">
+        <button id="startQuizBtn">▶ Iniciar Quiz</button>
+      </div>
     </div>
   </div>
 
-  <!-- Área dinâmica: pergunta / resultado / reinicio -->
-  <div id="dynamicArea"></div>
+  <!-- TELA 2: QUIZ -->
+  <div id="quizScreen">
+    <div class="progress-area">
+      <div class="progress-bar-bg">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-text">
+        <span id="currentQDisplay">Questão 1 de 20</span>
+        <span id="attemptDisplay">Tentativa: 1</span>
+      </div>
+    </div>
+
+    <div id="quizDynamicArea"></div>
+  </div>
 
   <footer>🌱 Cada escolha importa</footer>
 </div>
@@ -337,7 +378,7 @@
     const questions = [
       { text: "Questão 1: \"Não existe problema ambiental isolado. Cada enchente, cada seca, cada deslizamento é também um problema ____________.\"",
         options: ["a) econômico", "b) técnico", "c) político", "d) social"],
-        correct: 3, // índice 3 = d
+        correct: 3,
         justification: "Desastres ambientais afetam desproporcionalmente populações vulneráveis e revelam desigualdades estruturais, tornando-se também problemas sociais." },
       { text: "Questão 2: Cada escolha de consumo e cada hábito cotidiano pode ser considerado também:",
         options: ["a) Uma decisão ética, pois afeta o meio ambiente e a sociedade", "b) Um ato exclusivamente econômico, sem consequências ambientais", "c) Uma ação neutra que não interfere no equilíbrio do planeta", "d) Um comportamento determinado apenas pela renda do indivíduo"],
@@ -398,28 +439,32 @@
         correct: 1, justification: "A segregação socioespacial e vulnerabilidade mostram como problemas afetam desigualmente." }
     ];
 
-    // ---------- VARIÁVEIS DE ESTADO ----------
-    let currentIndex = 0;               // 0 a 19
-    let userAnswers = new Array(20).fill(null);
-    let answerSubmitted = new Array(20).fill(false);
-    let quizCompleted = false;
-    let attemptCount = 1;               // tentativas na sessão
-    let selectedOption = null;          // temporário da questão atual
-
-    // Elementos DOM
-    const dynamicArea = document.getElementById('dynamicArea');
-    const progressFill = document.getElementById('progressFill');
-    const currentQDisplay = document.getElementById('currentQDisplay');
-    const attemptDisplay = document.getElementById('attemptDisplay');
+    // ---------- ELEMENTOS DOM ----------
+    const idScreen = document.getElementById('identificationScreen');
+    const quizScreen = document.getElementById('quizScreen');
     const studentNameInput = document.getElementById('studentName');
     const classSelect = document.getElementById('classSelect');
     const bimestreSelect = document.getElementById('bimestreSelect');
-    const idPanel = document.getElementById('idPanel');
+    const nameError = document.getElementById('nameError');
+    const startBtn = document.getElementById('startQuizBtn');
+    
+    const progressFill = document.getElementById('progressFill');
+    const currentQDisplay = document.getElementById('currentQDisplay');
+    const attemptDisplay = document.getElementById('attemptDisplay');
+    const quizDynamicArea = document.getElementById('quizDynamicArea');
 
-    // Helpers
+    // ---------- VARIÁVEIS DE ESTADO ----------
+    let currentIndex = 0;
+    let userAnswers = new Array(20).fill(null);
+    let answerSubmitted = new Array(20).fill(false);
+    let quizCompleted = false;
+    let attemptCount = 1;
+    let selectedOption = null;
+
+    // ---------- FUNÇÕES AUXILIARES ----------
     function updateProgressUI() {
       if (!quizCompleted) {
-        const percent = ((currentIndex) / 20) * 100;
+        const percent = (currentIndex / 20) * 100;
         progressFill.style.width = percent + '%';
         currentQDisplay.textContent = `Questão ${currentIndex+1} de 20`;
       } else {
@@ -444,7 +489,7 @@
       return 'Não foi muito bem';
     }
 
-    // reiniciar completamente (nova tentativa)
+    // Reiniciar quiz (para reprovados)
     function resetQuizForRetry() {
       currentIndex = 0;
       userAnswers = new Array(20).fill(null);
@@ -454,29 +499,11 @@
       attemptCount++;
       updateProgressUI();
       renderQuestion();
-      // habilita campos de identificação novamente (já estão habilitados, mas garantimos)
-      studentNameInput.disabled = false;
-      classSelect.disabled = false;
-      bimestreSelect.disabled = false;
-      idPanel.style.opacity = '1';
     }
 
-    // verifica se nome foi preenchido (obrigatório)
-    function isNameValid() {
-      return studentNameInput.value.trim() !== '';
-    }
-
-    // RENDERIZA TELA DE PERGUNTA
+    // Renderizar questão atual
     function renderQuestion() {
       if (quizCompleted) return;
-      if (!isNameValid()) {
-        dynamicArea.innerHTML = `<div class="warning-message">⚠️ Por favor, preencha seu nome para continuar.</div>`;
-        return;
-      }
-      // desabilita edição da identificação durante o quiz
-      studentNameInput.disabled = true;
-      classSelect.disabled = true;
-      bimestreSelect.disabled = true;
       
       const q = questions[currentIndex];
       const submitted = answerSubmitted[currentIndex];
@@ -487,14 +514,13 @@
         let classes = 'option-item';
         if (!submitted && selectedOption === i) classes += ' selected';
         if (submitted && savedAnswer === i) classes += ' selected';
-        if (submitted && i === q.correct) classes += ' selected'; // destacar correta depois de submit? só se quiser, mas manteremos.
         optionsHtml += `<div class="${classes}" data-opt-index="${i}">${q.options[i]}</div>`;
       }
 
       let feedbackHtml = '';
       if (submitted) {
         const isCorrect = (savedAnswer === q.correct);
-        const correctLetter = String.fromCharCode(97 + q.correct); // a,b,c,d
+        const correctLetter = String.fromCharCode(97 + q.correct);
         const correctText = q.options[q.correct];
         feedbackHtml = `
           <div class="feedback-area">
@@ -510,7 +536,7 @@
       const nextButtonDisabled = !submitted;
       const nextButtonText = isLast ? 'Finalizar Quiz' : 'Próxima';
 
-      dynamicArea.innerHTML = `
+      quizDynamicArea.innerHTML = `
         <div class="question-container">
           <div class="question-text">${q.text}</div>
           <div class="options" id="optionsContainer">
@@ -523,14 +549,17 @@
         </div>
       `;
 
-      // Atribuir eventos de clique nas opções (apenas se não submetida)
+      // Event listeners para opções
       if (!submitted) {
         document.querySelectorAll('.option-item').forEach(opt => {
           opt.addEventListener('click', (e) => {
             if (answerSubmitted[currentIndex]) return;
             const idx = parseInt(opt.dataset.optIndex);
             selectedOption = idx;
-            renderQuestion(); // re-render para destacar
+            // Submete imediatamente
+            userAnswers[currentIndex] = idx;
+            answerSubmitted[currentIndex] = true;
+            renderQuestion();
           });
         });
       }
@@ -550,24 +579,6 @@
         });
       }
 
-      // se não submetida, habilitar submit via clique na opção? Mas precisa de um botão "Responder"? 
-      // Conforme especificação: "Aluno só pode avançar após responder" e "Feedback imediato após cada resposta".
-      // Vamos implementar: ao clicar na opção já registra resposta e mostra feedback. (sem botão extra)
-      // Modificar: ao selecionar, já submete.
-      if (!submitted) {
-        document.querySelectorAll('.option-item').forEach(opt => {
-          opt.addEventListener('click', (e) => {
-            if (answerSubmitted[currentIndex]) return;
-            const idx = parseInt(opt.dataset.optIndex);
-            selectedOption = idx;
-            // Submete imediatamente
-            userAnswers[currentIndex] = idx;
-            answerSubmitted[currentIndex] = true;
-            renderQuestion(); // mostra feedback e botão habilitado
-          });
-        });
-      }
-
       updateProgressUI();
     }
 
@@ -581,27 +592,23 @@
       updateProgressUI();
 
       if (!aprovado) {
-        // reprovado: exibir mensagem e reiniciar após 2s?
-        dynamicArea.innerHTML = `
+        quizDynamicArea.innerHTML = `
           <div class="result-screen">
             <div class="warning-message">❌ Você não atingiu a nota mínima (14 acertos).</div>
             <p>Você acertou ${acertos} de 20. Nota: ${nota.toFixed(1)}</p>
             <p>O quiz será reiniciado para nova tentativa.</p>
-            <div class="attempt-info">Tentativa atual: ${attemptCount}</div>
           </div>
         `;
-        // Reiniciar automaticamente
         setTimeout(() => {
           resetQuizForRetry();
         }, 2500);
         return;
       }
 
-      // Aprovado: tela de resultado com botão PDF e Encerrar
+      // Aprovado
       const now = new Date();
       const dateStr = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
       
-      // Montar lista de erros
       let errosHtml = '';
       for (let i=0; i<20; i++) {
         if (userAnswers[i] !== questions[i].correct) {
@@ -609,7 +616,7 @@
         }
       }
 
-      dynamicArea.innerHTML = `
+      quizDynamicArea.innerHTML = `
         <div class="result-screen">
           <h2 style="color:#1e3a2f;">Resultado Final</h2>
           <div class="score-badge">${acertos} / 20</div>
@@ -634,8 +641,9 @@
 
       document.getElementById('pdfButton').addEventListener('click', gerarPDF);
       document.getElementById('encerrarButton').addEventListener('click', ()=>{
-        window.close(); // pode não funcionar em alguns navegadores, alternativa: exibir mensagem
-        alert('Quiz encerrado. Você pode fechar a janela.');
+        if (confirm('Deseja encerrar o quiz?')) {
+          window.close();
+        }
       });
     }
 
@@ -671,16 +679,39 @@
       printWindow.print();
     }
 
-    // Inicialização
-    function initQuiz() {
-      resetQuizForRetry(); // primeira tentativa
-      // listener para nome obrigatório antes de começar, mas render já bloqueia
-      studentNameInput.addEventListener('input', ()=>{
-        if (!quizCompleted && currentIndex===0 && !answerSubmitted[0]) renderQuestion();
-      });
+    // Iniciar quiz
+    function startQuiz() {
+      const nome = studentNameInput.value.trim();
+      if (!nome) {
+        nameError.textContent = '❌ O nome é obrigatório';
+        return;
+      }
+      nameError.textContent = '';
+      
+      // Trocar telas usando classes
+      idScreen.classList.add('hidden');
+      quizScreen.classList.add('visible');
+      
+      // Resetar estado do quiz
+      currentIndex = 0;
+      userAnswers = new Array(20).fill(null);
+      answerSubmitted = new Array(20).fill(false);
+      quizCompleted = false;
+      selectedOption = null;
+      attemptCount = 1;
+      
+      updateProgressUI();
+      renderQuestion();
     }
 
-    initQuiz();
+    // Event Listeners - APENAS CLIQUE NO BOTÃO
+    startBtn.addEventListener('click', startQuiz);
+    
+    // REMOVIDO o event listener de keypress que causava o problema
+    // Nenhuma tecla pressionada no campo de nome vai iniciar o quiz
+
+    // Inicialização
+    updateProgressUI();
   })();
 </script>
 </body>
