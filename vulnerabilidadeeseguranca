@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Vulnerabilidade e Insegurança Ambiental</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', 'Arial', 'Verdana', sans-serif;
+    }
+
+    body {
+      background: #f0f4f0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .quiz-wrapper {
+      max-width: 850px;
+      width: 100%;
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 12px 30px rgba(0, 30, 0, 0.08);
+      overflow: hidden;
+      padding: 24px 20px 30px;
+      border: 1px solid #c8ddc0;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      color: #1a3a2a;
+      margin-top: 4px;
+      margin-bottom: 20px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      border-left: 6px solid #2e7d64;
+      padding-left: 18px;
+    }
+
+    /* Sistema de telas */
+    #identificationScreen {
+      display: block;
+    }
+
+    #quizScreen {
+      display: none;
+    }
+
+    #identificationScreen.hidden {
+      display: none;
+    }
+
+    #quizScreen.visible {
+      display: block;
+    }
+
+    /* Tela de Identificação */
+    .identification-screen {
+      padding: 10px 0;
+    }
+
+    .field-group {
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 12px;
+    }
+
+    .field-group label {
+      font-weight: 600;
+      color: #1a3a2a;
+      min-width: 90px;
+      font-size: 1.1rem;
+    }
+
+    .field-group input, .field-group select {
+      flex: 1;
+      padding: 14px 16px;
+      border: 1.5px solid #b8d0a8;
+      border-radius: 40px;
+      font-size: 1rem;
+      background: white;
+      outline: none;
+      transition: 0.15s;
+    }
+
+    .field-group input:focus, .field-group select:focus {
+      border-color: #2e7d64;
+      box-shadow: 0 0 0 3px rgba(46, 125, 100, 0.2);
+    }
+
+    .btn-start-container {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .error-message {
+      color: #a12f2f;
+      font-size: 0.9rem;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      padding-left: 100px;
+      min-height: 24px;
+    }
+
+    /* Tela do Quiz */
+    .progress-area {
+      margin: 8px 0 18px;
+    }
+
+    .progress-bar-bg {
+      background: #d9e4d4;
+      height: 12px;
+      border-radius: 40px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 12px;
+      width: 0%;
+      background: #2e7d64;
+      border-radius: 40px;
+      transition: width 0.2s;
+    }
+
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+      color: #2a4a3a;
+      font-weight: 500;
+      font-size: 1rem;
+    }
+
+    .question-container {
+      background: #fafdf9;
+      padding: 22px 18px;
+      border-radius: 24px;
+      margin: 10px 0 18px;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.02);
+      border: 1px solid #c8dcc0;
+    }
+
+    .question-text {
+      font-size: 1.25rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: #0e2a1e;
+      margin-bottom: 24px;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option-item {
+      background: white;
+      border: 1.5px solid #bdd6b0;
+      border-radius: 50px;
+      padding: 14px 20px;
+      cursor: pointer;
+      font-size: 1.05rem;
+      transition: background 0.1s, border 0.1s;
+      color: #1a3a2a;
+      font-weight: 500;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .option-item:hover {
+      background: #e8f3e4;
+    }
+
+    .option-item.selected {
+      background: #2e7d64;
+      border-color: #1a5e4a;
+      color: white;
+      box-shadow: 0 4px 8px rgba(46,125,100,0.2);
+    }
+
+    .feedback-area {
+      margin-top: 24px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: #f0f8ee;
+      border-left: 6px solid #5f9c7b;
+    }
+
+    .feedback-correct {
+      font-weight: 700;
+      color: #1a6b3e;
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+
+    .feedback-incorrect {
+      font-weight: 700;
+      color: #a12f2f;
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+
+    .justification {
+      color: #1f3a2c;
+      line-height: 1.5;
+      font-size: 1rem;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+
+    button {
+      background: #2e7d64;
+      border: none;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 16px 32px;
+      border-radius: 60px;
+      cursor: pointer;
+      border: 1px solid #1a5e4a;
+      box-shadow: 0 6px 0 #1a4e3a;
+      transition: all 0.05s ease-in;
+      min-width: 160px;
+      letter-spacing: 0.5px;
+    }
+
+    button:active {
+      transform: translateY(3px);
+      box-shadow: 0 3px 0 #1a4e3a;
+    }
+
+    button:disabled {
+      background: #a9bbae;
+      border-color: #7e9a86;
+      box-shadow: 0 4px 0 #5e7a66;
+      transform: none;
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .result-screen {
+      text-align: center;
+      padding: 16px 0;
+    }
+
+    .score-badge {
+      font-size: 2.4rem;
+      background: #e8f3e4;
+      display: inline-block;
+      padding: 12px 36px;
+      border-radius: 60px;
+      margin: 20px 0;
+      font-weight: 800;
+      color: #1a3a2a;
+    }
+
+    .mensao {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 30px;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 24px;
+    }
+
+    .secondary-btn {
+      background: #4a6b58;
+      box-shadow: 0 4px 0 #2f4638;
+      font-size: 1rem;
+      padding: 14px 24px;
+    }
+
+    .warning-message {
+      background: #fce8e6;
+      color: #a12f2f;
+      padding: 16px;
+      border-radius: 40px;
+      font-weight: 600;
+      margin: 20px 0;
+      font-size: 1rem;
+    }
+
+    footer {
+      margin-top: 16px;
+      font-size: 0.85rem;
+      color: #5f7a68;
+      text-align: center;
+    }
+
+    @media (max-width: 500px) {
+      body { font-size: 16px; padding: 8px; }
+      .quiz-wrapper { padding: 16px 12px; }
+      h1 { font-size: 1.5rem; }
+      .question-text { font-size: 1.15rem; }
+      .option-item { font-size: 1rem; padding: 12px 16px; }
+      button { width: 100%; font-size: 1rem; }
+      .field-group label { min-width: 70px; }
+      .error-message { padding-left: 80px; }
+    }
+  </style>
+</head>
+<body>
+<div class="quiz-wrapper">
+  <h1>🌍 Vulnerabilidade e Insegurança Ambiental</h1>
+
+  <!-- TELA 1: IDENTIFICAÇÃO -->
+  <div id="identificationScreen">
+    <div class="identification-screen">
+      <div class="field-group">
+        <label>👤 Nome*</label>
+        <input type="text" id="studentName" placeholder="Seu nome completo" autocomplete="off">
+      </div>
+      <div id="nameError" class="error-message"></div>
+      
+      <div class="field-group">
+        <label>📚 Turma</label>
+        <select id="classSelect">
+          <option value="3 ADM">3 ADM</option>
+          <option value="2 RH">2 RH</option>
+          <option value="2 M AMB">2 M AMB</option>
+        </select>
+      </div>
+      
+      <div class="field-group">
+        <label>📅 Bimestre</label>
+        <select id="bimestreSelect">
+          <option value="1 Bimestre">1 Bimestre</option>
+          <option value="2 Bimestre">2 Bimestre</option>
+          <option value="3 Bimestre">3 Bimestre</option>
+          <option value="4 Bimestre">4 Bimestre</option>
+        </select>
+      </div>
+      
+      <div class="btn-start-container">
+        <button id="startQuizBtn">▶ Iniciar Quiz</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TELA 2: QUIZ -->
+  <div id="quizScreen">
+    <div class="progress-area">
+      <div class="progress-bar-bg">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-text">
+        <span id="currentQDisplay">Questão 1 de 20</span>
+        <span id="attemptDisplay">Tentativa: 1</span>
+      </div>
+    </div>
+
+    <div id="quizDynamicArea"></div>
+  </div>
+
+  <footer>🌱 Segurança ambiental é justiça social</footer>
+</div>
+
+<script>
+  (function(){
+    "use strict";
+
+    // ---------- DADOS DAS 20 QUESTÕES ----------
+    const questions = [
+      { text: "Questão 1: O conceito de \"vulnerabilidade ambiental\" não se refere apenas ao fenômeno natural em si, mas sim à:",
+        options: ["A) Quantidade total de chuva em uma região específica.", "B) Velocidade dos ventos em zonas de furacões.", "C) Localização geográfica exata de um ecossistema intocado.", "D) Capacidade de um sistema ou comunidade de antecipar, lidar, resistir e recuperar-se de um impacto ambiental."],
+        correct: 3,
+        justification: "A vulnerabilidade é uma medida social e física que relaciona a exposição a um risco com a capacidade (ou falta dela) de resposta do grupo afetado." },
+      { text: "Questão 2: O termo \"Injustiça Ambiental\" (ou Racismo Ambiental) é frequentemente associado à insegurança ambiental porque:",
+        options: ["A) Todos os grupos sociais sofrem igualmente com desastres naturais.", "B) A natureza seleciona quem deve ser atingido por fenômenos extremos.", "C) As populações de baixa renda e minorias étnicas costumam ser as mais expostas a resíduos tóxicos e riscos de desastres.", "D) Ambientes preservados são locais de insegurança para o desenvolvimento urbano."],
+        correct: 2,
+        justification: "A injustiça ambiental ocorre quando a carga dos danos ambientais é distribuída de forma desigual, penalizando grupos social e economicamente vulnerabilizados." },
+      { text: "Questão 3: (Questão Estilo ENEM) O processo de urbanização acelerada e sem planejamento no Brasil resultou na ocupação de encostas e várzeas. Esse cenário amplia a:",
+        options: ["A) Resiliência urbana.", "B) Insegurança ambiental em áreas de risco.", "C) Sustentabilidade das bacias hidrográficas.", "D) Preservação das matas ciliares."],
+        correct: 1,
+        justification: "A ocupação de áreas geologicamente instáveis (encostas) ou inundáveis (várzeas) coloca a população em contato direto com riscos, gerando insegurança." },
+      { text: "Questão 4: Qual fator é considerado um componente social da vulnerabilidade?",
+        options: ["A) A magnitude de um terremoto.", "B) A composição mineralógica do solo.", "C) O nível de escolaridade e o acesso ao saneamento básico.", "D) A inclinação da vertente de uma montanha."],
+        correct: 2,
+        justification: "Fatores socioeconômicos (renda, educação, serviços públicos) determinam o quão vulnerável uma pessoa está diante de um evento extremo." },
+      { text: "Questão 5: A insegurança ambiental pode gerar fluxos migratórios conhecidos como:",
+        options: ["A) Transumância sazonal.", "B) Migração de retorno.", "C) Êxodo rural técnico.", "D) Refugiados ambientais."],
+        correct: 3,
+        justification: "Refugiados ambientais são pessoas forçadas a deixar seu local de origem devido a degradações ambientais severas ou desastres que tornam a vida impossível." },
+      { text: "Questão 6: A construção de grandes hidrelétricas em regiões amazônicas pode gerar insegurança ambiental para populações ribeirinhas devido à:",
+        options: ["A) Redução da oferta de energia elétrica para essas comunidades.", "B) Alteração dos ciclos de cheia e vazante e perda da biodiversidade local.", "C) Diminuição da umidade relativa do ar em escala global.", "D) Impossibilidade de navegação por grandes transatlânticos."],
+        correct: 1,
+        justification: "Grandes obras alteram o ecossistema do qual essas populações dependem para subsistência (pesca e agricultura), gerando insegurança alimentar e social." },
+      { text: "Questão 7: O conceito de \"Riscos Tecnológicos\" na segurança ambiental refere-se a:",
+        options: ["A) Queda de raios durante tempestades.", "B) Erupções vulcânicas em áreas povoadas.", "C) Rompimento de barragens de rejeitos e vazamentos químicos.", "D) Erosão eólica em solos desérticos."],
+        correct: 2,
+        justification: "Riscos tecnológicos são aqueles derivados da atividade humana e industrial, como os desastres de Mariana e Brumadinho." },
+      { text: "Questão 8: O que caracteriza a \"Resiliência\" no contexto ambiental?",
+        options: ["A) A capacidade de um ambiente ou sociedade retornar ao seu estado original após um distúrbio.", "B) A proibição de qualquer intervenção humana na natureza.", "C) O aumento da poluição em áreas industriais.", "D) A fragilidade total de uma estrutura urbana."],
+        correct: 0,
+        justification: "Resiliência é a capacidade de absorver o choque e se reorganizar, mantendo as funções básicas." },
+      { text: "Questão 9: As mudanças climáticas globais atuam sobre a vulnerabilidade ambiental como:",
+        options: ["A) Um multiplicador de ameaças, intensificando eventos extremos.", "B) Um fator de neutralização de riscos.", "C) Uma solução para a escassez hídrica no semiárido.", "D) Um fenômeno sem impacto nas áreas urbanas litorâneas."],
+        correct: 0,
+        justification: "O aquecimento global aumenta a frequência e intensidade de secas, inundações e tempestades, elevando a insegurança." },
+      { text: "Questão 10: A \"Segurança Alimentar\" é diretamente afetada pela insegurança ambiental quando:",
+        options: ["A) O preço dos eletrônicos sobe no mercado internacional.", "B) Novas tecnologias de plantio são introduzidas no campo.", "C) Há aumento da pavimentação nas grandes cidades.", "D) Períodos prolongados de seca destroem safras de subsistência."],
+        correct: 3,
+        justification: "A degradação do ambiente (solo e clima) compromete a produção de alimentos, afetando a segurança nutricional das populações." },
+      { text: "Questão 11: No planejamento urbano, as \"Zonas de Especial Interesse Social\" (ZEIS) muitas vezes coincidem com áreas de vulnerabilidade ambiental porque:",
+        options: ["A) O governo prefere construir em locais perigosos.", "B) Populações pobres são empurradas para terrenos menos valorizados e mais suscetíveis a riscos.", "C) Essas áreas possuem a melhor infraestrutura de lazer.", "D) A legislação ambiental obriga a moradia em locais de preservação."],
+        correct: 1,
+        justification: "O mercado imobiliário segrega o espaço; as áreas seguras são caras, restando as áreas de risco para as camadas mais pobres." },
+      { text: "Questão 12: O fenômeno das \"Ilhas de Calor\" nas metrópoles aumenta a vulnerabilidade de idosos devido a:",
+        options: ["A) Problemas respiratórios e estresse térmico.", "B) Aumento da incidência de chuvas de granizo.", "C) Melhora na circulação de ventos frios.", "D) Redução do consumo de energia elétrica."],
+        correct: 0,
+        justification: "O aumento excessivo da temperatura em áreas urbanas densas agrava problemas de saúde em grupos sensíveis." },
+      { text: "Questão 13: A desertificação é um processo que gera insegurança ambiental principalmente em regiões:",
+        options: ["A) Temperadas e frias.", "B) Úmidas e tropicais.", "C) Semiáridas e subúmidas secas.", "D) De alta montanha."],
+        correct: 2,
+        justification: "A perda da capacidade produtiva do solo nessas regiões torna a sobrevivência humana inviável a longo prazo." },
+      { text: "Questão 14: A governança ambiental eficaz para reduzir a vulnerabilidade deve priorizar:",
+        options: ["A) Ações apenas após a ocorrência do desastre (remediação).", "B) O aumento do desmatamento para facilitar a visualização de riscos.", "C) A expulsão imediata de todas as pessoas das cidades.", "D) O investimento em sistemas de alerta precoce e educação ambiental."],
+        correct: 3,
+        justification: "A prevenção e a preparação são as chaves para reduzir danos e salvar vidas." },
+      { text: "Questão 15: Qual é o papel da Defesa Civil na gestão da insegurança ambiental?",
+        options: ["A) Monitorar riscos, emitir alertas e coordenar operações de socorro.", "B) Estimular a ocupação de encostas.", "C) Financiar a construção de indústrias poluentes.", "D) Vender seguros contra desastres naturais."],
+        correct: 0,
+        justification: "A Defesa Civil é o órgão responsável pela gestão de riscos e resposta a desastres no Brasil." },
+      { text: "Questão 16: A escassez de água potável em grandes centros urbanos é um exemplo de:",
+        options: ["A) Insegurança ambiental hídrica.", "B) Desenvolvimento sustentável pleno.", "C) Vulnerabilidade geológica natural.", "D) Excedente ecológico."],
+        correct: 0,
+        justification: "A falta de acesso à água limpa compromete a saúde pública e a manutenção da vida urbana." },
+      { text: "Questão 17: (Concursos) A \"Susceptibilidade\" de um terreno refere-se a:",
+        options: ["A) Vontade política de remover moradores.", "B) Propensão intrínseca do terreno a sofrer um processo (ex: deslizamento) devido às suas características geológicas.", "C) Valor de mercado do metro quadrado.", "D) Quantidade de árvores plantadas pela prefeitura."],
+        correct: 1,
+        justification: "Susceptibilidade é uma característica física (natureza do solo, inclinação) que favorece a ocorrência de um fenômeno." },
+      { text: "Questão 18: O aumento do nível do mar representa uma insegurança ambiental crítica para:",
+        options: ["A) Cidades localizadas no interior dos continentes.", "B) Áreas de agricultura mecanizada no Cerrado.", "C) Regiões de planalto e chapadas.", "D) Pequenos estados insulares e planícies costeiras."],
+        correct: 3,
+        justification: "O avanço do mar ameaça a infraestrutura e a existência física de ilhas e cidades litorâneas." },
+      { text: "Questão 19: O termo \"Danos Colaterais Ambientais\" em conflitos armados gera insegurança porque:",
+        options: ["A) Destrói recursos naturais necessários à sobrevivência civil (água, solo).", "B) Melhora a economia de guerra.", "C) Acelera o crescimento da vegetação nativa.", "D) Não afeta as gerações futuras."],
+        correct: 0,
+        justification: "Guerras frequentemente causam poluição grave e destruição de infraestrutura sanitária, gerando insegurança ambiental crônica." },
+      { text: "Questão 20: A análise de vulnerabilidade ambiental é uma ferramenta essencial para:",
+        options: ["A) O aumento do lucro das empresas mineradoras.", "B) Ignorar os problemas sociais da cidade.", "C) O Plano Diretor Municipal e o ordenamento do território.", "D) Acelerar a produção industrial sem filtros."],
+        correct: 2,
+        justification: "Saber onde estão os riscos e quem são os vulneráveis permite que a prefeitura planeje onde construir e onde preservar." }
+    ];
+
+    // ---------- ELEMENTOS DOM ----------
+    const idScreen = document.getElementById('identificationScreen');
+    const quizScreen = document.getElementById('quizScreen');
+    const studentNameInput = document.getElementById('studentName');
+    const classSelect = document.getElementById('classSelect');
+    const bimestreSelect = document.getElementById('bimestreSelect');
+    const nameError = document.getElementById('nameError');
+    const startBtn = document.getElementById('startQuizBtn');
+    
+    const progressFill = document.getElementById('progressFill');
+    const currentQDisplay = document.getElementById('currentQDisplay');
+    const attemptDisplay = document.getElementById('attemptDisplay');
+    const quizDynamicArea = document.getElementById('quizDynamicArea');
+
+    // ---------- VARIÁVEIS DE ESTADO ----------
+    let currentIndex = 0;
+    let userAnswers = new Array(20).fill(null);
+    let answerSubmitted = new Array(20).fill(false);
+    let quizCompleted = false;
+    let attemptCount = 1;
+    let selectedOption = null;
+
+    // ---------- FUNÇÕES AUXILIARES ----------
+    function updateProgressUI() {
+      if (!quizCompleted) {
+        const percent = (currentIndex / 20) * 100;
+        progressFill.style.width = percent + '%';
+        currentQDisplay.textContent = `Questão ${currentIndex+1} de 20`;
+      } else {
+        progressFill.style.width = '100%';
+        currentQDisplay.textContent = `Quiz finalizado`;
+      }
+      attemptDisplay.textContent = `Tentativa: ${attemptCount}`;
+    }
+
+    function calculateScore() {
+      let correctCount = 0;
+      for (let i=0; i<20; i++) {
+        if (userAnswers[i] === questions[i].correct) correctCount++;
+      }
+      return correctCount;
+    }
+
+    function getMensao(acertos) {
+      if (acertos >= 19) return 'Excelente';
+      if (acertos >= 17) return 'Bom';
+      if (acertos >= 14) return 'Regular';
+      return 'Não foi muito bem';
+    }
+
+    function resetQuizForRetry() {
+      currentIndex = 0;
+      userAnswers = new Array(20).fill(null);
+      answerSubmitted = new Array(20).fill(false);
+      quizCompleted = false;
+      selectedOption = null;
+      attemptCount++;
+      updateProgressUI();
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      if (quizCompleted) return;
+      
+      const q = questions[currentIndex];
+      const submitted = answerSubmitted[currentIndex];
+      const savedAnswer = userAnswers[currentIndex];
+      
+      let optionsHtml = '';
+      for (let i=0; i<4; i++) {
+        let classes = 'option-item';
+        if (!submitted && selectedOption === i) classes += ' selected';
+        if (submitted && savedAnswer === i) classes += ' selected';
+        optionsHtml += `<div class="${classes}" data-opt-index="${i}">${q.options[i]}</div>`;
+      }
+
+      let feedbackHtml = '';
+      if (submitted) {
+        const isCorrect = (savedAnswer === q.correct);
+        const correctLetter = String.fromCharCode(65 + q.correct);
+        const correctText = q.options[q.correct];
+        feedbackHtml = `
+          <div class="feedback-area">
+            <div class="${isCorrect ? 'feedback-correct' : 'feedback-incorrect'}">
+              ${isCorrect ? '✅ Correto!' : `❌ Incorreto. A resposta certa é: ${correctLetter}) ${correctText}`}
+            </div>
+            <div class="justification">📘 ${q.justification}</div>
+          </div>
+        `;
+      }
+
+      const isLast = (currentIndex === 19);
+      const nextButtonDisabled = !submitted;
+      const nextButtonText = isLast ? 'Finalizar Quiz' : 'Próxima';
+
+      quizDynamicArea.innerHTML = `
+        <div class="question-container">
+          <div class="question-text">${q.text}</div>
+          <div class="options" id="optionsContainer">
+            ${optionsHtml}
+          </div>
+          ${feedbackHtml}
+        </div>
+        <div class="actions">
+          <button id="nextButton" ${nextButtonDisabled ? 'disabled' : ''}>${nextButtonText}</button>
+        </div>
+      `;
+
+      if (!submitted) {
+        document.querySelectorAll('.option-item').forEach(opt => {
+          opt.addEventListener('click', (e) => {
+            if (answerSubmitted[currentIndex]) return;
+            const idx = parseInt(opt.dataset.optIndex);
+            selectedOption = idx;
+            userAnswers[currentIndex] = idx;
+            answerSubmitted[currentIndex] = true;
+            renderQuestion();
+          });
+        });
+      }
+
+      const nextBtn = document.getElementById('nextButton');
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+          if (!submitted) return;
+          if (currentIndex === 19) {
+            finishQuiz();
+          } else {
+            currentIndex++;
+            selectedOption = null;
+            updateProgressUI();
+            renderQuestion();
+          }
+        });
+      }
+
+      updateProgressUI();
+    }
+
+    function finishQuiz() {
+      quizCompleted = true;
+      const acertos = calculateScore();
+      const nota = acertos * 0.5;
+      const mensao = getMensao(acertos);
+      const aprovado = acertos >= 14;
+
+      updateProgressUI();
+
+      if (!aprovado) {
+        quizDynamicArea.innerHTML = `
+          <div class="result-screen">
+            <div class="warning-message">❌ Você não atingiu a nota mínima (14 acertos).</div>
+            <p>Você acertou ${acertos} de 20. Nota: ${nota.toFixed(1)}</p>
+            <p>O quiz será reiniciado para nova tentativa.</p>
+          </div>
+        `;
+        setTimeout(() => {
+          resetQuizForRetry();
+        }, 2500);
+        return;
+      }
+
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+      
+      let errosHtml = '';
+      for (let i=0; i<20; i++) {
+        if (userAnswers[i] !== questions[i].correct) {
+          errosHtml += `<li><strong>Q${i+1}:</strong> ${questions[i].text} <br> ✅ Correta: ${questions[i].options[questions[i].correct]}</li>`;
+        }
+      }
+
+      quizDynamicArea.innerHTML = `
+        <div class="result-screen">
+          <h2 style="color:#1a3a2a;">Resultado Final</h2>
+          <div class="score-badge">${acertos} / 20</div>
+          <p style="font-size:1.4rem; margin:5px 0;">Nota: ${nota.toFixed(1)}</p>
+          <div class="mensao">🏅 ${mensao}</div>
+          <div class="btn-group">
+            <button id="pdfButton" class="secondary-btn">📄 Gerar Relatório PDF</button>
+            <button id="encerrarButton" class="secondary-btn">🚪 Encerrar</button>
+          </div>
+          <div style="display:none;" id="reportData"
+            data-nome="${studentNameInput.value.trim()}"
+            data-turma="${classSelect.value}"
+            data-bimestre="${bimestreSelect.value}"
+            data-datahora="${dateStr}"
+            data-acertos="${acertos}"
+            data-nota="${nota.toFixed(1)}"
+            data-mensao="${mensao}"
+            data-erros="${encodeURIComponent(errosHtml)}">
+          </div>
+        </div>
+      `;
+
+      document.getElementById('pdfButton').addEventListener('click', gerarPDF);
+      document.getElementById('encerrarButton').addEventListener('click', ()=>{
+        if (confirm('Deseja encerrar o quiz?')) {
+          window.close();
+        }
+      });
+    }
+
+    function gerarPDF() {
+      const reportDiv = document.getElementById('reportData');
+      const nome = reportDiv.dataset.nome;
+      const turma = reportDiv.dataset.turma;
+      const bimestre = reportDiv.dataset.bimestre;
+      const datahora = reportDiv.dataset.datahora;
+      const acertos = reportDiv.dataset.acertos;
+      const nota = reportDiv.dataset.nota;
+      const mensao = reportDiv.dataset.mensao;
+      const errosHtml = decodeURIComponent(reportDiv.dataset.erros);
+
+      const printWindow = window.open('', '_blank', 'width=800,height=900');
+      printWindow.document.write(`
+        <html><head><title>Relatório - Vulnerabilidade e Insegurança Ambiental</title>
+        <style>body{font-family:Arial;padding:30px; max-width:800px; margin:auto;} h1{color:#1a3a2a} li{margin:12px 0;}</style>
+        </head><body>
+        <h1>Relatório de Desempenho</h1>
+        <p><strong>Nome:</strong> ${nome}</p>
+        <p><strong>Turma:</strong> ${turma} &nbsp; | &nbsp;<strong>Bimestre:</strong> ${bimestre}</p>
+        <p><strong>Data/Hora:</strong> ${datahora}</p>
+        <p><strong>Acertos:</strong> ${acertos} / 20 &nbsp; | &nbsp;<strong>Nota:</strong> ${nota}</p>
+        <p><strong>Mensão:</strong> ${mensao}</p>
+        <h3>📋 Questões erradas</h3>
+        <ul>${errosHtml || '<li>Nenhum erro! Parabéns!</li>'}</ul>
+        <p style="margin-top:40px;">--- Fim do relatório ---</p>
+        </body></html>
+      `);
+      printWindow.document.close();
+      printWindow.focus();
+      printWindow.print();
+    }
+
+    function startQuiz() {
+      const nome = studentNameInput.value.trim();
+      if (!nome) {
+        nameError.textContent = '❌ O nome é obrigatório';
+        return;
+      }
+      nameError.textContent = '';
+      
+      idScreen.classList.add('hidden');
+      quizScreen.classList.add('visible');
+      
+      currentIndex = 0;
+      userAnswers = new Array(20).fill(null);
+      answerSubmitted = new Array(20).fill(false);
+      quizCompleted = false;
+      selectedOption = null;
+      attemptCount = 1;
+      
+      updateProgressUI();
+      renderQuestion();
+    }
+
+    startBtn.addEventListener('click', startQuiz);
+    updateProgressUI();
+  })();
+</script>
+</body>
+</html>
