@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Questões Ambientais – Conexões entre Sociedade, Consumo e Natureza</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      font-family: 'Segoe UI', 'Arial', 'Verdana', sans-serif;
+    }
+
+    body {
+      background: #f4f7f2;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      margin: 0;
+    }
+
+    .quiz-wrapper {
+      max-width: 800px;
+      width: 100%;
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 12px 30px rgba(0, 20, 0, 0.08);
+      overflow: hidden;
+      padding: 24px 20px 30px;
+      border: 1px solid #d0e0c0;
+    }
+
+    h1 {
+      font-size: 1.7rem;
+      color: #1e3a2f;
+      margin-top: 4px;
+      margin-bottom: 20px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      border-left: 6px solid #2e7d5e;
+      padding-left: 18px;
+    }
+
+    .identification-panel {
+      background: #e9f3e6;
+      padding: 18px 16px 14px;
+      border-radius: 20px;
+      margin-bottom: 26px;
+    }
+
+    .field-group {
+      margin-bottom: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 12px;
+    }
+
+    .field-group label {
+      font-weight: 600;
+      color: #1e3a2f;
+      min-width: 70px;
+      font-size: 1rem;
+    }
+
+    .field-group input, .field-group select {
+      flex: 1;
+      padding: 12px 14px;
+      border: 1px solid #bcd0b0;
+      border-radius: 40px;
+      font-size: 1rem;
+      background: white;
+      outline: none;
+      transition: 0.15s;
+    }
+
+    .field-group input:focus, .field-group select:focus {
+      border-color: #2e7d5e;
+      box-shadow: 0 0 0 3px rgba(46, 125, 94, 0.2);
+    }
+
+    .progress-area {
+      margin: 8px 0 18px;
+    }
+
+    .progress-bar-bg {
+      background: #d9e2d4;
+      height: 12px;
+      border-radius: 40px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 12px;
+      width: 0%;
+      background: #2e7d5e;
+      border-radius: 40px;
+      transition: width 0.2s;
+    }
+
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+      color: #2c4a3a;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .question-container {
+      background: #fafdf9;
+      padding: 22px 18px;
+      border-radius: 24px;
+      margin: 10px 0 18px;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.02);
+      border: 1px solid #cbdcc2;
+    }
+
+    .question-text {
+      font-size: 1.25rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: #0e2a1e;
+      margin-bottom: 24px;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option-item {
+      background: white;
+      border: 1.5px solid #c2d6b6;
+      border-radius: 50px;
+      padding: 14px 20px;
+      cursor: pointer;
+      font-size: 1.05rem;
+      transition: background 0.1s, border 0.1s;
+      color: #1e3a2f;
+      font-weight: 500;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .option-item.selected {
+      background: #2e7d5e;
+      border-color: #1b5e3f;
+      color: white;
+      box-shadow: 0 4px 8px rgba(46,125,94,0.2);
+    }
+
+    .feedback-area {
+      margin-top: 24px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: #f1f8ee;
+      border-left: 6px solid #5f9c7b;
+    }
+
+    .feedback-correct {
+      font-weight: 700;
+      color: #1e6b3e;
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+
+    .feedback-incorrect {
+      font-weight: 700;
+      color: #a12f2f;
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+
+    .justification {
+      color: #1f3a2c;
+      line-height: 1.5;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+
+    button {
+      background: #2e7d5e;
+      border: none;
+      color: white;
+      font-weight: 700;
+      font-size: 1.2rem;
+      padding: 16px 32px;
+      border-radius: 60px;
+      cursor: pointer;
+      border: 1px solid #1e5e44;
+      box-shadow: 0 6px 0 #1b4e3a;
+      transition: all 0.05s ease-in;
+      min-width: 160px;
+      letter-spacing: 0.5px;
+    }
+
+    button:active {
+      transform: translateY(3px);
+      box-shadow: 0 3px 0 #1b4e3a;
+    }
+
+    button:disabled {
+      background: #a9bbae;
+      border-color: #7e9a86;
+      box-shadow: 0 4px 0 #5e7a66;
+      transform: none;
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .result-screen {
+      text-align: center;
+      padding: 16px 0;
+    }
+
+    .score-badge {
+      font-size: 2.4rem;
+      background: #e9f3e6;
+      display: inline-block;
+      padding: 12px 36px;
+      border-radius: 60px;
+      margin: 20px 0;
+      font-weight: 800;
+      color: #1e3a2f;
+    }
+
+    .mensao {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 30px;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 24px;
+    }
+
+    .secondary-btn {
+      background: #4a6b55;
+      box-shadow: 0 4px 0 #2f4638;
+      font-size: 1rem;
+      padding: 14px 24px;
+    }
+
+    .warning-message {
+      background: #fce8e6;
+      color: #a12f2f;
+      padding: 16px;
+      border-radius: 40px;
+      font-weight: 600;
+      margin: 20px 0;
+    }
+
+    footer {
+      margin-top: 12px;
+      font-size: 0.8rem;
+      color: #5f7a68;
+      text-align: center;
+    }
+
+    .attempt-info {
+      font-size: 0.9rem;
+      color: #3b5c48;
+      margin-top: 8px;
+    }
+
+    /* responsivo extra */
+    @media (max-width: 500px) {
+      .quiz-wrapper { padding: 16px 12px; }
+      h1 { font-size: 1.4rem; }
+      .question-text { font-size: 1.15rem; }
+      button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+<div class="quiz-wrapper" id="quizApp">
+  <h1>🌍 Questões Ambientais<br><span style="font-size:0.9rem; font-weight:normal;">Conexões entre Sociedade, Consumo e Natureza</span></h1>
+
+  <!-- Área de identificação -->
+  <div class="identification-panel" id="idPanel">
+    <div class="field-group">
+      <label>👤 Nome*</label>
+      <input type="text" id="studentName" placeholder="Seu nome completo" autocomplete="off">
+    </div>
+    <div class="field-group">
+      <label>📚 Turma</label>
+      <select id="classSelect">
+        <option value="3 ADM">3 ADM</option>
+        <option value="2 RH">2 RH</option>
+        <option value="2 M AMB">2 M AMB</option>
+      </select>
+    </div>
+    <div class="field-group">
+      <label>📅 Bimestre</label>
+      <select id="bimestreSelect">
+        <option value="1 Bimestre">1 Bimestre</option>
+        <option value="2 Bimestre">2 Bimestre</option>
+        <option value="3 Bimestre">3 Bimestre</option>
+        <option value="4 Bimestre">4 Bimestre</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- barra de progresso -->
+  <div class="progress-area">
+    <div class="progress-bar-bg">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-text">
+      <span id="currentQDisplay">Questão 1 de 20</span>
+      <span id="attemptDisplay">Tentativa: 1</span>
+    </div>
+  </div>
+
+  <!-- Área dinâmica: pergunta / resultado / reinicio -->
+  <div id="dynamicArea"></div>
+
+  <footer>🌱 Cada escolha importa</footer>
+</div>
+
+<script>
+  (function(){
+    "use strict";
+
+    // ---------- DADOS DAS QUESTÕES ----------
+    const questions = [
+      { text: "Questão 1: \"Não existe problema ambiental isolado. Cada enchente, cada seca, cada deslizamento é também um problema ____________.\"",
+        options: ["a) econômico", "b) técnico", "c) político", "d) social"],
+        correct: 3, // índice 3 = d
+        justification: "Desastres ambientais afetam desproporcionalmente populações vulneráveis e revelam desigualdades estruturais, tornando-se também problemas sociais." },
+      { text: "Questão 2: Cada escolha de consumo e cada hábito cotidiano pode ser considerado também:",
+        options: ["a) Uma decisão ética, pois afeta o meio ambiente e a sociedade", "b) Um ato exclusivamente econômico, sem consequências ambientais", "c) Uma ação neutra que não interfere no equilíbrio do planeta", "d) Um comportamento determinado apenas pela renda do indivíduo"],
+        correct: 0, justification: "Nossas escolhas individuais têm implicações morais sobre o meio ambiente e a sociedade, tornando cada ato de consumo uma decisão ética." },
+      { text: "Questão 3: A expressão \"olhar para trás do palco\" significa:",
+        options: ["a) Ignorar os problemas ambientais visíveis", "b) Concentrar-se apenas nas consequências imediatas", "c) Enxergar as causas e conexões ocultas dos problemas", "d) Focar exclusivamente nos efeitos dos desastres naturais"],
+        correct: 2, justification: "\"Olhar para trás do palco\" significa ir além das aparências, buscando compreender as causas profundas e as relações invisíveis entre diferentes fenômenos." },
+      { text: "Questão 4: Um debate completo sobre questões ambientais geralmente envolve ____________ dimensões principais.",
+        options: ["a) duas", "b) três", "c) quatro", "d) cinco"],
+        correct: 2, justification: "Quatro dimensões são comumente abordadas: impactos do consumo, riscos e desastres, mudanças climáticas, e segregação com vulnerabilidade socioambiental." },
+      { text: "Questão 5: Quais são as quatro dimensões frequentemente abordadas em um debate sobre questões ambientais?",
+        options: ["a) Consumo, educação, saúde, moradia", "b) Impactos do consumo; riscos e desastres; mudanças climáticas; segregação e vulnerabilidade", "c) Política, economia, cultura, religião", "d) Água, ar, solo, fogo"],
+        correct: 1, justification: "As quatro dimensões são: impactos socioambientais do consumo, riscos e desastres, mudanças climáticas (com acordos internacionais), e a relação entre segregação espacial e vulnerabilidade ambiental." },
+      { text: "Questão 6: Analise as afirmações: I. Problemas ambientais e sociais são independentes. II. Cada escolha de consumo é também uma decisão ética. III. A crise ecológica não tem relação com desigualdade social.",
+        options: ["a) Apenas I é verdadeira.", "b) Apenas II é verdadeira.", "c) Apenas I e II são verdadeiras.", "d) Todas são falsas."],
+        correct: 1, justification: "A afirmação I é falsa; II é verdadeira; III é falsa." },
+      { text: "Questão 7: Existem conexões, muitas vezes invisíveis, entre o que consumimos, como nos organizamos em ____________, onde moramos e como tratamos o planeta.",
+        options: ["a) política", "b) economia", "c) sociedade", "d) cultura"],
+        correct: 2, justification: "A organização social influencia diretamente os padrões de consumo, moradia e impacto ambiental." },
+      { text: "Questão 8: Qual é o papel da ética nas discussões sobre consumo e meio ambiente?",
+        options: ["a) A ética é irrelevante", "b) Deve ser deixada de lado em nome do desenvolvimento", "c) A ética só se aplica a questões religiosas", "d) A ética está no centro, pois cada escolha tem implicações morais"],
+        correct: 3, justification: "A ética é central porque cada decisão de consumo envolve valores e consequências." },
+      { text: "Questão 9: O protagonista da mudança ambiental — o \"fio mais importante\" — está ____________.",
+        options: ["a) nas mãos dos governantes", "b) nas mãos de cada cidadão", "c) nas mãos das grandes corporações", "d) inexistente"],
+        correct: 1, justification: "Cada pessoa tem poder de escolha e pode agir de forma mais consciente." },
+      { text: "Questão 10: Analise as afirmações: I. O consumismo e a organização social estão no centro das questões ambientais. II. Apenas grandes indústrias são responsáveis. III. O protagonista da mudança é exclusivamente o Estado.",
+        options: ["a) Apenas I é verdadeira.", "b) Apenas II é verdadeira.", "c) Apenas I e II são verdadeiras.", "d) Todas são falsas."],
+        correct: 0, justification: "I é verdadeira; II e III são falsas." },
+      { text: "Questão 11: Cada enchente, seca ou deslizamento pode ser compreendido como:",
+        options: ["a) Fenômeno puramente natural", "b) Evento inevitável sem relação com políticas", "c) Punição divina", "d) Um problema social, pois revela vulnerabilidades"],
+        correct: 3, justification: "Desastres ambientais atingem mais populações vulneráveis e expõem falhas no planejamento." },
+      { text: "Questão 12: As conexões entre consumo, sociedade e meio ambiente são \"invisíveis\", exigindo um ____________ mais atento.",
+        options: ["a) ouvido", "b) toque", "c) olhar", "d) paladar"],
+        correct: 2, justification: "A metáfora visual (\"olhar\") indica a necessidade de atenção para perceber relações." },
+      { text: "Questão 13: Analise: I. Hábitos cotidianos não têm relação ética. II. Conexões invisíveis existem entre consumo, sociedade, moradia e meio ambiente. III. Apenas desastres de grande escala são problemas sociais.",
+        options: ["a) Apenas I", "b) Apenas II e III", "c) Apenas I e II", "d) Apenas II"],
+        correct: 3, justification: "I é falsa; II verdadeira; III falsa." },
+      { text: "Questão 14: Qual o objetivo principal de uma reflexão aprofundada sobre questões ambientais?",
+        options: ["a) Convidar a enxergar conexões entre ações cotidianas e problemas ambientais", "b) Assustar sobre o fim do mundo", "c) Defender que nada pode ser feito", "d) Culpar exclusivamente as indústrias"],
+        correct: 0, justification: "A reflexão visa despertar consciência sobre responsabilidade individual e coletiva." },
+      { text: "Questão 15: A crise ecológica é também uma crise de _______________, pois os mais pobres são mais afetados.",
+        options: ["a) desigualdade social", "b) falta de tecnologia", "c) educação ambiental", "d) crescimento econômico"],
+        correct: 0, justification: "Populações vulneráveis têm menos recursos para se proteger, revelando a face social da crise." },
+      { text: "Questão 16: O que significa \"não existe problema ambiental isolado\"?",
+        options: ["a) Todos são iguais", "b) Estão conectados a questões sociais, econômicas e políticas", "c) A natureza resolve sozinha", "d) Apenas grandes desastres importam"],
+        correct: 1, justification: "Questões ambientais não podem ser separadas das condições sociais e políticas." },
+      { text: "Questão 17: Analise: I. Consumismo e organização social são irrelevantes. II. Não existe problema ambiental isolado de problema social. III. Apenas escolhas políticas têm caráter ético.",
+        options: ["a) Apenas I", "b) Apenas II", "c) Apenas I e II", "d) Apenas II e III"],
+        correct: 1, justification: "I falsa; II verdadeira (tese central); III falsa." },
+      { text: "Questão 18: As conexões entre consumo, organização social, ____________ e tratamento do planeta são fundamentais.",
+        options: ["a) moradia", "b) transporte", "c) alimentação", "d) lazer"],
+        correct: 0, justification: "O local de moradia é determinante na vulnerabilidade ambiental." },
+      { text: "Questão 19: Qual a relação entre consumo e impacto ambiental?",
+        options: ["a) Não afeta", "b) Afeta só a economia", "c) Cada ato de consumo tem impacto ambiental", "d) Impacto irrelevante"],
+        correct: 2, justification: "Todo consumo consome recursos e gera resíduos, portanto sempre tem impacto." },
+      { text: "Questão 20: Um debate completo sobre questões ambientais envolve: impactos do consumo, riscos e desastres, mudanças climáticas e ____________.",
+        options: ["a) soluções tecnológicas", "b) segregação e vulnerabilidade socioambiental", "c) reciclagem", "d) energias renováveis"],
+        correct: 1, justification: "A segregação socioespacial e vulnerabilidade mostram como problemas afetam desigualmente." }
+    ];
+
+    // ---------- VARIÁVEIS DE ESTADO ----------
+    let currentIndex = 0;               // 0 a 19
+    let userAnswers = new Array(20).fill(null);
+    let answerSubmitted = new Array(20).fill(false);
+    let quizCompleted = false;
+    let attemptCount = 1;               // tentativas na sessão
+    let selectedOption = null;          // temporário da questão atual
+
+    // Elementos DOM
+    const dynamicArea = document.getElementById('dynamicArea');
+    const progressFill = document.getElementById('progressFill');
+    const currentQDisplay = document.getElementById('currentQDisplay');
+    const attemptDisplay = document.getElementById('attemptDisplay');
+    const studentNameInput = document.getElementById('studentName');
+    const classSelect = document.getElementById('classSelect');
+    const bimestreSelect = document.getElementById('bimestreSelect');
+    const idPanel = document.getElementById('idPanel');
+
+    // Helpers
+    function updateProgressUI() {
+      if (!quizCompleted) {
+        const percent = ((currentIndex) / 20) * 100;
+        progressFill.style.width = percent + '%';
+        currentQDisplay.textContent = `Questão ${currentIndex+1} de 20`;
+      } else {
+        progressFill.style.width = '100%';
+        currentQDisplay.textContent = `Quiz finalizado`;
+      }
+      attemptDisplay.textContent = `Tentativa: ${attemptCount}`;
+    }
+
+    function calculateScore() {
+      let correctCount = 0;
+      for (let i=0; i<20; i++) {
+        if (userAnswers[i] === questions[i].correct) correctCount++;
+      }
+      return correctCount;
+    }
+
+    function getMensao(acertos) {
+      if (acertos >= 19) return 'Excelente';
+      if (acertos >= 17) return 'Bom';
+      if (acertos >= 14) return 'Regular';
+      return 'Não foi muito bem';
+    }
+
+    // reiniciar completamente (nova tentativa)
+    function resetQuizForRetry() {
+      currentIndex = 0;
+      userAnswers = new Array(20).fill(null);
+      answerSubmitted = new Array(20).fill(false);
+      quizCompleted = false;
+      selectedOption = null;
+      attemptCount++;
+      updateProgressUI();
+      renderQuestion();
+      // habilita campos de identificação novamente (já estão habilitados, mas garantimos)
+      studentNameInput.disabled = false;
+      classSelect.disabled = false;
+      bimestreSelect.disabled = false;
+      idPanel.style.opacity = '1';
+    }
+
+    // verifica se nome foi preenchido (obrigatório)
+    function isNameValid() {
+      return studentNameInput.value.trim() !== '';
+    }
+
+    // RENDERIZA TELA DE PERGUNTA
+    function renderQuestion() {
+      if (quizCompleted) return;
+      if (!isNameValid()) {
+        dynamicArea.innerHTML = `<div class="warning-message">⚠️ Por favor, preencha seu nome para continuar.</div>`;
+        return;
+      }
+      // desabilita edição da identificação durante o quiz
+      studentNameInput.disabled = true;
+      classSelect.disabled = true;
+      bimestreSelect.disabled = true;
+      
+      const q = questions[currentIndex];
+      const submitted = answerSubmitted[currentIndex];
+      const savedAnswer = userAnswers[currentIndex];
+      
+      let optionsHtml = '';
+      for (let i=0; i<4; i++) {
+        let classes = 'option-item';
+        if (!submitted && selectedOption === i) classes += ' selected';
+        if (submitted && savedAnswer === i) classes += ' selected';
+        if (submitted && i === q.correct) classes += ' selected'; // destacar correta depois de submit? só se quiser, mas manteremos.
+        optionsHtml += `<div class="${classes}" data-opt-index="${i}">${q.options[i]}</div>`;
+      }
+
+      let feedbackHtml = '';
+      if (submitted) {
+        const isCorrect = (savedAnswer === q.correct);
+        const correctLetter = String.fromCharCode(97 + q.correct); // a,b,c,d
+        const correctText = q.options[q.correct];
+        feedbackHtml = `
+          <div class="feedback-area">
+            <div class="${isCorrect ? 'feedback-correct' : 'feedback-incorrect'}">
+              ${isCorrect ? '✅ Correto!' : `❌ Incorreto. A resposta certa é: ${correctLetter}) ${correctText}`}
+            </div>
+            <div class="justification">📘 ${q.justification}</div>
+          </div>
+        `;
+      }
+
+      const isLast = (currentIndex === 19);
+      const nextButtonDisabled = !submitted;
+      const nextButtonText = isLast ? 'Finalizar Quiz' : 'Próxima';
+
+      dynamicArea.innerHTML = `
+        <div class="question-container">
+          <div class="question-text">${q.text}</div>
+          <div class="options" id="optionsContainer">
+            ${optionsHtml}
+          </div>
+          ${feedbackHtml}
+        </div>
+        <div class="actions">
+          <button id="nextButton" ${nextButtonDisabled ? 'disabled' : ''}>${nextButtonText}</button>
+        </div>
+      `;
+
+      // Atribuir eventos de clique nas opções (apenas se não submetida)
+      if (!submitted) {
+        document.querySelectorAll('.option-item').forEach(opt => {
+          opt.addEventListener('click', (e) => {
+            if (answerSubmitted[currentIndex]) return;
+            const idx = parseInt(opt.dataset.optIndex);
+            selectedOption = idx;
+            renderQuestion(); // re-render para destacar
+          });
+        });
+      }
+
+      const nextBtn = document.getElementById('nextButton');
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+          if (!submitted) return;
+          if (currentIndex === 19) {
+            finishQuiz();
+          } else {
+            currentIndex++;
+            selectedOption = null;
+            updateProgressUI();
+            renderQuestion();
+          }
+        });
+      }
+
+      // se não submetida, habilitar submit via clique na opção? Mas precisa de um botão "Responder"? 
+      // Conforme especificação: "Aluno só pode avançar após responder" e "Feedback imediato após cada resposta".
+      // Vamos implementar: ao clicar na opção já registra resposta e mostra feedback. (sem botão extra)
+      // Modificar: ao selecionar, já submete.
+      if (!submitted) {
+        document.querySelectorAll('.option-item').forEach(opt => {
+          opt.addEventListener('click', (e) => {
+            if (answerSubmitted[currentIndex]) return;
+            const idx = parseInt(opt.dataset.optIndex);
+            selectedOption = idx;
+            // Submete imediatamente
+            userAnswers[currentIndex] = idx;
+            answerSubmitted[currentIndex] = true;
+            renderQuestion(); // mostra feedback e botão habilitado
+          });
+        });
+      }
+
+      updateProgressUI();
+    }
+
+    function finishQuiz() {
+      quizCompleted = true;
+      const acertos = calculateScore();
+      const nota = acertos * 0.5;
+      const mensao = getMensao(acertos);
+      const aprovado = acertos >= 14;
+
+      updateProgressUI();
+
+      if (!aprovado) {
+        // reprovado: exibir mensagem e reiniciar após 2s?
+        dynamicArea.innerHTML = `
+          <div class="result-screen">
+            <div class="warning-message">❌ Você não atingiu a nota mínima (14 acertos).</div>
+            <p>Você acertou ${acertos} de 20. Nota: ${nota.toFixed(1)}</p>
+            <p>O quiz será reiniciado para nova tentativa.</p>
+            <div class="attempt-info">Tentativa atual: ${attemptCount}</div>
+          </div>
+        `;
+        // Reiniciar automaticamente
+        setTimeout(() => {
+          resetQuizForRetry();
+        }, 2500);
+        return;
+      }
+
+      // Aprovado: tela de resultado com botão PDF e Encerrar
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+      
+      // Montar lista de erros
+      let errosHtml = '';
+      for (let i=0; i<20; i++) {
+        if (userAnswers[i] !== questions[i].correct) {
+          errosHtml += `<li><strong>Q${i+1}:</strong> ${questions[i].text} <br> ✅ Correta: ${questions[i].options[questions[i].correct]}</li>`;
+        }
+      }
+
+      dynamicArea.innerHTML = `
+        <div class="result-screen">
+          <h2 style="color:#1e3a2f;">Resultado Final</h2>
+          <div class="score-badge">${acertos} / 20</div>
+          <p style="font-size:1.4rem; margin:5px 0;">Nota: ${nota.toFixed(1)}</p>
+          <div class="mensao">🏅 ${mensao}</div>
+          <div class="btn-group">
+            <button id="pdfButton" class="secondary-btn">📄 Gerar Relatório PDF</button>
+            <button id="encerrarButton" class="secondary-btn">🚪 Encerrar</button>
+          </div>
+          <div style="display:none;" id="reportData"
+            data-nome="${studentNameInput.value.trim()}"
+            data-turma="${classSelect.value}"
+            data-bimestre="${bimestreSelect.value}"
+            data-datahora="${dateStr}"
+            data-acertos="${acertos}"
+            data-nota="${nota.toFixed(1)}"
+            data-mensao="${mensao}"
+            data-erros="${encodeURIComponent(errosHtml)}">
+          </div>
+        </div>
+      `;
+
+      document.getElementById('pdfButton').addEventListener('click', gerarPDF);
+      document.getElementById('encerrarButton').addEventListener('click', ()=>{
+        window.close(); // pode não funcionar em alguns navegadores, alternativa: exibir mensagem
+        alert('Quiz encerrado. Você pode fechar a janela.');
+      });
+    }
+
+    function gerarPDF() {
+      const reportDiv = document.getElementById('reportData');
+      const nome = reportDiv.dataset.nome;
+      const turma = reportDiv.dataset.turma;
+      const bimestre = reportDiv.dataset.bimestre;
+      const datahora = reportDiv.dataset.datahora;
+      const acertos = reportDiv.dataset.acertos;
+      const nota = reportDiv.dataset.nota;
+      const mensao = reportDiv.dataset.mensao;
+      const errosHtml = decodeURIComponent(reportDiv.dataset.erros);
+
+      const printWindow = window.open('', '_blank', 'width=800,height=900');
+      printWindow.document.write(`
+        <html><head><title>Relatório - Questões Ambientais</title>
+        <style>body{font-family:Arial;padding:30px; max-width:800px; margin:auto;} h1{color:#1e3a2f} li{margin:12px 0;}</style>
+        </head><body>
+        <h1>Relatório de Desempenho</h1>
+        <p><strong>Nome:</strong> ${nome}</p>
+        <p><strong>Turma:</strong> ${turma} &nbsp; | &nbsp;<strong>Bimestre:</strong> ${bimestre}</p>
+        <p><strong>Data/Hora:</strong> ${datahora}</p>
+        <p><strong>Acertos:</strong> ${acertos} / 20 &nbsp; | &nbsp;<strong>Nota:</strong> ${nota}</p>
+        <p><strong>Mensão:</strong> ${mensao}</p>
+        <h3>📋 Questões erradas</h3>
+        <ul>${errosHtml || '<li>Nenhum erro! Parabéns!</li>'}</ul>
+        <p style="margin-top:40px;">--- Fim do relatório ---</p>
+        </body></html>
+      `);
+      printWindow.document.close();
+      printWindow.focus();
+      printWindow.print();
+    }
+
+    // Inicialização
+    function initQuiz() {
+      resetQuizForRetry(); // primeira tentativa
+      // listener para nome obrigatório antes de começar, mas render já bloqueia
+      studentNameInput.addEventListener('input', ()=>{
+        if (!quizCompleted && currentIndex===0 && !answerSubmitted[0]) renderQuestion();
+      });
+    }
+
+    initQuiz();
+  })();
+</script>
+</body>
+</html>
