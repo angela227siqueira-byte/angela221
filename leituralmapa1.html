@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Território e Fronteira - Material de Leitura</title>
+    <style>
+        /* ========== RESET E ESTILOS BASE ========== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, Helvetica, system-ui, sans-serif;
+            background: #f0f4f8;
+            color: #1a2b3c;
+            line-height: 1.7;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.2s;
+        }
+
+        /* Container principal com margens reduzidas para melhor aproveitamento */
+        .app-container {
+            max-width: 95%;
+            margin: 0 auto;
+            width: 100%;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 30px 2.5%;
+            flex: 1;
+        }
+
+        /* ========== TELA DE IDENTIFICAÇÃO ========== */
+        .identificacao-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .card-identificacao {
+            background: #fafbfc;
+            border-radius: 20px;
+            padding: 32px 30px;
+            border: 1px solid #e2eaf2;
+        }
+
+        .card-identificacao h2 {
+            margin-bottom: 28px;
+            text-align: center;
+            color: #1e4b6e;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-size: 1.05rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #cfdde9;
+            border-radius: 16px;
+            background: white;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: #1e4b6e;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(30, 75, 110, 0.15);
+        }
+
+        .btn-iniciar {
+            background: #1e4b6e;
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 16px;
+        }
+
+        .btn-iniciar:disabled {
+            background: #b8ccdd;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .btn-iniciar:not(:disabled):hover {
+            background: #123a52;
+        }
+
+        /* ========== MATERIAL DE LEITURA ========== */
+        .material-leitura {
+            display: none;
+        }
+
+        /* Barra superior - progresso e ferramentas */
+        .top-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            gap: 18px;
+        }
+
+        .progresso-container {
+            flex: 2;
+            min-width: 220px;
+        }
+
+        .pagina-indicador {
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 1.15rem;
+            color: #1e4b6e;
+        }
+
+        .barra-progresso-bg {
+            background: #dee7ef;
+            height: 12px;
+            border-radius: 40px;
+            overflow: hidden;
+        }
+
+        .barra-progresso-preenchimento {
+            background: #1e4b6e;
+            height: 100%;
+            width: 11.11%;
+            border-radius: 40px;
+            transition: width 0.25s ease;
+        }
+
+        .ferramentas-rapidas {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-icon {
+            background: white;
+            border: 1.5px solid #cddae5;
+            border-radius: 40px;
+            padding: 10px 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.95rem;
+        }
+
+        .btn-icon:hover {
+            background: #eef3f8;
+            border-color: #9bb7d0;
+        }
+
+        .btn-icon.velocidade-ativa,
+        .btn-icon.fonte-ativa {
+            background: #1e4b6e;
+            color: white;
+            border-color: #1e4b6e;
+        }
+
+        /* ========== PAINEL DE ÁUDIO ========== */
+        .audio-painel {
+            background: #e8f0f7;
+            padding: 18px 22px;
+            border-radius: 50px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            margin: 20px 0 25px;
+        }
+
+        .audio-botoes {
+            display: flex;
+            gap: 14px;
+        }
+
+        .btn-audio {
+            background: white;
+            border: none;
+            border-radius: 60px;
+            padding: 14px 26px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+            cursor: pointer;
+            border: 1px solid #cbdae6;
+            transition: 0.1s;
+            min-width: 100px;
+        }
+
+        .btn-audio:hover {
+            background: #f5f9fc;
+        }
+
+        .btn-audio.velocidade-ativa {
+            background: #1e4b6e;
+            color: white;
+            border-color: #123a52;
+        }
+
+        /* ========== CONTEÚDO DA PÁGINA ========== */
+        .conteudo-pagina {
+            margin: 30px 0 40px;
+            transition: font-size 0.2s;
+        }
+
+        h2 {
+            margin-bottom: 22px;
+            color: #0e2e44;
+            border-left: 5px solid #1e4b6e;
+            padding-left: 20px;
+        }
+
+        h3 {
+            margin: 28px 0 16px;
+            color: #1a4d6b;
+        }
+
+        p {
+            margin-bottom: 1.4rem;
+        }
+
+        figure {
+            margin: 30px 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 15px 0;
+            border-radius: 16px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2eaf1;
+        }
+
+        figcaption {
+            font-style: italic;
+            text-align: center;
+            color: #3a5f7a;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        /* Tamanhos de fonte - 4 níveis */
+        /* Nível 1 - Normal (padrão) */
+        .fonte-normal .conteudo-pagina { font-size: 16px; }
+        .fonte-normal h2 { font-size: 28px; }
+        .fonte-normal h3 { font-size: 22px; }
+        .fonte-normal figcaption { font-size: 14px; }
+
+        /* Nível 2 - 1.5x */
+        .fonte-1-5 .conteudo-pagina { font-size: 24px; }
+        .fonte-1-5 h2 { font-size: 42px; }
+        .fonte-1-5 h3 { font-size: 33px; }
+        .fonte-1-5 figcaption { font-size: 21px; }
+
+        /* Nível 3 - 2.0x */
+        .fonte-2-0 .conteudo-pagina { font-size: 32px; }
+        .fonte-2-0 h2 { font-size: 56px; }
+        .fonte-2-0 h3 { font-size: 44px; }
+        .fonte-2-0 figcaption { font-size: 28px; }
+
+        /* Nível 4 - 3.0x */
+        .fonte-3-0 .conteudo-pagina { font-size: 48px; }
+        .fonte-3-0 h2 { font-size: 84px; }
+        .fonte-3-0 h3 { font-size: 66px; }
+        .fonte-3-0 figcaption { font-size: 42px; }
+
+        /* ========== NAVEGAÇÃO MANUAL ========== */
+        .navegacao-manual {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 25px 0 10px;
+        }
+
+        .btn-nav {
+            background: white;
+            border: 2px solid #1e4b6e;
+            color: #1e4b6e;
+            padding: 14px 26px;
+            border-radius: 60px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.3;
+            border-color: #a1b7c9;
+            color: #6b8da3;
+            cursor: default;
+        }
+
+        .btn-nav:not(:disabled):hover {
+            background: #1e4b6e;
+            color: white;
+        }
+
+        /* ========== ENCERRAMENTO ========== */
+        .encerramento-msg {
+            text-align: center;
+            margin: 30px 0 10px;
+            padding: 20px;
+            background: #e2f0e8;
+            border-radius: 60px;
+        }
+
+        .btn-reiniciar {
+            background: #2e6b4b;
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 18px;
+            border: 1px solid #1f5239;
+        }
+
+        .btn-reiniciar:hover {
+            background: #1f5239;
+        }
+
+        /* ========== RESPONSIVIDADE ========== */
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .app-container { 
+                padding: 18px 3%; 
+                max-width: 100%;
+            }
+            .btn-audio { padding: 12px 16px; min-width: 80px; font-size: 1rem; }
+            .btn-nav { padding: 12px 18px; font-size: 1rem; }
+            .audio-painel { border-radius: 30px; padding: 15px; }
+            .ferramentas-rapidas { justify-content: center; }
+            
+            /* Ajustes de fonte para mobile */
+            .fonte-normal h2 { font-size: 24px; }
+            .fonte-1-5 h2 { font-size: 36px; }
+            .fonte-2-0 h2 { font-size: 48px; }
+            .fonte-3-0 h2 { font-size: 60px; }
+        }
+
+        @media (max-width: 480px) {
+            .app-container { padding: 15px 2.5%; }
+            .btn-audio { min-width: 70px; padding: 10px 12px; }
+            .btn-icon { padding: 8px 12px; font-size: 0.9rem; }
+            .top-bar { flex-direction: column; align-items: stretch; }
+        }
+
+        /* ========== GRUPO DE BOTÕES DE FONTE ========== */
+        .fonte-controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .fonte-controls .btn-icon {
+            padding: 8px 14px;
+        }
+
+        #statusExtra {
+            font-size: 0.95rem;
+            color: #4a6f8a;
+        }
+    </style>
+</head>
+<body class="fonte-normal">
+<div class="app-container">
+    <!-- ========== TELA DE IDENTIFICAÇÃO ========== -->
+    <div id="telaIdentificacao" class="identificacao-wrapper">
+        <div class="card-identificacao">
+            <h2>📚 Território e Fronteira</h2>
+            <p style="text-align: center; margin-bottom: 28px; color: #3a5f7a;">Material de apoio para concurso de nível superior</p>
+            <div class="form-group">
+                <label>Nome completo *</label>
+                <input type="text" id="nomeAluno" placeholder="Digite seu nome completo" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label>Turma</label>
+                <select id="turmaSelect">
+                    <option value="Turma A">Turma A</option>
+                    <option value="Turma B">Turma B</option>
+                    <option value="Turma C">Turma C</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Bimestre</label>
+                <select id="bimestreSelect">
+                    <option value="1º Bimestre">1º Bimestre</option>
+                    <option value="2º Bimestre">2º Bimestre</option>
+                    <option value="3º Bimestre">3º Bimestre</option>
+                    <option value="4º Bimestre">4º Bimestre</option>
+                </select>
+            </div>
+            <button id="btnIniciarLeitura" class="btn-iniciar" disabled>▶ Iniciar Leitura</button>
+        </div>
+    </div>
+
+    <!-- ========== MATERIAL DE LEITURA (OCULTO INICIALMENTE) ========== -->
+    <div id="materialLeitura" class="material-leitura">
+        <!-- Barra superior -->
+        <div class="top-bar">
+            <div class="progresso-container">
+                <div class="pagina-indicador" id="indicadorPagina">Página 1 de 9</div>
+                <div class="barra-progresso-bg">
+                    <div class="barra-progresso-preenchimento" id="barraProgresso" style="width: 11.11%;"></div>
+                </div>
+            </div>
+            <div class="ferramentas-rapidas">
+                <button id="btnTelaCheia" class="btn-icon" title="Alternar tela cheia">⛶ Tela Cheia</button>
+                <div class="fonte-controls">
+                    <button id="btnFonteNormal" class="btn-icon fonte-ativa">A</button>
+                    <button id="btnFonte15" class="btn-icon">A+</button>
+                    <button id="btnFonte20" class="btn-icon">A++</button>
+                    <button id="btnFonte30" class="btn-icon">A+++</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Painel de áudio -->
+        <div class="audio-painel">
+            <div class="audio-botoes">
+                <button id="btnPlay" class="btn-audio">▶️ Play</button>
+                <button id="btnStop" class="btn-audio">⏹️ Stop</button>
+            </div>
+            <div class="audio-botoes">
+                <button id="btnVelNormal" class="btn-audio velocidade-ativa">1.0x</button>
+                <button id="btnVelRapido" class="btn-audio">1.5x</button>
+            </div>
+        </div>
+
+        <!-- Conteúdo dinâmico da página -->
+        <div id="conteudoPagina" class="conteudo-pagina"></div>
+
+        <!-- Navegação manual -->
+        <div class="navegacao-manual">
+            <button id="btnAnterior" class="btn-nav" disabled>← Página Anterior</button>
+            <span id="statusExtra"></span>
+            <button id="btnProximo" class="btn-nav">Próxima Página →</button>
+        </div>
+
+        <!-- Mensagem de encerramento (última página) -->
+        <div id="encerramentoBox" style="display: none;" class="encerramento-msg">
+            <p style="font-size: 1.3rem; font-weight: bold;">🎉 Você concluiu o material!</p>
+            <p style="margin-top: 10px;">Parabéns pela leitura. Desejamos sucesso nos seus estudos.</p>
+            <button id="btnReiniciar" class="btn-reiniciar">⟲ Reiniciar Leitura</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function(){
+        "use strict";
+
+        // ---------- CONTEÚDO DAS 9 PÁGINAS (COM IMAGENS CORRIGIDAS) ----------
+        const conteudoPaginas = [
+            // PÁGINA 1 - Introdução
+            `<h2>Introdução</h2>
+            <p>O território é uma das categorias fundamentais da análise geográfica. Longe de ser um mero suporte físico ou um palco vazio onde os fenômenos acontecem, ele é produzido, vivido, transformado e disputado por pessoas. Como lembra o geógrafo Milton Santos, o território não é apenas um conjunto de coisas naturais, mas "um híbrido entre a materialidade herdada e as relações sociais que continuamente a recriam" (SANTOS, 1996). Em outras palavras, o território é resultado da ação humana sobre o espaço.</p>
+            <figure><img src="https://www.brasildefato.com.br/wp-content/uploads/2024/09/image_processing20200201-29235-r2sqzt.jpg" alt="Milton Santos" onerror="this.src='https://placehold.co/800x600/e8f0f7/1e4b6e?text=Milton+Santos'"><figcaption>Figura 1 - Milton Santos</figcaption></figure>
+            <p>Neste material, vamos explorar dois processos centrais que moldam o território e as fronteiras – entendidas não apenas como limites políticos, mas como zonas de contato, tensão e circulação. O primeiro deles são as correntes migratórias e a produção e circulação de mercadorias, que deixam marcas profundas na paisagem. O segundo é a produção e ocupação do espaço por meio da análise e elaboração de mapas temáticos – ferramentas que não criam o território, mas contam a história de como ele foi ocupado e como essa ocupação se manifesta nos dias atuais.</p>
+            <p><strong>A ideia central que atravessa estas páginas é simples, mas poderosa: as pessoas produzem o território; os mapas contam essa história.</strong></p>`,
+
+            // PÁGINA 2 - 1.1 As migrações históricas
+            `<h2>Tema 1 – Correntes migratórias, circulação de mercadorias e suas marcas na paisagem</h2>
+            <p>O deslocamento de pessoas e coisas é tão antigo quanto a própria humanidade. No entanto, a forma como esses deslocamentos ocorrem, sua intensidade, direção e consequências variaram profundamente ao longo da história.</p>
+            <h3>1.1 As migrações históricas: a formação do mundo moderno</h3>
+            <p>As grandes migrações históricas moldaram o planeta como o conhecemos. Podemos destacar pelo menos quatro processos fundamentais:</p>
+            <p><strong>A diáspora africana forçada</strong> – Entre os séculos XVI e XIX, cerca de 12 a 15 milhões de africanos foram sequestrados de seus territórios de origem e transportados à força para as Américas, no que ficou conhecido como tráfico atlântico de pessoas escravizadas. Esse deslocamento compulsório não apenas desorganizou sociedades inteiras na África, como também foi a base da economia colonial nas Américas. As marcas dessa migração forçada estão na paisagem até hoje: plantações de cana, café e algodão; cidades portuárias como Salvador, Rio de Janeiro, Recife e Luanda; e, sobretudo, na composição étnica, cultural e social de países como Brasil, Estados Unidos, Colômbia e Haiti.</p>
+            <figure><img src="https://www.coladaweb.com/files/movimentos-migratorios1.jpg" alt="Correntes migratórias" onerror="this.src='https://placehold.co/800x600/e8f0f7/1e4b6e?text=Correntes+Migratórias'"><figcaption>Figura 2 - Correntes Migratórias</figcaption></figure>
+            <p><strong>A migração europeia para as Américas (séculos XIX e XX)</strong> – Entre 1820 e 1930, cerca de 50 milhões de europeus deixaram o Velho Mundo rumo às Américas. Italianos, portugueses, espanhóis, alemães, poloneses, entre outros, fugiam da pobreza, da fome, das perseguições religiosas e das guerras que assolavam a Europa. Essa corrente migratória transformou profundamente a paisagem de países como Estados Unidos, Argentina, Uruguai e Brasil.</p>`,
+
+            // PÁGINA 3 - 1.2 As migrações contemporâneas
+            `<h3>1.2 As migrações contemporâneas: novos contextos, velhos desafios</h3>
+            <p>No mundo atual, as migrações não cessaram. Mudaram de direção, de escala e de motivação, mas continuam sendo uma força central na produção do território.</p>
+            <figure><img src=" https://migramundo.com/wp-content/uploads/2023/10/gaza_ziad-taleb_onunews-1068x484.jpg" alt="Refugiados" onerror="this.src='https://placehold.co/800x600/e8f0f7/1e4b6e?text=Refugiados'"><figcaption>Figura 3 - Refugiados forçados pela guerra</figcaption></figure>
+            <p><strong>Refugiados e deslocados forçados</strong> – Segundo dados do ACNUR, no final de 2023 mais de 110 milhões de pessoas estavam deslocadas à força no mundo – o maior número já registrado. Guerras civis (como na Síria, no Sudão e na Ucrânia), perseguições étnicas e religiosas (como a dos rohingyas em Mianmar), e a violência generalizada têm produzido fluxos migratórios massivos.</p>
+            <p><strong>Migração econômica sul-norte</strong> – Milhões de pessoas deixam países pobres ou em desenvolvimento em busca de melhores condições de vida nos países ricos. O fluxo de latino-americanos para os Estados Unidos, de africanos para a Europa, de sul-asiáticos para o Golfo Pérsico são exemplos clássicos.</p>
+            <p><strong>Migrações climáticas</strong> – Um fenômeno cada vez mais relevante é o deslocamento de populações em razão de desastres ambientais e mudanças climáticas. Secas prolongadas, elevação do nível do mar, eventos climáticos extremos têm forçado pessoas a deixarem suas casas.</p>`,
+
+            // PÁGINA 4 - 1.3 A circulação de mercadorias
+            `<h3>1.3 A circulação de mercadorias e suas marcas na paisagem</h3>
+            <p>Se as pessoas se deslocam, as coisas também se deslocam – e em volumes e velocidades jamais vistos. A circulação de mercadorias produz paisagens específicas que merecem atenção.</p>
+            <p><strong>Portos, aeroportos e centros logísticos</strong> – A paisagem das grandes cidades contemporâneas é marcada por zonas portuárias, aeroportos internacionais, centros de distribuição e armazéns logísticos. Esses lugares são nós em redes globais que conectam os territórios.</p>
+            <figure><img src="https://cbfa.com.br/wp-content/uploads/2022/11/importancia-do-modal-ferroviario-brasileiro.jpg" alt="Ferrovias" onerror="this.src='https://placehold.co/800x600/e8f0f7/1e4b6e?text=Ferrovias'"><figcaption>Figura 4 - Ferrovias</figcaption></figure>
+            <p><strong>Rodovias, ferrovias e dutos</strong> – As vias de circulação não apenas conectam territórios – elas os transformam. Rodovias como a BR-163 (Cuiabá-Santarém) abrem novas frentes de expansão agrícola na Amazônia. Ferrovias como a Carajás transportam minério do Pará até o Maranhão, transformando a paisagem por onde passam.</p>
+            <p><strong>Zonas de livre comércio e enclaves industriais</strong> – A circulação de mercadorias também produz espaços específicos de produção e comercialização.</p>
+            <p><strong>O comércio informal e as feiras</strong> – Nem toda circulação de mercadorias acontece sob o controle estrito do Estado. O comércio informal, as feiras livres, os camelódromos também produzem paisagens.</p>`,
+
+            // PÁGINA 5 - 2.1 Conceitos fundamentais
+            `<h2>Tema 2 – Produção e ocupação do espaço por meio da análise e elaboração de mapas temáticos</h2>
+            <p>Se o território é produzido pelas pessoas que se deslocam e pelas mercadorias que circulam, como podemos compreender e representar essa produção? É aqui que entram os mapas temáticos.</p>
+            <figure><img src="https://i.ytimg.com/vi/ewUda3H3Kew/maxresdefault.jpg" alt="Mapas temáticos" onerror="this.src='https://placehold.co/800x600/e8f0f7/1e4b6e?text=Mapas+Temáticos'"><figcaption>Figura 5 - Mapas temáticos</figcaption></figure>
+            <p>Como afirma o cartógrafo francês Jacques Bertin, "mapa não é apenas um desenho. É uma linguagem."</p>
+            <h3>2.1 Conceitos fundamentais da Cartografia Temática</h3>
+            <p><strong>Escala cartográfica</strong> – A escala é a relação entre a distância no mapa e a distância real na superfície terrestre. Pode ser expressa numericamente (1:50.000) ou graficamente (uma barra graduada).</p>
+            <figure><img src="https://blogdoenem.com.br/wp-content/uploads/2017/03/Sem-titulo.png" alt="Tipos de escala" onerror="this.src='https://placehold.co/800x600/e8f0f7/1e4b6e?text=Tipos+de+Escala'"><figcaption>Figura 6 - Tipos de Escala</figcaption></figure>`,
+
+            // PÁGINA 6 - 2.2 Tipos de mapas temáticos
+            `<p><strong>Projeção cartográfica</strong> – A superfície da Terra é curva (um geoide). Representá-la em um plano exige transformações matemáticas – as projeções. Toda projeção distorce alguma propriedade: área, forma, distância ou direção.</p>
+            <figure><img src="https://static.todamateria.com.br/upload/pr/oj/projea_a_es_1.jpg" alt="Projeções cartográficas" onerror="this.src='https://placehold.co/800x600/e8f0f7/1e4b6e?text=Projeções+Cartográficas'"><figcaption>Figura 7 - Projeções Cartográficas</figcaption></figure>
+            <p><strong>Legenda e símbolos</strong> – A legenda é a chave de leitura do mapa. Ela explica o que cada cor, cada traço, cada ícone significa.</p>
+            <figure><img src="https://adenilsongiovanini.com.br/blog/wp-content/uploads/2021/06/legenda-1024x725.png" alt="Legendas" onerror="this.src='https://placehold.co/800x600/e8f0f7/1e4b6e?text=Legendas'"><figcaption>Figura 8 - Legendas</figcaption></figure>
+            <h3>2.2 Tipos de mapas temáticos</h3>
+            <p><strong>Mapas de coropléticos</strong> – São mapas que usam cores ou hachuras para representar a intensidade de um fenômeno por unidade de área.</p>
+            <figure><img src="https://www.researchgate.net/profile/Frederico-Ramos/publication/349553738/figure/fig6/AS:1141203215089666@1649095457237/a-A-esquerda-Mapa-coropletico-representando-os-distritos-de-Municipio-de-Sao-Paulo.png" alt="Mapa coroplético" onerror="this.src='https://placehold.co/800x600/e8f0f7/1e4b6e?text=Mapa+Cloroplético'"><figcaption>Figura 9 - Mapa cloroplético</figcaption></figure>`,
+
+            // PÁGINA 7 - 2.3 A elaboração de mapas temáticos
+            `<p><strong>Mapas de pontos</strong> – Cada ponto no mapa representa uma quantidade fixa do fenômeno. Os mapas de pontos são eficazes para mostrar concentrações e vazios demográficos.</p>
+            <p><strong>Mapas de fluxos</strong> – Representam movimentos: migrações, circulação de mercadorias, rotas de transporte. Usam setas de diferentes espessuras.</p>
+            <p><strong>Mapas de isolinhas</strong> – Usam linhas que conectam pontos de igual valor. As curvas de nível (altitude) são o exemplo mais conhecido.</p>
+            <figure><img src="https://fotos.web.sapo.io/i/B3617d975/22022933_Fz86e.jpeg" alt="Mapa de isolinhas" onerror="this.src='https://placehold.co/800x600/e8f0f7/1e4b6e?text=Isolinhas'"><figcaption>Figura 10 - Exemplos de mapas isolinhas</figcaption></figure>
+            <p><strong>Cartogramas</strong> – Mapas em que o tamanho das unidades territoriais é distorcido proporcionalmente ao valor do fenômeno.</p>
+            <figure><img src=" https://image.slidesharecdn.com/aula04-161015015317/85/Cartogramas-Cartografia-Tematica-69-320.jpg" alt="Cartograma da Ásia" onerror="this.src='https://placehold.co/800x600/e8f0f7/1e4b6e?text=Cartograma'"><figcaption>Figura 11 - Cartograma populacional</figcaption></figure>
+            <h3>2.3 A elaboração de mapas temáticos: do dado ao mapa</h3>
+            <p><strong>Coleta e tratamento dos dados</strong> – Todo mapa temático parte de dados. Esses dados podem vir de censos (IBGE), pesquisas específicas, sensoriamento remoto, GPS ou fontes administrativas.</p>
+            <p><strong>Classificação dos dados</strong> – Os dados brutos precisam ser agrupados em classes. Métodos: intervalos iguais, quantis, quebras naturais (Jenks) e quebras personalizadas.</p>`,
+
+            // PÁGINA 8 - 2.4 Análise crítica de mapas
+            `<p><strong>Escolha da paleta de cores</strong> – Cores não são apenas enfeite. Elas carregam significados culturais e psicológicos. Paletas: sequenciais, divergentes e qualitativas.</p>
+            <p><strong>Título, fonte, data, autoria</strong> – Um mapa completo precisa informar: o que está sendo mostrado (título), onde, quando, como (fonte dos dados) e quem fez (autoria).</p>
+            <h3>2.4 Análise crítica de mapas: o mapa como linguagem</h3>
+            <p>Embora o foco deste material seja nos conceitos básicos, é importante ter em mente que nenhum mapa é neutro. Como alerta o geógrafo britânico John Brian Harley, os mapas são "discursos sobre o poder". Eles podem:</p>
+            <ul style="margin-left: 25px; margin-bottom: 20px;">
+                <li>Ocultar ou minimizar certos fenômenos, ao escolher determinada classificação ou projeção;</li>
+                <li>Exagerar ou distorcer outros, ao usar cores chamativas ou escalas inadequadas;</li>
+                <li>Reforçar narrativas oficiais sobre o território, silenciando vozes alternativas;</li>
+                <li>Naturalizar divisões que são, na verdade, construções históricas e políticas.</li>
+            </ul>
+            <p>O estudante de nível superior deve desenvolver a habilidade de ler o mapa além do mapa – enxergar as escolhas e os interesses que estão por trás de cada representação cartográfica.</p>`,
+
+            // PÁGINA 9 - Encerramento
+            `<h2>Encerramento</h2>
+            <p>Chegamos ao fim deste percurso. Retomemos os fios que tecemos.</p>
+            <p>O território, vimos, não é um dado da natureza. É uma construção social, histórica e política. Ele é produzido por pessoas que se deslocam – seja à força, como nos tráficos de pessoas escravizadas e nos deslocamentos contemporâneos de refugiados; seja por vontade própria, em busca de melhores condições de vida. Ele é produzido também por mercadorias que circulam, deixando marcas na paisagem: portos, rodovias, zonas francas, feiras e mercados.</p>
+            <p>As migrações, antigas e atuais, são uma força motriz dessa produção do território. As marcas que deixam – na demografia, na cultura, na economia, na paisagem – são o testemunho vivo da ação humana sobre o espaço.</p>
+            <p>Os mapas temáticos, por fim, não criam o território. Eles contam a história dessa produção. Com suas escalas, projeções, legendas, cores e símbolos, eles traduzem em linguagem cartográfica a complexidade da ocupação humana. E, ao fazer isso, tornam-se eles próprios agentes na produção do conhecimento sobre o território.</p>
+            <p>Como afirmou o geógrafo brasileiro Milton Santos, <strong>"o território não é apenas o chão que se pisa. É o chão que se pensa".</strong> E pensar o território – suas migrações, suas circulações, suas representações – é o primeiro passo para agir sobre ele com consciência, responsabilidade e compromisso com a justiça espacial.</p>`
+        ];
+
+        // ---------- VARIÁVEIS GLOBAIS ----------
+        let paginaAtual = 0;
+        const totalPaginas = 9;
+        
+        // Elementos DOM
+        const telaIdent = document.getElementById('telaIdentificacao');
+        const materialDiv = document.getElementById('materialLeitura');
+        const inputNome = document.getElementById('nomeAluno');
+        const btnIniciar = document.getElementById('btnIniciarLeitura');
+        const conteudoDiv = document.getElementById('conteudoPagina');
+        const indicadorPagina = document.getElementById('indicadorPagina');
+        const barraProgresso = document.getElementById('barraProgresso');
+        const btnAnterior = document.getElementById('btnAnterior');
+        const btnProximo = document.getElementById('btnProximo');
+        const btnPlay = document.getElementById('btnPlay');
+        const btnStop = document.getElementById('btnStop');
+        const btnVelNormal = document.getElementById('btnVelNormal');
+        const btnVelRapido = document.getElementById('btnVelRapido');
+        const btnTelaCheia = document.getElementById('btnTelaCheia');
+        const encerramentoBox = document.getElementById('encerramentoBox');
+        const btnReiniciar = document.getElementById('btnReiniciar');
+
+        // Botões de fonte (4 níveis)
+        const btnFonteNormal = document.getElementById('btnFonteNormal');
+        const btnFonte15 = document.getElementById('btnFonte15');
+        const btnFonte20 = document.getElementById('btnFonte20');
+        const btnFonte30 = document.getElementById('btnFonte30');
+
+        // Áudio
+        let synth = window.speechSynthesis;
+        let utterance = null;
+        let audioAtivo = false;
+        let velocidadeAtual = 1.0;
+        let autoAvancoTimer = null;
+        let estaLendo = false;
+
+        // ---------- FUNÇÕES AUXILIARES ----------
+        function pararAudio(total = true) {
+            if (synth) {
+                synth.cancel();
+            }
+            if (autoAvancoTimer) {
+                clearTimeout(autoAvancoTimer);
+                autoAvancoTimer = null;
+            }
+            utterance = null;
+            estaLendo = false;
+            audioAtivo = false;
+        }
+
+        function resetarAutoAvanco() {
+            if (autoAvancoTimer) {
+                clearTimeout(autoAvancoTimer);
+                autoAvancoTimer = null;
+            }
+        }
+
+        function atualizarUI() {
+            const numPagina = paginaAtual + 1;
+            indicadorPagina.textContent = `Página ${numPagina} de ${totalPaginas}`;
+            const percentual = (numPagina / totalPaginas) * 100;
+            barraProgresso.style.width = percentual + '%';
+            
+            btnAnterior.disabled = (paginaAtual === 0);
+            
+            if (paginaAtual === totalPaginas - 1) {
+                btnProximo.textContent = 'Encerrar ✓';
+                encerramentoBox.style.display = 'block';
+            } else {
+                btnProximo.textContent = 'Próxima Página →';
+                encerramentoBox.style.display = 'none';
+            }
+            
+            conteudoDiv.innerHTML = conteudoPaginas[paginaAtual];
+        }
+
+        function iniciarLeitura() {
+            pararAudio();
+            
+            const textoParaLer = conteudoDiv.textContent || conteudoDiv.innerText;
+            if (!textoParaLer.trim()) return;
+            
+            utterance = new SpeechSynthesisUtterance(textoParaLer);
+            utterance.lang = 'pt-BR';
+            utterance.rate = velocidadeAtual;
+            
+            const vozes = synth.getVoices();
+            const vozBrasil = vozes.find(v => v.lang === 'pt-BR' && (v.name.includes('Google') || v.name.includes('Maria'))) || 
+                              vozes.find(v => v.lang === 'pt-BR');
+            if (vozBrasil) utterance.voice = vozBrasil;
+            
+            utterance.onstart = () => {
+                estaLendo = true;
+                audioAtivo = true;
+            };
+            
+            utterance.onend = () => {
+                estaLendo = false;
+                if (audioAtivo) {
+                    autoAvancoTimer = setTimeout(() => {
+                        if (paginaAtual < totalPaginas - 1) {
+                            paginaAtual++;
+                            atualizarUI();
+                            iniciarLeitura();
+                        } else {
+                            audioAtivo = false;
+                            autoAvancoTimer = null;
+                        }
+                        autoAvancoTimer = null;
+                    }, 3000);
+                }
+            };
+            
+            utterance.onerror = () => {
+                estaLendo = false;
+                audioAtivo = false;
+            };
+            
+            synth.speak(utterance);
+        }
+
+        function navegarPara(delta) {
+            pararAudio();
+            audioAtivo = false;
+            resetarAutoAvanco();
+            
+            const novaPagina = paginaAtual + delta;
+            if (novaPagina >= 0 && novaPagina < totalPaginas) {
+                paginaAtual = novaPagina;
+                atualizarUI();
+            }
+        }
+
+        // Função para mudar tamanho da fonte
+        function setFonteClasse(classe) {
+            document.body.classList.remove('fonte-normal', 'fonte-1-5', 'fonte-2-0', 'fonte-3-0');
+            document.body.classList.add(classe);
+            
+            // Atualizar botões ativos
+            btnFonteNormal.classList.remove('fonte-ativa');
+            btnFonte15.classList.remove('fonte-ativa');
+            btnFonte20.classList.remove('fonte-ativa');
+            btnFonte30.classList.remove('fonte-ativa');
+            
+            if (classe === 'fonte-normal') btnFonteNormal.classList.add('fonte-ativa');
+            else if (classe === 'fonte-1-5') btnFonte15.classList.add('fonte-ativa');
+            else if (classe === 'fonte-2-0') btnFonte20.classList.add('fonte-ativa');
+            else if (classe === 'fonte-3-0') btnFonte30.classList.add('fonte-ativa');
+        }
+
+        // ---------- EVENT LISTENERS ----------
+        inputNome.addEventListener('input', () => {
+            btnIniciar.disabled = !inputNome.value.trim();
+        });
+
+        btnIniciar.addEventListener('click', () => {
+            telaIdent.style.display = 'none';
+            materialDiv.style.display = 'block';
+            paginaAtual = 0;
+            atualizarUI();
+            pararAudio();
+        });
+
+        // Controles de áudio
+        btnPlay.addEventListener('click', () => {
+            pararAudio();
+            audioAtivo = true;
+            iniciarLeitura();
+        });
+
+        btnStop.addEventListener('click', () => {
+            pararAudio();
+            audioAtivo = false;
+        });
+
+        btnVelNormal.addEventListener('click', () => {
+            velocidadeAtual = 1.0;
+            btnVelNormal.classList.add('velocidade-ativa');
+            btnVelRapido.classList.remove('velocidade-ativa');
+            if (estaLendo) {
+                pararAudio();
+                audioAtivo = true;
+                iniciarLeitura();
+            }
+        });
+
+        btnVelRapido.addEventListener('click', () => {
+            velocidadeAtual = 1.5;
+            btnVelRapido.classList.add('velocidade-ativa');
+            btnVelNormal.classList.remove('velocidade-ativa');
+            if (estaLendo) {
+                pararAudio();
+                audioAtivo = true;
+                iniciarLeitura();
+            }
+        });
+
+        // Navegação manual
+        btnAnterior.addEventListener('click', () => {
+            navegarPara(-1);
+        });
+
+        btnProximo.addEventListener('click', () => {
+            if (paginaAtual === totalPaginas - 1) {
+                if (confirm('Deseja reiniciar o material?')) {
+                    paginaAtual = 0;
+                    atualizarUI();
+                    pararAudio();
+                    audioAtivo = false;
+                }
+            } else {
+                navegarPara(1);
+            }
+        });
+
+        // Tela cheia
+        btnTelaCheia.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                btnTelaCheia.textContent = '✕ Sair da Tela Cheia';
+            } else {
+                document.exitFullscreen();
+                btnTelaCheia.textContent = '⛶ Tela Cheia';
+            }
+        });
+
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                btnTelaCheia.textContent = '⛶ Tela Cheia';
+            }
+        });
+
+        // Controles de fonte (4 níveis)
+        btnFonteNormal.addEventListener('click', () => setFonteClasse('fonte-normal'));
+        btnFonte15.addEventListener('click', () => setFonteClasse('fonte-1-5'));
+        btnFonte20.addEventListener('click', () => setFonteClasse('fonte-2-0'));
+        btnFonte30.addEventListener('click', () => setFonteClasse('fonte-3-0'));
+
+        // Reiniciar
+        btnReiniciar.addEventListener('click', () => {
+            paginaAtual = 0;
+            atualizarUI();
+            pararAudio();
+            audioAtivo = false;
+        });
+
+        // Garantir carregamento das vozes
+        if (synth) {
+            synth.getVoices();
+        }
+
+        // Inicialização
+        atualizarUI();
+        setFonteClasse('fonte-normal');
+    })();
+</script>
+</body>
+</html>
