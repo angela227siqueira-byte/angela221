@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Quiz - Mapas Temáticos e Análise de Territórios</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a5f7a, #0d3b4f);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #0d3b4f;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.2rem;
+        }
+
+        .progress-bar-container {
+            background: #e0e0e0;
+            height: 8px;
+            width: 100%;
+        }
+
+        .progress-bar {
+            background: #28a745;
+            height: 8px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .main-content {
+            padding: 30px;
+            min-height: 450px;
+        }
+
+        .name-screen, .quiz-screen, .result-screen {
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .name-form {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .name-form input {
+            width: 80%;
+            max-width: 300px;
+            padding: 12px;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        h2 {
+            color: #0d3b4f;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #0d3b4f;
+            line-height: 1.4;
+        }
+
+        .options {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .options li {
+            margin: 10px 0;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .options li:hover {
+            background: #e0e0e0;
+            transform: translateX(5px);
+        }
+
+        .options li.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .options li.disabled:hover {
+            transform: none;
+        }
+
+        .options li.selected {
+            background: #1a5f7a;
+            color: white;
+            border-color: #1a5f7a;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 12px;
+            display: none;
+            line-height: 1.5;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+            border-left: 4px solid #28a745;
+        }
+
+        .feedback.wrong {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+            border-left: 4px solid #dc3545;
+        }
+
+        .btn {
+            background: #1a5f7a;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            background: #0d3b4f;
+            transform: scale(1.02);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .result-stats {
+            text-align: center;
+            padding: 20px;
+            background: #f0f2f5;
+            border-radius: 16px;
+            margin-bottom: 25px;
+        }
+
+        .score {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .grade {
+            font-size: 1.3rem;
+            padding: 10px;
+            border-radius: 30px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        .grade.aprovado { background: #d4edda; color: #155724; }
+        .grade.reprovado { background: #f8d7da; color: #721c24; }
+
+        .mistake-list {
+            text-align: left;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .mistake-item {
+            background: white;
+            border-left: 4px solid #dc3545;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+        }
+
+        .question-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .main-content {
+                padding: 20px;
+            }
+            .question-text {
+                font-size: 1rem;
+            }
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🗺️ Quiz: Mapas Temáticos e Análise de Territórios</h1>
+    </div>
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="main-content" id="mainContent"></div>
+</div>
+
+<script>
+    // ==================== CONFIGURAÇÃO ====================
+    let studentName = "";
+    let currentQuestion = 0;
+    let quizStarted = false;
+    let userAnswers = [];
+    
+    // ==================== 20 QUESTÕES (TEMA 6) ====================
+    const questionsData = [
+        { text: "Diferentemente dos mapas gerais, os mapas temáticos têm como característica principal:", options: ["Mostrar apenas acidentes geográficos", "Focar em um único tema ou fenômeno", "Serem exclusivamente políticos", "Não possuírem legendas"], correct: 1, justification: "Mapas temáticos concentram-se em um tema específico, como densidade populacional, clima ou produção agrícola." },
+        
+        { text: "O mapa coroplético é aquele que:", options: ["Utiliza pontos para representar ocorrências", "Usa áreas coloridas conforme o valor de um indicador", "Mostra fluxos entre pontos com linhas", "Distorce áreas para representar dados quantitativos"], correct: 1, justification: "Mapas coropléticos usam cores ou hachuras para representar a distribuição de fenômenos quantitativos por área." },
+        
+        { text: "O cartograma é um tipo de mapa temático que:", options: ["Mantém as áreas proporcionais à realidade", "Distorce deliberadamente a área das unidades territoriais para torná-las proporcionais a um dado", "Mostra apenas limites políticos", "Não utiliza cores"], correct: 1, justification: "Cartogramas distorcem áreas para representar dados como população ou PIB, mantendo a forma aproximada." },
+        
+        { text: "Os mapas de fluxo são utilizados para representar:", options: ["A altitude do terreno", "Movimentos, deslocamentos ou relações entre pontos", "A densidade populacional", "A vegetação nativa"], correct: 1, justification: "Mapas de fluxo mostram migrações, rotas de transporte, fluxos de comércio ou de informação." },
+        
+        { text: "Os mapas de isolinha (ou isopletas) utilizam linhas que conectam:", options: ["Pontos de mesma altitude, temperatura ou pressão", "Capitais de estados", "Rios principais", "Fronteiras internacionais"], correct: 0, justification: "Isolinhas conectam pontos de mesmo valor, como curvas de nível (altitude), isotermas (temperatura) ou isóbaras (pressão)." },
+        
+        { text: "O mapa de pontos é adequado para representar:", options: ["A variação de temperatura", "A localização e, às vezes, a quantidade de ocorrências (escolas, postos de saúde)", "A altitude do relevo", "A divisão política"], correct: 1, justification: "Mapas de ponto usam pontos para indicar localização e quantidade de fenômenos discretos." },
+        
+        { text: "O território, na abordagem política clássica de Ratzel, é entendido como:", options: ["Espaço de identidade cultural", "Extensão do poder do Estado e espaço vital (Lebensraum)", "Rede de fluxos e conexões", "Território sagrado"], correct: 1, justification: "Ratzel via o território como espaço vital necessário para a sobrevivência e desenvolvimento do Estado." },
+        
+        { text: "A abordagem cultural do território, associada a Claval e Haesbaert, enfatiza:", options: ["O território como mercadoria", "O território como espaço vivido, identidade e pertencimento", "O território como espaço de dominação militar", "O território como vazio"], correct: 1, justification: "Essa abordagem destaca as identidades, memórias, sentimentos e laços culturais com o território." },
+        
+        { text: "Milton Santos propôs o conceito de 'território usado' para enfatizar:", options: ["O território como espaço sagrado", "O território como espaço produtivo e lócus da circulação de mercadorias, capitais e informações", "O território como vazio a ser ocupado", "O território como área de preservação"], correct: 1, justification: "Território usado é o espaço onde ocorrem produção, circulação, consumo e relações de poder." },
+        
+        { text: "A abordagem de rede do território, associada a Manuel Castells, enfatiza:", options: ["As fronteiras fixas", "Os fluxos e nós em redes globais e locais", "A propriedade da terra", "As tradições locais"], correct: 1, justification: "Castells destaca a sociedade em rede, onde o território é articulado por fluxos de informação, capital e poder." },
+        
+        { text: "O território pode ser analisado na escala corporal, que corresponde a:", options: ["Ao bairro ou cidade", "Ao espaço mais íntimo (casa, quarto, corpo)", "Ao estado ou região", "Ao planeta Terra"], correct: 1, justification: "A escala corporal é o espaço do próprio corpo, das sensações e das identidades pessoais." },
+        
+        { text: "A sobreposição de mapas de vegetação, fundiário, queimadas e violência no campo é uma metodologia utilizada para:", options: ["Produzir mapas turísticos", "Identificar áreas críticas de conflito por terra na Amazônia", "Calcular o PIB municipal", "Mapear áreas de preservação permanente"], correct: 1, justification: "Essa sobreposição permite identificar onde desmatamento, grilagem e violência se concentram." },
+        
+        { text: "O Instituto Socioambiental (ISA) e a Comissão Pastoral da Terra (CPT) utilizam a análise territorial para:", options: ["Divulgar dados econômicos", "Produzir relatórios sobre conflitos e direitos territoriais na Amazônia", "Fazer propaganda política", "Mapear áreas urbanas"], correct: 1, justification: "ISA e CPT produzem relatórios anuais sobre violência no campo e ameaças a territórios tradicionais." },
+        
+        { text: "A cartografia social é uma ferramenta que:", options: ["Substitui completamente os mapas oficiais", "Permite que comunidades tradicionais elaborem seus próprios mapas, indicando usos e territórios", "É feita exclusivamente por satélites", "Não requer participação comunitária"], correct: 1, justification: "A cartografia social valoriza o conhecimento local e a participação das comunidades na representação de seus territórios." },
+        
+        { text: "Um mapa de símbolo proporcional utiliza símbolos cujo tamanho varia conforme:", options: ["A altitude do local", "A magnitude do fenômeno representado (ex: produção agrícola)", "A distância até a capital", "A cor escolhida aleatoriamente"], correct: 1, justification: "Símbolos proporcionais variam de tamanho conforme o valor do dado representado." },
+        
+        { text: "Analise as afirmativas sobre mapas temáticos: I - Mapas coropléticos são adequados para dados contínuos por área. II - Mapas de ponto são bons para fenômenos discretos. III - Cartogramas mantêm as áreas proporcionais à realidade. Assinale a alternativa correta:", options: ["Apenas I e II estão corretas", "Apenas I e III estão corretas", "Apenas II e III estão corretas", "Todas estão corretas"], correct: 0, justification: "Cartogramas distorcem áreas, não as mantêm proporcionais. I e II estão corretas." },
+        
+        { text: "O conceito de 'território' na abordagem simbólica, associada a Bonnemaison, enfatiza:", options: ["O território como espaço de produção econômica", "O território como vínculo afetivo e sagrado, espaço de mitos e rituais", "O território como extensão militar", "O território como mercadoria"], correct: 1, justification: "Bonnemaison destacou os vínculos simbólicos, afetivos e sagrados que ligam as pessoas ao território." },
+        
+        { text: "A escala regional de análise territorial abrange:", options: ["A casa e o quarto", "O bairro e a cidade", "O estado, a região ou a bacia hidrográfica", "O planeta Terra"], correct: 2, justification: "A escala regional inclui o estado, a província, a região geográfica ou a bacia hidrográfica." },
+        
+        { text: "Os mapas de fluxo são especialmente úteis para representar:", options: ["A altitude do relevo", "Migrações, rotas de transporte e fluxos de comércio", "A densidade populacional", "A vegetação nativa"], correct: 1, justification: "Mapas de fluxo mostram direção e intensidade de movimentos entre pontos." },
+        
+        { text: "A análise territorial integrada na Amazônia envolve a sobreposição de mapas que permitem identificar:", options: ["Apenas áreas de floresta", "Apenas áreas urbanas", "Áreas críticas onde grilagem, desmatamento e violência se concentram", "Apenas áreas de mineração"], correct: 2, justification: "A sobreposição de múltiplas camadas revela padrões complexos de conflito e degradação ambiental." }
+    ];
+    
+    // ==================== FUNÇÕES ====================
+    function updateProgressBar() {
+        const percent = ((currentQuestion + 1) / questionsData.length) * 100;
+        document.getElementById('progressBar').style.width = percent + '%';
+    }
+    
+    function renderNameScreen() {
+        const main = document.getElementById('mainContent');
+        main.innerHTML = `
+            <div class="name-screen name-form">
+                <h2>📝 Identificação</h2>
+                <p>Digite seu nome completo para iniciar o quiz:</p>
+                <input type="text" id="studentNameInput" placeholder="Seu nome" autocomplete="off">
+                <br>
+                <button class="btn btn-success" id="startQuizBtn">▶️ Iniciar Quiz</button>
+            </div>
+        `;
+        document.getElementById('startQuizBtn')?.addEventListener('click', () => {
+            const input = document.getElementById('studentNameInput');
+            if (input && input.value.trim()) {
+                studentName = input.value.trim();
+                quizStarted = true;
+                userAnswers = new Array(questionsData.length).fill(null);
+                currentQuestion = 0;
+                renderQuestion();
+            } else {
+                alert("Por favor, digite seu nome.");
+            }
+        });
+    }
+    
+    function renderQuestion() {
+        const q = questionsData[currentQuestion];
+        const isAnswered = userAnswers[currentQuestion] !== null;
+        const selectedAnswer = userAnswers[currentQuestion];
+        
+        let optionsHtml = '<ul class="options">';
+        q.options.forEach((opt, idx) => {
+            const isSelected = (selectedAnswer === idx);
+            optionsHtml += `<li data-opt="${idx}" class="${isAnswered ? 'disabled' : ''} ${isSelected ? 'selected' : ''}">${opt}</li>`;
+        });
+        optionsHtml += '</ul>';
+        
+        const feedbackHtml = isAnswered ? `
+            <div class="feedback ${userAnswers[currentQuestion] === q.correct ? 'correct' : 'wrong'}">
+                <strong>${userAnswers[currentQuestion] === q.correct ? '✓ Correto!' : '✗ Incorreto!'}</strong><br>
+                ${q.justification}
+            </div>
+        ` : '';
+        
+        const main = document.getElementById('mainContent');
+        main.innerHTML = `
+            <div class="quiz-screen">
+                <div class="question-info">
+                    <span>Questão ${currentQuestion + 1} de ${questionsData.length}</span>
+                    <span>${Math.round(((currentQuestion + 1) / questionsData.length) * 100)}%</span>
+                </div>
+                <div class="question-text">${currentQuestion + 1}. ${q.text}</div>
+                ${optionsHtml}
+                ${feedbackHtml}
+                <div class="nav-buttons">
+                    <button class="btn" id="prevBtn" ${currentQuestion === 0 ? 'disabled' : ''}>◀ Anterior</button>
+                    <button class="btn" id="nextBtn" ${!isAnswered ? 'disabled' : ''}>${currentQuestion === questionsData.length - 1 ? '✅ Finalizar' : 'Próxima ▶'}</button>
+                </div>
+            </div>
+        `;
+        
+        const options = document.querySelectorAll('.options li');
+        options.forEach(opt => {
+            opt.addEventListener('click', () => {
+                if (userAnswers[currentQuestion] !== null) return;
+                const selected = parseInt(opt.dataset.opt);
+                userAnswers[currentQuestion] = selected;
+                renderQuestion();
+            });
+        });
+        
+        document.getElementById('prevBtn')?.addEventListener('click', () => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                renderQuestion();
+            }
+        });
+        
+        document.getElementById('nextBtn')?.addEventListener('click', () => {
+            if (userAnswers[currentQuestion] === null) return;
+            if (currentQuestion === questionsData.length - 1) {
+                calculateResult();
+            } else {
+                currentQuestion++;
+                renderQuestion();
+            }
+        });
+        
+        updateProgressBar();
+    }
+    
+    function calculateResult() {
+        let correctCount = 0;
+        const mistakes = [];
+        
+        questionsData.forEach((q, idx) => {
+            const userAnswer = userAnswers[idx];
+            if (userAnswer === q.correct) {
+                correctCount++;
+            } else {
+                mistakes.push({
+                    number: idx + 1,
+                    question: q.text,
+                    userAnswer: userAnswer !== null ? q.options[userAnswer] : "Não respondida",
+                    correctAnswer: q.options[q.correct],
+                    justification: q.justification
+                });
+            }
+        });
+        
+        const approved = correctCount >= 14;
+        renderResultScreen(correctCount, approved, mistakes);
+    }
+    
+    function renderResultScreen(score, approved, mistakes) {
+        const main = document.getElementById('mainContent');
+        const gradeText = approved ? "APROVADO" : "REPROVADO";
+        const gradeClass = approved ? "aprovado" : "reprovado";
+        
+        let mistakesHtml = '';
+        if (mistakes.length > 0) {
+            mistakesHtml = `<h3>📋 Questões com erro:</h3><div class="mistake-list">`;
+            mistakes.forEach(m => {
+                mistakesHtml += `
+                    <div class="mistake-item">
+                        <strong>Questão ${m.number}</strong><br>
+                        <strong>Pergunta:</strong> ${m.question}<br>
+                        <strong>Sua resposta:</strong> ${m.userAnswer}<br>
+                        <strong>Resposta correta:</strong> ${m.correctAnswer}<br>
+                        <strong>Justificativa:</strong> ${m.justification}
+                    </div>
+                `;
+            });
+            mistakesHtml += `</div>`;
+        } else {
+            mistakesHtml = `<p style="color:#155724; background:#d4edda; padding:15px; border-radius:12px;">🎉 Parabéns! Você não errou nenhuma questão!</p>`;
+        }
+        
+        main.innerHTML = `
+            <div class="result-screen">
+                <div class="result-stats">
+                    <h2>📊 Resultado Final</h2>
+                    <p><strong>Aluno(a):</strong> ${studentName}</p>
+                    <p><strong>Data:</strong> ${new Date().toLocaleString('pt-BR')}</p>
+                    <div class="score">${score} / 20</div>
+                    <div class="grade ${gradeClass}">${gradeText}</div>
+                    ${approved ? '<p>✅ Você atingiu a nota mínima (14/20). Relatório liberado!</p>' : '<p>❌ Você não atingiu a nota mínima (14/20). Estude mais e refaça o quiz.</p>'}
+                </div>
+                ${mistakesHtml}
+                <div style="margin-top: 30px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    ${approved ? `<button class="btn btn-success" id="printReportBtn">📄 Gerar Relatório PDF</button>` : ''}
+                    <button class="btn btn-secondary" id="restartQuizBtn">🔄 Refazer Quiz</button>
+                </div>
+            </div>
+        `;
+        
+        if (approved) {
+            document.getElementById('printReportBtn')?.addEventListener('click', () => {
+                generatePDFReport(score, mistakes);
+            });
+        }
+        
+        document.getElementById('restartQuizBtn')?.addEventListener('click', () => {
+            userAnswers = new Array(questionsData.length).fill(null);
+            quizStarted = false;
+            currentQuestion = 0;
+            renderNameScreen();
+            document.getElementById('progressBar').style.width = '0%';
+        });
+    }
+    
+    function generatePDFReport(score, mistakes) {
+        const printWindow = window.open('', '_blank');
+        const dateStr = new Date().toLocaleString('pt-BR');
+        let mistakesPrint = '';
+        
+        if (mistakes.length > 0) {
+            mistakesPrint = '<h3>Questões com erro:</h3>';
+            mistakes.forEach(m => {
+                mistakesPrint += `
+                    <div style="margin-bottom: 20px; padding: 10px; border-bottom: 1px solid #ccc;">
+                        <strong>Questão ${m.number}</strong><br>
+                        <strong>Pergunta:</strong> ${m.question}<br>
+                        <strong>Sua resposta:</strong> ${m.userAnswer}<br>
+                        <strong>Resposta correta:</strong> ${m.correctAnswer}<br>
+                        <strong>Justificativa:</strong> ${m.justification}
+                    </div>
+                `;
+            });
+        } else {
+            mistakesPrint = '<p>Parabéns! Você acertou todas as questões!</p>';
+        }
+        
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Relatório - Mapas Temáticos e Análise de Territórios</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.5; }
+                    h1 { color: #1a5f7a; }
+                    .header { text-align: center; margin-bottom: 30px; }
+                    .score { font-size: 24px; font-weight: bold; margin: 20px 0; }
+                    .approved { color: green; }
+                    @media print {
+                        body { margin: 20px; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>Relatório de Desempenho</h1>
+                    <p><strong>Aluno(a):</strong> ${studentName}</p>
+                    <p><strong>Data:</strong> ${dateStr}</p>
+                    <p><strong>Quiz:</strong> Mapas Temáticos e Análise de Territórios</p>
+                    <div class="score">Nota: ${score} / 20</div>
+                    <div class="approved">✅ APROVADO (mínimo 14)</div>
+                </div>
+                ${mistakesPrint}
+                <hr>
+                <p style="font-size: 12px; color: #666;">Relatório gerado automaticamente pelo sistema de quiz.</p>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+    }
+    
+    renderNameScreen();
+</script>
+</body>
+</html>
