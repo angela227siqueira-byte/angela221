@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Quiz: Mapas Temáticos & Análise de Territórios</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: #f4f7f9;
+            color: #1e2b3c;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            margin: 0;
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px -10px rgba(0, 20, 30, 0.15);
+            padding: 28px 24px;
+            transition: all 0.2s ease;
+            border: 1px solid #e9edf2;
+        }
+
+        .screen {
+            display: block;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        h1 {
+            font-size: 1.9rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+            color: #0f2b3d;
+        }
+
+        .subtitle {
+            color: #5e7180;
+            margin-bottom: 32px;
+            font-weight: 400;
+            border-left: 5px solid #7b6c8c;
+            padding-left: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #2c4356;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 16px 18px;
+            font-size: 1.1rem;
+            border: 1.5px solid #d6dee5;
+            border-radius: 20px;
+            background: white;
+            transition: border 0.2s;
+            font-family: inherit;
+            background-color: #fafcfd;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #7b6c8c;
+            box-shadow: 0 0 0 4px rgba(123, 108, 140, 0.1);
+        }
+
+        button {
+            background: #4a3b5c;
+            color: white;
+            border: none;
+            padding: 16px 28px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 60px;
+            width: 100%;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.05s;
+            margin-top: 8px;
+            letter-spacing: 0.3px;
+            box-shadow: 0 6px 14px rgba(74, 59, 92, 0.2);
+        }
+
+        button:active { transform: scale(0.98); }
+        
+        button:disabled {
+            background: #b4c4cf;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        button.secondary {
+            background: #eef3f7;
+            color: #1e3b4c;
+            box-shadow: none;
+            border: 1px solid #ccdae3;
+        }
+
+        .flex-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .flex-buttons button { width: 50%; }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            font-weight: 500;
+            color: #3e5e71;
+        }
+
+        .progress-bar-container {
+            background: #e2e9f0;
+            height: 12px;
+            border-radius: 20px;
+            margin: 16px 0 28px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: #7b6c8c;
+            height: 100%;
+            width: 5%;
+            border-radius: 20px;
+            transition: width 0.3s;
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 28px;
+            line-height: 1.4;
+            color: #0b2a3b;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .option {
+            background: #f8fafc;
+            border: 1.5px solid #dce5ec;
+            border-radius: 18px;
+            padding: 18px 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.1s;
+            color: #1a3a4e;
+            font-weight: 500;
+        }
+
+        .option:hover { background: #edf3f9; border-color: #a9c1d2; }
+        .option.correct { background: #d4eee9; border-color: #2a8e7e; color: #0b352d; }
+        .option.incorrect { background: #ffe8e8; border-color: #d58f8f; color: #712b2b; opacity: 0.8; }
+        .option.disabled { pointer-events: none; opacity: 0.8; }
+
+        .feedback-box {
+            background: #eef3f7;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 16px 0 24px;
+            border-left: 8px solid #7b6c8c;
+        }
+
+        .feedback-correct { color: #1a6e5a; font-weight: 700; margin-bottom: 8px; }
+        .feedback-incorrect { color: #b13e3e; font-weight: 700; margin-bottom: 8px; }
+        .justification { color: #254b61; }
+
+        .result-card { text-align: center; padding: 16px 0; }
+        .grade { font-size: 4.5rem; font-weight: 800; color: #4a3b5c; line-height: 1; }
+        .mention { font-size: 1.8rem; margin: 16px 0; }
+        .stats { background: #f0f5fa; border-radius: 24px; padding: 24px; margin: 24px 0; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea { position: absolute; left: 0; top: 0; width: 100%; padding: 20px; }
+        }
+
+        @media (max-width: 480px) {
+            .quiz-container { padding: 20px 16px; }
+            h1 { font-size: 1.7rem; }
+            .question-text { font-size: 1.2rem; }
+            .option { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+<div class="quiz-container">
+    <!-- TELA INICIAL -->
+    <div id="startScreen" class="screen">
+        <h1>🗺️ Mapas Temáticos</h1>
+        <div class="subtitle">Análise de Territórios</div>
+        <div class="form-group">
+            <label>👤 Nome completo</label>
+            <input type="text" id="studentName" placeholder="Ex: Fabrício" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label>📚 Turma</label>
+            <select id="studentClass">
+                <option value="A">A</option><option value="B">B</option>
+                <option value="C">C</option><option value="D">D</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>📅 Bimestre</label>
+            <select id="bimester">
+                <option value="1º">1º Bimestre</option><option value="2º">2º Bimestre</option>
+                <option value="3º">3º Bimestre</option><option value="4º">4º Bimestre</option>
+            </select>
+        </div>
+        <button id="startBtn" disabled>▶ Iniciar Quiz</button>
+        <div style="margin-top:16px; color:#6f8a9b;">Preencha seu nome para começar</div>
+    </div>
+
+    <!-- TELA DO QUIZ -->
+    <div id="quizScreen" class="screen hidden">
+        <div class="quiz-header">
+            <span id="questionCounter">Questão 1 de 20</span>
+            <span id="studentInfoDisplay">Aluno | Turma</span>
+        </div>
+        <div class="progress-bar-container">
+            <div id="progressBarFill" class="progress-bar-fill" style="width: 5%;"></div>
+        </div>
+        <div id="questionText" class="question-text"></div>
+        <div id="optionsContainer" class="options-container"></div>
+        <div id="feedbackArea" class="feedback-box hidden">
+            <div id="feedbackStatus"></div>
+            <div id="feedbackJustification" class="justification"></div>
+        </div>
+        <button id="nextBtn" class="hidden">Próxima ▶</button>
+        <button id="finishBtn" class="hidden">🏁 Finalizar Quiz</button>
+    </div>
+
+    <!-- TELA DE RESULTADO -->
+    <div id="resultScreen" class="screen hidden">
+        <h1>📋 Resultado</h1>
+        <div id="resultContent" class="result-card"></div>
+        <div id="resultActions" class="flex-buttons"></div>
+    </div>
+
+    <!-- TELA DE ENCERRAMENTO -->
+    <div id="endScreen" class="screen hidden">
+        <h1>✅ Obrigado!</h1>
+        <div style="padding: 30px 0; text-align: center;">
+            <p style="font-size:1.3rem; margin-bottom: 30px;">Obrigado por responder o quiz!</p>
+            <button id="exitBtn" style="background:#7b6c8c;">🚪 Sair</button>
+        </div>
+    </div>
+</div>
+
+<!-- ÁREA PARA IMPRESSÃO (PDF) -->
+<div id="printArea" style="display: none;"></div>
+
+<script>
+    (function(){
+        "use strict";
+
+        // ---------- BANCO DE QUESTÕES (TEMA 6) ----------
+        const questions = [
+            { question: "Um mapa temático é caracterizado por:", options: ["Representar um fenômeno específico (população, clima, economia, etc.)", "Representar apenas divisões políticas e administrativas", "Mostrar exclusivamente acidentes geográficos naturais", "Ser sempre um mapa-múndi em escala pequena"], answer: 0, justification: "Mapas temáticos são aqueles que representam fenômenos específicos ou temas particulares, como densidade populacional, precipitação, produção agrícola, etc., utilizando símbolos, cores e padrões." },
+            { question: "Sobre os diferentes tipos de mapas temáticos:\nI. Mapas coropléticos utilizam cores para representar dados por área\nII. Mapas de pontos representam a localização de fenômenos específicos\nIII. Mapas de isolinhas conectam pontos de mesmo valor (ex: curvas de nível)\nEstá(ão) correta(s):", options: ["Apenas I", "Apenas I e II", "Apenas II e III", "I, II e III"], answer: 3, justification: "As três afirmações estão corretas e descrevem os principais tipos de representação cartográfica temática." },
+            { question: "Sobre a análise de territórios:\nI. Território é um espaço delimitado e controlado por relações de poder\nII. O conceito de território envolve apenas fronteiras políticas (países, estados)\nIII. Territórios podem ser disputados por diferentes grupos sociais\nA sequência correta (V para verdadeiro, F para falso) é:", options: ["V – V – V", "V – V – F", "V – F – V", "F – V – V"], answer: 2, justification: "I é verdadeira (território envolve poder e delimitação). II é falsa (território não se limita a fronteiras políticas; inclui também territórios indígenas, quilombolas, áreas de influência econômica, etc.). III é verdadeira (conflitos territoriais são comuns entre diferentes grupos)." },
+            { question: "Um mapa de densidade populacional é um exemplo de mapa:", options: ["Político", "Físico", "Temático", "Histórico"], answer: 2, justification: "Mapa de densidade populacional representa um fenômeno específico (distribuição da população), portanto é um mapa temático." },
+            { question: "Sobre a análise territorial e poder:\nI. O Estado exerce soberania sobre seu território nacional\nII. Empresas podem criar 'territórios de influência' econômica\nIII. Territórios são fixos e nunca se modificam ao longo do tempo\nEstá(ão) correta(s):", options: ["Apenas I", "Apenas I e II", "Apenas II e III", "I, II e III"], answer: 1, justification: "I e II estão corretas. III está falsa: territórios são dinâmicos e se transformam ao longo do tempo por mudanças políticas, econômicas, sociais e ambientais." },
+            { question: "Sobre a cartografia social:\nI. A cartografia social envolve comunidades na produção de mapas\nII. Mapas sociais podem representar territórios indígenas e quilombolas\nIII. A cartografia social desconsidera o conhecimento local\nA sequência correta (V para verdadeiro, F para falso) é:", options: ["V – V – V", "V – V – F", "V – F – V", "F – V – V"], answer: 1, justification: "I e II são verdadeiras. III é falsa: a cartografia social valoriza exatamente o conhecimento local e a participação comunitária." },
+            { question: "O que são 'territórios de identidade'?", options: ["Áreas definidas exclusivamente por leis federais", "Espaços com os quais grupos sociais estabelecem forte vínculo cultural e histórico", "Regiões sem qualquer ocupação humana", "Áreas destinadas apenas à preservação ambiental"], answer: 1, justification: "Territórios de identidade são espaços onde grupos sociais desenvolvem forte sentimento de pertencimento, baseado em história, cultura, religião ou memória coletiva." },
+            { question: "Sobre a sobreposição de territórios:\nI. Uma mesma área pode conter múltiplos territórios sobrepostos\nII. Território indígena e unidade de conservação podem ocupar a mesma região\nIII. Sobreposição territorial sempre gera conflitos harmônicos\nEstá(ão) correta(s):", options: ["Apenas I", "Apenas I e II", "Apenas II e III", "I, II e III"], answer: 1, justification: "I e II estão corretas. III está falsa: a sobreposição territorial frequentemente gera conflitos (ex: disputas entre mineração, agricultura, comunidades tradicionais e áreas protegidas)." },
+            { question: "Sobre a evolução dos mapas temáticos:\nI. Os primeiros mapas temáticos surgiram no século XIX\nII. John Snow usou um mapa temático para identificar a fonte de cólera em Londres (1854)\nIII. Atualmente, mapas temáticos são feitos apenas em papel\nA sequência correta (V para verdadeiro, F para falso) é:", options: ["V – V – V", "V – V – F", "V – F – V", "F – V – V"], answer: 1, justification: "I e II são verdadeiras. III é falsa: atualmente, mapas temáticos são produzidos principalmente em meio digital, com softwares de SIG." },
+            { question: "Um mapa de fluxos é utilizado para representar:", options: ["A altitude do relevo", "Movimentos de pessoas, mercadorias ou informações entre territórios", "A divisão política entre países", "A vegetação original de uma região"], answer: 1, justification: "Mapas de fluxos mostram deslocamentos (migrações, rotas comerciais, fluxos de informação, tráfego aéreo, etc.) entre diferentes pontos ou territórios." },
+            { question: "Sobre a análise de territórios na geografia:\nI. A geografia política estuda as relações de poder sobre o território\nII. A geografia econômica analisa a distribuição de atividades produtivas no espaço\nIII. A análise territorial ignora questões ambientais\nEstá(ão) correta(s):", options: ["Apenas I e II", "Apenas I", "Apenas II e III", "I, II e III"], answer: 0, justification: "I e II estão corretas. III está falsa: a análise territorial contemporânea incorpora fortemente questões ambientais (sustentabilidade, recursos naturais, impactos)." },
+            { question: "Sobre a representação de dados em mapas temáticos:\nI. Cores quentes (vermelho, laranja) geralmente indicam valores mais altos\nII. Cores frias (azul, verde) geralmente indicam valores mais baixos\nIII. A escolha das cores é arbitrária e não segue padrões\nA sequência correta (V para verdadeiro, F para falso) é:", options: ["V – V – F", "V – V – V", "V – F – V", "F – V – V"], answer: 0, justification: "I e II são verdadeiras (existe uma convenção visual). III é falsa: a escolha de cores segue padrões estabelecidos para facilitar a interpretação e evitar distorções." },
+            { question: "A diferença entre território e lugar é que:", options: ["Território é apenas político; lugar é apenas natural", "Território envolve poder e controle; lugar envolve pertencimento e afeto", "Não há diferença; são sinônimos", "Território é maior que lugar sempre"], answer: 1, justification: "Território está associado a relações de poder, dominação e controle. Lugar está associado a experiência, afeto, memória e identidade." },
+            { question: "Sobre os conflitos territoriais no mundo contemporâneo:\nI. Conflitos por fronteiras entre países ainda ocorrem\nII. Disputas por territórios indígenas e quilombolas são frequentes\nIII. Conflitos territoriais não envolvem recursos naturais\nEstá(ão) correta(s):", options: ["Apenas I", "Apenas I e II", "Apenas II e III", "I, II e III"], answer: 1, justification: "I e II estão corretas. III está falsa: muitos conflitos territoriais envolvem recursos naturais (água, minerais, petróleo, terras férteis)." },
+            { question: "Sobre a cartografia digital e os SIGs:\nI. SIG significa Sistema de Informações Geográficas\nII. SIGs permitem cruzar diferentes camadas de informação (solos, vegetação, uso da terra)\nIII. SIGs são usados apenas por governos, não por empresas\nA sequência correta (V para verdadeiro, F para falso) é:", options: ["V – V – V", "F – V – V", "V – F – V", "V – V – F"], answer: 3, justification: "I e II são verdadeiras. III é falsa: SIGs são amplamente utilizados por empresas (logística, marketing, mineração, agricultura de precisão, etc.)." },
+            { question: "O que é um mapa de anamorfose?", options: ["Um mapa que distorce intencionalmente as áreas para representar dados estatísticos", "Um mapa que mostra apenas relevo", "Um mapa político sem fronteiras", "Um mapa exclusivamente marítimo"], answer: 0, justification: "Anamorfose é uma técnica cartográfica que distorce a área dos territórios proporcionalmente a um dado estatístico (ex: população, PIB, emissão de carbono), ampliando áreas com valores altos e reduzindo áreas com valores baixos." },
+            { question: "Sobre a importância dos mapas temáticos para o planejamento:\nI. Mapas de uso da terra auxiliam no planejamento urbano\nII. Mapas de risco ajudam na prevenção de desastres naturais\nIII. Mapas temáticos são apenas ilustrativos, sem utilidade prática\nEstá(ão) correta(s):", options: ["Apenas I", "Apenas I e II", "Apenas II e III", "I, II e III"], answer: 1, justification: "I e II estão corretas. III está falsa: mapas temáticos têm ampla utilidade prática em planejamento, gestão, tomada de decisão e políticas públicas." },
+            { question: "Sobre a relação entre mapas e poder:\nI. Quem produz mapas exerce poder sobre a representação do território\nII. Mapas podem ser usados para legitimar fronteiras e reivindicações territoriais\nIII. Todos os mapas são neutros e objetivos\nA sequência correta (V para verdadeiro, F para falso) é:", options: ["V – V – V", "V – V – F", "V – F – V", "F – V – V"], answer: 1, justification: "I e II são verdadeiras. III é falsa: mapas não são neutros; eles refletem escolhas do cartógrafo, interesses políticos e visões de mundo." },
+            { question: "Um mapa de localização de indústrias é útil para:", options: ["Estudar a distribuição espacial da atividade econômica", "Analisar a vegetação nativa", "Identificar áreas de preservação permanente", "Medir a altitude do relevo"], answer: 0, justification: "Mapas de localização de indústrias permitem visualizar padrões de distribuição espacial da atividade industrial, concentrações regionais e relação com infraestrutura." },
+            { question: "Sobre a análise integrada de territórios:\nI. É necessário considerar aspectos físicos (relevo, clima, recursos hídricos)\nII. É necessário considerar aspectos sociais (população, cultura, saúde, educação)\nIII. É necessário considerar aspectos econômicos (produção, renda, infraestrutura)\nEstá(ão) correta(s):", options: ["Apenas I", "Apenas I e II", "Apenas II e III", "I, II e III"], answer: 3, justification: "As três afirmações estão corretas. A análise integrada de territórios requer a articulação de dimensões físicas, sociais e econômicas." }
+        ];
+
+        // ---------- ESTADO ----------
+        let studentName = "", studentClass = "", bimester = "";
+        let currentIndex = 0;
+        let userAnswers = new Array(20).fill(null);
+        let attemptCount = parseInt(sessionStorage.getItem('quizAttempt6')) || 1;
+        let quizResults = null;
+
+        // Elementos DOM
+        const startScreen = document.getElementById('startScreen');
+        const quizScreen = document.getElementById('quizScreen');
+        const resultScreen = document.getElementById('resultScreen');
+        const endScreen = document.getElementById('endScreen');
+        const nameInput = document.getElementById('studentName');
+        const classSelect = document.getElementById('studentClass');
+        const bimesterSelect = document.getElementById('bimester');
+        const startBtn = document.getElementById('startBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const finishBtn = document.getElementById('finishBtn');
+        const questionText = document.getElementById('questionText');
+        const optionsDiv = document.getElementById('optionsContainer');
+        const feedbackArea = document.getElementById('feedbackArea');
+        const feedbackStatus = document.getElementById('feedbackStatus');
+        const feedbackJust = document.getElementById('feedbackJustification');
+        const progressFill = document.getElementById('progressBarFill');
+        const counterSpan = document.getElementById('questionCounter');
+        const studentInfoDisplay = document.getElementById('studentInfoDisplay');
+
+        // ---------- FUNÇÕES ----------
+        function updateStartButton() { startBtn.disabled = !nameInput.value.trim(); }
+
+        function renderQuestion(index) {
+            const q = questions[index];
+            questionText.innerText = q.question;
+            counterSpan.innerText = `Questão ${index+1} de 20`;
+            progressFill.style.width = `${((index+1)/20)*100}%`;
+            
+            let html = '';
+            q.options.forEach((opt, i) => {
+                const letter = String.fromCharCode(65 + i);
+                let classes = 'option';
+                const selected = userAnswers[index];
+                if (selected !== null) {
+                    classes += ' disabled';
+                    if (i === q.answer) classes += ' correct';
+                    else if (i === selected) classes += ' incorrect';
+                }
+                html += `<div class="${classes}" data-opt-index="${i}">${letter}) ${opt}</div>`;
+            });
+            optionsDiv.innerHTML = html;
+
+            if (userAnswers[index] !== null) {
+                const isCorrect = (userAnswers[index] === q.answer);
+                feedbackStatus.innerHTML = isCorrect ? '✅ Correto!' : '❌ Incorreto';
+                feedbackStatus.className = isCorrect ? 'feedback-correct' : 'feedback-incorrect';
+                feedbackJust.innerText = q.justification;
+                feedbackArea.classList.remove('hidden');
+            } else {
+                feedbackArea.classList.add('hidden');
+            }
+
+            const isLast = (index === 19);
+            if (userAnswers[index] !== null) {
+                if (isLast) { nextBtn.classList.add('hidden'); finishBtn.classList.remove('hidden'); }
+                else { nextBtn.classList.remove('hidden'); finishBtn.classList.add('hidden'); }
+            } else {
+                nextBtn.classList.add('hidden'); finishBtn.classList.add('hidden');
+            }
+        }
+
+        function handleOptionClick(e) {
+            const opt = e.target.closest('.option');
+            if (!opt || userAnswers[currentIndex] !== null) return;
+            const idx = parseInt(opt.dataset.optIndex);
+            userAnswers[currentIndex] = idx;
+            renderQuestion(currentIndex);
+        }
+
+        function calculateResults() {
+            let correct = 0;
+            const wrong = [];
+            userAnswers.forEach((ans, i) => {
+                if (ans === questions[i].answer) correct++;
+                else wrong.push({ number: i+1, text: questions[i].question });
+            });
+            const nota = (correct / 20) * 10;
+            let mention = '';
+            if (nota < 5.0) mention = 'Não foi muito bem';
+            else if (nota < 6.5) mention = 'Regular';
+            else if (nota < 8.5) mention = 'Bom';
+            else mention = 'Excelente';
+            return { correct, nota: nota.toFixed(1), mention, wrong };
+        }
+
+        function showResultScreen() {
+            startScreen.classList.add('hidden'); quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden'); endScreen.classList.add('hidden');
+            
+            quizResults = calculateResults();
+            const content = document.getElementById('resultContent');
+            const actions = document.getElementById('resultActions');
+            
+            content.innerHTML = `
+                <div class="grade">${quizResults.nota}</div>
+                <div class="mention">${quizResults.mention}</div>
+                <div class="stats">✅ Acertos: ${quizResults.correct} / 20<br>📊 Nota: ${quizResults.nota}</div>
+            `;
+            actions.innerHTML = `
+                <button id="redoQuizBtn" class="secondary">🔄 Refazer Quiz</button>
+                <button id="sendReportBtn">📤 Enviar</button>
+            `;
+            document.getElementById('redoQuizBtn').addEventListener('click', resetQuiz);
+            document.getElementById('sendReportBtn').addEventListener('click', generateAndSend);
+        }
+
+        function generateAndSend() {
+            const date = new Date().toLocaleString('pt-BR');
+            const printDiv = document.getElementById('printArea');
+            let wrongHtml = '';
+            quizResults.wrong.forEach(w => { wrongHtml += `<p><strong>${w.number}.</strong> ${w.text}</p>`; });
+            if (wrongHtml === '') wrongHtml = '<p>✨ Nenhuma questão errada! Parabéns!</p>';
+            
+            printDiv.innerHTML = `
+                <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin:auto;">
+                    <h2 style="color:#4a3b5c;">Relatório - Quiz: Mapas Temáticos & Análise de Territórios</h2>
+                    <p><strong>Nome:</strong> ${studentName} | <strong>Turma:</strong> ${studentClass} | <strong>Bimestre:</strong> ${bimester}</p>
+                    <p><strong>Data/Hora:</strong> ${date} | <strong>Tentativa:</strong> ${attemptCount}ª</p>
+                    <p><strong>Pontuação:</strong> ${quizResults.correct}/20 | <strong>Nota:</strong> ${quizResults.nota} | <strong>Mensão:</strong> ${quizResults.mention}</p>
+                    <hr style="margin: 20px 0;">
+                    <h3>📝 Questões erradas:</h3>
+                    ${wrongHtml}
+                </div>
+            `;
+            
+            window.print();
+            
+            setTimeout(() => {
+                resultScreen.classList.add('hidden');
+                endScreen.classList.remove('hidden');
+            }, 200);
+        }
+
+        function resetQuiz() {
+            sessionStorage.setItem('quizAttempt6', ++attemptCount);
+            userAnswers = new Array(20).fill(null);
+            currentIndex = 0;
+            startScreen.classList.remove('hidden');
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            endScreen.classList.add('hidden');
+            updateStartButton();
+            studentInfoDisplay.innerText = '';
+        }
+
+        // ---------- EVENTOS ----------
+        nameInput.addEventListener('input', updateStartButton);
+        startBtn.addEventListener('click', () => {
+            studentName = nameInput.value.trim();
+            studentClass = classSelect.value;
+            bimester = bimesterSelect.value;
+            studentInfoDisplay.innerText = `${studentName.split(' ')[0]} | ${studentClass} | ${bimester}`;
+            startScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            currentIndex = 0;
+            renderQuestion(0);
+        });
+
+        optionsDiv.addEventListener('click', handleOptionClick);
+        nextBtn.addEventListener('click', () => { if (currentIndex < 19) { currentIndex++; renderQuestion(currentIndex); } });
+        finishBtn.addEventListener('click', showResultScreen);
+        document.getElementById('exitBtn').addEventListener('click', () => { window.close(); });
+
+        // Inicialização
+        updateStartButton();
+        sessionStorage.setItem('quizAttempt6', attemptCount);
+    })();
+</script>
+</body>
+</html>
