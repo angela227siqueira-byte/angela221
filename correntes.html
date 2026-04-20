@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Quiz 1 · Correntes Migratórias e Circulação de Mercadorias</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, Helvetica, system-ui, sans-serif;
+            background: #eef3f7;
+            color: #1a2e3c;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        /* Container principal */
+        .quiz-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+            padding: 28px 28px;
+            flex: 1;
+        }
+
+        /* Telas */
+        .tela {
+            display: none;
+        }
+
+        .tela.ativa {
+            display: block;
+        }
+
+        /* ========== TELA DE IDENTIFICAÇÃO ========== */
+        .card-identificacao {
+            background: #fafcfe;
+            border-radius: 24px;
+            padding: 30px 28px;
+            border: 1px solid #dde6ed;
+        }
+
+        h2 {
+            color: #1a4659;
+            margin-bottom: 24px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        h3 {
+            color: #1e4b6e;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+            color: #1e3a4d;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #cddde8;
+            border-radius: 18px;
+            background: white;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus {
+            border-color: #1e4b6e;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(30, 75, 110, 0.1);
+        }
+
+        .btn {
+            background: #1e4b6e;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.15s;
+            border: 1px solid #16415e;
+        }
+
+        .btn:disabled {
+            background: #b0c7d8;
+            border-color: #98b3c7;
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        .btn:not(:disabled):hover {
+            background: #0e3852;
+        }
+
+        .btn-iniciar {
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        /* ========== QUIZ (ÁREA DE QUESTÕES) ========== */
+        .quiz-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+
+        .progresso-area {
+            flex: 2;
+            min-width: 200px;
+        }
+
+        .questao-indicador {
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1e4b6e;
+        }
+
+        .barra-bg {
+            background: #dae3ec;
+            height: 12px;
+            border-radius: 40px;
+            overflow: hidden;
+        }
+
+        .barra-fill {
+            background: #1e4b6e;
+            height: 100%;
+            width: 5%;
+            border-radius: 40px;
+            transition: width 0.2s;
+        }
+
+        .ferramentas-topo {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-icone {
+            background: white;
+            border: 1.5px solid #c7d7e3;
+            border-radius: 40px;
+            padding: 8px 16px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-icone:hover {
+            background: #e3ecf3;
+        }
+
+        /* Painel da questão */
+        .questao-box {
+            margin: 20px 0 30px;
+        }
+
+        .enunciado {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 28px;
+            color: #0f3448;
+        }
+
+        .alternativas {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 30px;
+        }
+
+        .alt-item {
+            background: #f5f9fc;
+            border: 2px solid #d7e3ec;
+            border-radius: 60px;
+            padding: 16px 22px;
+            cursor: pointer;
+            transition: 0.1s;
+            font-size: 1.05rem;
+        }
+
+        .alt-item:hover {
+            background: #e2edf6;
+            border-color: #9fbcd3;
+        }
+
+        .alt-item.selecionada {
+            background: #d3e3f0;
+            border-color: #1e4b6e;
+        }
+
+        .alt-item.correta-destaque {
+            background: #d4edda;
+            border-color: #2e7d5e;
+        }
+
+        .alt-item.incorreta-destaque {
+            background: #f8d7da;
+            border-color: #b55a5a;
+        }
+
+        /* Feedback */
+        .feedback-area {
+            background: #f2f7fb;
+            border-radius: 24px;
+            padding: 22px 24px;
+            margin: 20px 0 25px;
+            border-left: 6px solid #1e4b6e;
+        }
+
+        .feedback-status {
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+        }
+
+        .feedback-correta {
+            margin: 12px 0;
+            font-weight: 500;
+        }
+
+        .justificativa {
+            color: #1e4057;
+            font-style: italic;
+        }
+
+        /* Navegação */
+        .navegacao-quiz {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-proximo {
+            min-width: 160px;
+        }
+
+        /* Tela de resultado */
+        .resultado-card {
+            background: #fafcfe;
+            border-radius: 24px;
+            padding: 28px;
+        }
+
+        .pontuacao-destaque {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1e4b6e;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .mensao {
+            text-align: center;
+            font-size: 1.6rem;
+            margin: 10px 0 25px;
+        }
+
+        .lista-erros {
+            margin: 20px 0;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #d4e0e9;
+            border-radius: 16px;
+            padding: 16px;
+            background: white;
+        }
+
+        .botoes-resultado {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        /* Responsivo */
+        @media (max-width: 600px) {
+            body { padding: 8px; }
+            .quiz-wrapper { padding: 18px 14px; }
+            .alt-item { padding: 14px 18px; }
+            .btn { width: 100%; }
+            .navegacao-quiz .btn { width: auto; }
+        }
+
+        .info-tentativa {
+            margin: 10px 0;
+            color: #3f627c;
+        }
+    </style>
+</head>
+<body>
+<div class="quiz-wrapper">
+    <!-- TELA 1: IDENTIFICAÇÃO -->
+    <div id="telaIdent" class="tela ativa">
+        <div class="card-identificacao">
+            <h2>📋 Quiz 1 · Correntes Migratórias</h2>
+            <p style="text-align: center; margin-bottom: 28px; color: #2e5f7a;">Circulação de mercadorias e marcas na paisagem</p>
+            <div class="form-group">
+                <label>Nome completo *</label>
+                <input type="text" id="nomeAluno" placeholder="Digite seu nome" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label>Turma</label>
+                <select id="turmaSelect">
+                    <option value="Turma A">Turma A</option>
+                    <option value="Turma B">Turma B</option>
+                    <option value="Turma C">Turma C</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Bimestre</label>
+                <select id="bimestreSelect">
+                    <option value="1º Bimestre">1º Bimestre</option>
+                    <option value="2º Bimestre">2º Bimestre</option>
+                    <option value="3º Bimestre">3º Bimestre</option>
+                    <option value="4º Bimestre">4º Bimestre</option>
+                </select>
+            </div>
+            <button id="btnIniciar" class="btn btn-iniciar" disabled>▶ Iniciar Quiz</button>
+        </div>
+    </div>
+
+    <!-- TELA 2: QUIZ (QUESTÕES) -->
+    <div id="telaQuiz" class="tela">
+        <div class="quiz-header">
+            <div class="progresso-area">
+                <div class="questao-indicador" id="questaoIndicador">Questão 1 de 20</div>
+                <div class="barra-bg">
+                    <div class="barra-fill" id="barraProgresso" style="width: 5%;"></div>
+                </div>
+            </div>
+            <div class="ferramentas-topo">
+                <button id="btnTelaCheia" class="btn-icone">⛶ Tela Cheia</button>
+            </div>
+        </div>
+
+        <div class="questao-box">
+            <div class="enunciado" id="enunciadoQuestao"></div>
+            <div class="alternativas" id="containerAlternativas"></div>
+        </div>
+
+        <div id="feedbackContainer" class="feedback-area" style="display: none;">
+            <div id="feedbackStatus" class="feedback-status"></div>
+            <div id="feedbackCorreta" class="feedback-correta"></div>
+            <div id="feedbackJustificativa" class="justificativa"></div>
+        </div>
+
+        <div class="navegacao-quiz">
+            <button id="btnProximo" class="btn btn-proximo" disabled>Próxima →</button>
+        </div>
+    </div>
+
+    <!-- TELA 3: RESULTADO (APROVADO / REPROVADO) -->
+    <div id="telaResultado" class="tela">
+        <div class="resultado-card">
+            <h2 id="resultadoTitulo">Resultado</h2>
+            <div id="infoAluno"></div>
+            <div class="pontuacao-destaque" id="pontuacaoFinal"></div>
+            <div class="mensao" id="mensagemMensao"></div>
+            <div id="listaErrosContainer" class="lista-erros"></div>
+            <div class="info-tentativa" id="tentativaInfo"></div>
+            <div class="botoes-resultado">
+                <button id="btnGerarPDF" class="btn" style="display: none;">📄 Gerar Relatório PDF</button>
+                <button id="btnRefazer" class="btn">⟲ Refazer Quiz</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function(){
+        "use strict";
+
+        // ---------- BANCO DE 20 QUESTÕES ----------
+        const quizData = [
+            { question: "Na Geografia Humana, a categoria de território é entendida como:", options: ["O suporte físico natural onde os fenômenos sociais ocorrem de forma passiva.", "Uma construção social, histórica e política, produzida pela ação humana ao longo do tempo.", "Apenas os limites políticos definidos por fronteiras interestaduais.", "O conjunto de características naturais que independem da ocupação humana."], answer: 1, justification: "O território não é um dado da natureza, mas sim uma construção social resultante das relações de poder, da ocupação, da circulação e das disputas entre grupos humanos ao longo da história." },
+            { question: "A diáspora africana forçada (séculos XVI-XIX) deixou marcas profundas na paisagem das Américas. Entre essas marcas, NÃO se inclui:", options: ["Plantations de cana-de-açúcar, café e algodão.", "Cidades portuárias estruturadas para o comércio atlântico.", "A composição étnica e cultural de países como Brasil e Estados Unidos.", "A construção de ferrovias para integração produtiva no século XX."], answer: 3, justification: "As ferrovias estão associadas à circulação de mercadorias e à expansão capitalista do século XIX-XX, não especificamente à diáspora africana forçada." },
+            { question: "O êxodo rural verificado em diversos países ao longo do século XX resultou principalmente:", options: ["No fortalecimento da economia agrária e na redução da pobreza no campo.", "Na transformação da paisagem urbana, com expansão de periferias, cortiços e ocupações irregulares.", "Na diminuição da população das cidades e no crescimento das áreas rurais.", "Na uniformização cultural entre campo e cidade."], answer: 1, justification: "O êxodo rural levou milhões de pessoas do campo para as cidades, gerando crescimento urbano desordenado, periferias carentes de infraestrutura e moradias precárias." },
+            { question: "Diásporas (como a judaica, a armênia e a chinesa) são importantes para a análise geográfica porque:", options: ["Demonstram que o território se estende para além das fronteiras políticas por meio de redes transnacionais.", "Representam fluxos migratórios exclusivamente econômicos e temporários.", "São fenômenos recentes relacionados exclusivamente às migrações climáticas.", "Indicam que os deslocamentos populacionais não produzem marcas duradouras."], answer: 0, justification: "As diásporas mantêm laços culturais, econômicos e afetivos com seus territórios de origem, formando redes que conectam lugares distantes e transcendem fronteiras políticas." },
+            { question: "Sobre os refugiados e deslocados forçados no mundo contemporâneo, é correto afirmar que:", options: ["O número de refugiados tem diminuído significativamente na última década.", "Mais de 110 milhões de pessoas estavam deslocadas à força no final de 2023.", "Os refugiados climáticos já possuem status jurídico consolidado internacionalmente.", "A migração forçada afeta exclusivamente países da África e do Oriente Médio."], answer: 1, justification: "Segundo dados do ACNUR, o número de pessoas deslocadas à força ultrapassou 110 milhões em 2023. Refugiados climáticos ainda não têm status jurídico consolidado." },
+            { question: "Analise as afirmações sobre a migração econômica sul-norte:\nI. Envolve fluxos de países pobres ou em desenvolvimento para países ricos.\nII. As remessas de dinheiro enviadas pelos migrantes são irrelevantes para os países de origem.\nIII. Deixa marcas como bairros étnicos nos países de destino e dependência financeira nos países de origem.\nEstá(ão) correta(s):", options: ["Apenas I.", "Apenas I e II.", "Apenas I e III.", "I, II e III."], answer: 2, justification: "I correta (definição de migração sul-norte). III correta. II é falsa – remessas são fonte crucial de divisas." },
+            { question: "A circulação de mercadorias produz paisagens específicas. Assinale o exemplo que NÃO se enquadra como paisagem diretamente associada a esse processo:", options: ["Campos de refugiados que se tornam cidades improvisadas.", "Portos, aeroportos e centros de distribuição logística.", "Zonas francas e parques industriais voltados para exportação.", "Rodovias, ferrovias e dutos que cruzam territórios."], answer: 0, justification: "Campos de refugiados estão associados às migrações forçadas, não diretamente à circulação de mercadorias." },
+            { question: "A BR-163 (Cuiabá-Santarém) e a Ferrovia Carajás são exemplos de como:", options: ["Vias de circulação podem abrir novas frentes de expansão econômica e transformar a paisagem.", "O modal ferroviário é exclusivo para transporte de passageiros.", "As rodovias não têm impacto significativo na paisagem da Amazônia.", "A circulação de mercadorias é irrelevante para a economia brasileira."], answer: 0, justification: "A BR-163 abriu novas áreas para expansão agrícola na Amazônia, e a Ferrovia Carajás transformou a paisagem e a economia da região Norte." },
+            { question: "O comércio informal, as feiras livres e os camelódromos são exemplos de:", options: ["Práticas comerciais em extinção no capitalismo contemporâneo.", "Circulação de mercadorias que ocorre fora do controle estrito do Estado.", "Fenômenos exclusivos das áreas rurais e de países subdesenvolvidos.", "Formas de comércio que não produzem marcas na paisagem urbana."], answer: 1, justification: "O comércio informal opera à margem da fiscalização estatal e produz paisagens próprias em áreas centrais." },
+            { question: "A frase de Milton Santos – 'o território não é apenas o chão que se pisa. É o chão que se pensa' – significa que:", options: ["O território é apenas uma construção mental, sem materialidade.", "O território é simultaneamente material (herdado) e imaterial (construído pelas relações sociais).", "Os mapas são mais importantes que as pessoas na produção do território.", "As migrações são irrelevantes para a transformação da paisagem."], answer: 1, justification: "A frase enfatiza a dupla dimensão do território: materialidade herdada e dimensão simbólica construída socialmente." },
+            { question: "As remessas de dinheiro enviadas por migrantes econômicos para seus países de origem são consideradas importantes porque:", options: ["Representam um volume financeiro insignificante.", "Em alguns países, superam a ajuda internacional e o investimento estrangeiro direto.", "Substituem completamente as políticas públicas de desenvolvimento.", "São a principal causa da pobreza nos países de origem."], answer: 1, justification: "As remessas constituem uma fonte crucial de divisas, em alguns casos superando ajuda internacional e IED." },
+            { question: "As zonas de livre comércio (como a Zona Franca de Manaus) e os parques industriais de exportação são caracterizados por:", options: ["Promover a integração econômica com o território circundante.", "Privilegiarem o mercado interno em detrimento das exportações.", "Serem territórios altamente especializados, frequentemente desconectados do entorno.", "Estimularem a produção artesanal e o comércio local."], answer: 2, justification: "Esses espaços são orientados para o comércio global, operando como enclaves com pouca integração local." },
+            { question: "A cidade de Santos (SP) é frequentemente citada como exemplo de como:", options: ["Os portos perderam importância na economia globalizada.", "As migrações internas são irrelevantes para a formação das cidades.", "A circulação de mercadorias pode definir a identidade e a função de um território.", "Apenas a capital federal concentra atividades econômicas relevantes."], answer: 2, justification: "Santos desenvolveu-se em torno de sua atividade portuária, mostrando como a circulação molda o território." },
+            { question: "Sobre as migrações climáticas, é correto afirmar que:", options: ["Estima-se que centenas de milhões de pessoas possam ser deslocadas nas próximas décadas, mas ainda não há status jurídico consolidado.", "Já existe um protocolo internacional garantindo status de refugiado a deslocados ambientais.", "As migrações climáticas afetam exclusivamente os países insulares do Pacífico.", "Esse fenômeno é numericamente irrelevante em comparação com as migrações econômicas."], answer: 0, justification: "Ainda não há status jurídico consolidado, mas projeções indicam centenas de milhões de deslocados por mudanças climáticas." },
+            { question: "A migração econômica sul-norte produz marcas nos países de destino. Uma das marcas mais visíveis é:", options: ["O aumento da ajuda internacional.", "A desativação de zonas portuárias.", "A redução da diversidade cultural.", "A formação de bairros étnicos e enclaves laborais."], answer: 3, justification: "Migrantes tendem a formar bairros étnicos (Chinatowns, Little Italys) e ocupar nichos específicos no mercado de trabalho." },
+            { question: "A 'selva de Darién', na fronteira entre Colômbia e Panamá, é conhecida por ser:", options: ["Uma área de intensa circulação de mercadorias.", "Uma região de preservação ambiental totalmente controlada.", "Um polo de desenvolvimento econômico na América Central.", "Uma rota migratória perigosa utilizada por deslocados forçados."], answer: 3, justification: "A selva de Darién é uma das rotas mais perigosas para migrantes que tentam chegar à América do Norte." },
+            { question: "No contexto da circulação de mercadorias, as marcas na paisagem incluem:", options: ["Apenas grandes cidades e regiões metropolitanas.", "Portos, aeroportos, rodovias, ferrovias, dutos, zonas francas e centros de distribuição.", "Exclusivamente as áreas de preservação ambiental.", "Somente as feiras livres e o comércio informal."], answer: 1, justification: "A circulação de mercadorias produz ampla infraestrutura: portos, aeroportos, rodovias, ferrovias, dutos, zonas francas etc." },
+            { question: "A paisagem das grandes metrópoles contemporâneas é resultado:", options: ["Exclusivamente do planejamento estatal.", "Apenas das condições naturais do relevo.", "De migrações internas e internacionais, combinadas com intensa circulação de mercadorias.", "Da redução dos fluxos migratórios nas últimas décadas."], answer: 2, justification: "Grandes metrópoles são moldadas por ondas migratórias e pela infraestrutura de circulação de mercadorias." },
+            { question: "Uma diferença central entre migrações históricas e contemporâneas é:", options: ["As migrações contemporâneas incluem novos fatores, como deslocamentos por mudanças climáticas e conflitos civis prolongados.", "As migrações históricas foram exclusivamente voluntárias.", "As migrações históricas não deixaram marcas na paisagem.", "As migrações contemporâneas afetam apenas países ricos."], answer: 0, justification: "Migrações contemporâneas incorporam novas causas, como mudanças climáticas e crises políticas prolongadas." },
+            { question: "A relação entre migrações, circulação de mercadorias e paisagem pode ser resumida como:", options: ["As migrações são fenômenos históricos sem relevância para a paisagem atual.", "A circulação de mercadorias é mais importante que os deslocamentos humanos.", "Tanto os deslocamentos humanos quanto a circulação de mercadorias transformam o território e deixam marcas profundas na paisagem.", "A paisagem é determinada apenas por fatores naturais."], answer: 2, justification: "Migrações e circulação de mercadorias são processos gêmeos na produção do território, ambos deixando marcas específicas." }
+        ];
+
+        const TOTAL_QUESTOES = 20;
+        let tentativas = 1;
+        let respostasAluno = new Array(TOTAL_QUESTOES).fill(null);
+        let questaoAtual = 0;
+        let selecionada = null;
+        let respondida = false;
+
+        // Elementos DOM
+        const telaIdent = document.getElementById('telaIdent');
+        const telaQuiz = document.getElementById('telaQuiz');
+        const telaResultado = document.getElementById('telaResultado');
+        const inputNome = document.getElementById('nomeAluno');
+        const btnIniciar = document.getElementById('btnIniciar');
+        const turmaSelect = document.getElementById('turmaSelect');
+        const bimestreSelect = document.getElementById('bimestreSelect');
+
+        const questaoIndicador = document.getElementById('questaoIndicador');
+        const barraProgresso = document.getElementById('barraProgresso');
+        const enunciadoQuestao = document.getElementById('enunciadoQuestao');
+        const containerAlternativas = document.getElementById('containerAlternativas');
+        const feedbackContainer = document.getElementById('feedbackContainer');
+        const feedbackStatus = document.getElementById('feedbackStatus');
+        const feedbackCorreta = document.getElementById('feedbackCorreta');
+        const feedbackJustificativa = document.getElementById('feedbackJustificativa');
+        const btnProximo = document.getElementById('btnProximo');
+
+        const resultadoTitulo = document.getElementById('resultadoTitulo');
+        const infoAluno = document.getElementById('infoAluno');
+        const pontuacaoFinal = document.getElementById('pontuacaoFinal');
+        const mensagemMensao = document.getElementById('mensagemMensao');
+        const listaErrosContainer = document.getElementById('listaErrosContainer');
+        const tentativaInfo = document.getElementById('tentativaInfo');
+        const btnGerarPDF = document.getElementById('btnGerarPDF');
+        const btnRefazer = document.getElementById('btnRefazer');
+
+        // Ativa/desativa botão iniciar
+        inputNome.addEventListener('input', () => btnIniciar.disabled = !inputNome.value.trim());
+
+        // Iniciar quiz
+        btnIniciar.addEventListener('click', () => {
+            telaIdent.classList.remove('ativa');
+            telaQuiz.classList.add('ativa');
+            carregarQuestao(0);
+        });
+
+        function carregarQuestao(index) {
+            questaoAtual = index;
+            const q = quizData[index];
+            enunciadoQuestao.textContent = `${index+1}. ${q.question}`;
+            questaoIndicador.textContent = `Questão ${index+1} de 20`;
+            barraProgresso.style.width = ((index+1)/20*100) + '%';
+            
+            let html = '';
+            q.options.forEach((opt, i) => {
+                const letra = String.fromCharCode(97 + i);
+                html += `<div class="alt-item" data-index="${i}"><strong>${letra})</strong> ${opt}</div>`;
+            });
+            containerAlternativas.innerHTML = html;
+            
+            // Resetar estado visual
+            respondida = false;
+            selecionada = null;
+            feedbackContainer.style.display = 'none';
+            btnProximo.disabled = true;
+            
+            // Se já respondeu antes (reload)
+            if (respostasAluno[index] !== null) {
+                const respAnterior = respostasAluno[index];
+                aplicarFeedback(respAnterior);
+                destacarAlternativas(q.answer, respAnterior);
+            }
+            
+            document.querySelectorAll('.alt-item').forEach(el => {
+                el.addEventListener('click', onAlternativaClick);
+            });
+        }
+
+        function onAlternativaClick(e) {
+            if (respondida) return;
+            const div = e.currentTarget;
+            const idx = parseInt(div.dataset.index);
+            selecionada = idx;
+            
+            // Destacar seleção
+            document.querySelectorAll('.alt-item').forEach(el => el.classList.remove('selecionada'));
+            div.classList.add('selecionada');
+            
+            // Registrar resposta
+            respostasAluno[questaoAtual] = idx;
+            respondida = true;
+            
+            const q = quizData[questaoAtual];
+            aplicarFeedback(idx);
+            destacarAlternativas(q.answer, idx);
+            btnProximo.disabled = false;
+        }
+
+        function aplicarFeedback(respostaIdx) {
+            const q = quizData[questaoAtual];
+            const acertou = (respostaIdx === q.answer);
+            feedbackStatus.textContent = acertou ? '✅ Correto!' : '❌ Incorreto.';
+            const letraCorreta = String.fromCharCode(97 + q.answer);
+            feedbackCorreta.textContent = `A resposta certa é: ${letraCorreta}) ${q.options[q.answer]}`;
+            feedbackJustificativa.textContent = q.justification;
+            feedbackContainer.style.display = 'block';
+        }
+
+        function destacarAlternativas(correctIdx, selectedIdx) {
+            document.querySelectorAll('.alt-item').forEach((el, i) => {
+                el.classList.remove('correta-destaque', 'incorreta-destaque');
+                if (i === correctIdx) el.classList.add('correta-destaque');
+                else if (i === selectedIdx && selectedIdx !== correctIdx) el.classList.add('incorreta-destaque');
+            });
+        }
+
+        btnProximo.addEventListener('click', () => {
+            if (questaoAtual < TOTAL_QUESTOES - 1) {
+                carregarQuestao(questaoAtual + 1);
+            } else {
+                finalizarQuiz();
+            }
+        });
+
+        function finalizarQuiz() {
+            let acertos = 0;
+            respostasAluno.forEach((resp, i) => { if (resp === quizData[i].answer) acertos++; });
+            const nota = acertos * 0.5;
+            const aprovado = nota >= 7.0;
+            
+            if (!aprovado) {
+                tentativas++;
+                alert(`Nota: ${nota.toFixed(1)}. Você não atingiu 7,0. O quiz será reiniciado.`);
+                reiniciarQuiz();
+                return;
+            }
+            
+            // APROVADO
+            telaQuiz.classList.remove('ativa');
+            telaResultado.classList.add('ativa');
+            
+            const nome = inputNome.value.trim();
+            const turma = turmaSelect.value;
+            const bimestre = bimestreSelect.value;
+            const dataHora = new Date().toLocaleString('pt-BR');
+            
+            infoAluno.innerHTML = `<strong>${nome}</strong> · ${turma} · ${bimestre}<br>${dataHora}`;
+            pontuacaoFinal.textContent = `${acertos} de 20 acertos · Nota ${nota.toFixed(1)}`;
+            
+            let mensao = '';
+            if (nota < 5.0) mensao = 'Não foi muito bem';
+            else if (nota < 6.5) mensao = 'Regular';
+            else if (nota < 8.5) mensao = 'Bom';
+            else mensao = 'Excelente';
+            mensagemMensao.textContent = mensao;
+            
+            // Lista de erros
+            let errosHtml = '<h3>Questões erradas:</h3><ul>';
+            respostasAluno.forEach((r, i) => {
+                if (r !== quizData[i].answer) {
+                    errosHtml += `<li><strong>Q${i+1}:</strong> ${quizData[i].question.substring(0,60)}...</li>`;
+                }
+            });
+            errosHtml += '</ul>';
+            listaErrosContainer.innerHTML = errosHtml;
+            tentativaInfo.textContent = `Tentativa nº ${tentativas}`;
+            btnGerarPDF.style.display = 'inline-block';
+        }
+
+        function reiniciarQuiz() {
+            respostasAluno = new Array(TOTAL_QUESTOES).fill(null);
+            questaoAtual = 0;
+            telaResultado.classList.remove('ativa');
+            telaQuiz.classList.add('ativa');
+            carregarQuestao(0);
+        }
+
+        btnRefazer.addEventListener('click', () => {
+            tentativas++;
+            reiniciarQuiz();
+        });
+
+        // PDF (window.print)
+        btnGerarPDF.addEventListener('click', () => {
+            const nome = inputNome.value;
+            const turma = turmaSelect.value;
+            const bimestre = bimestreSelect.value;
+            let acertos = respostasAluno.filter((r,i) => r === quizData[i].answer).length;
+            const nota = acertos * 0.5;
+            let mensao = nota < 5 ? 'Não foi muito bem' : nota < 6.5 ? 'Regular' : nota < 8.5 ? 'Bom' : 'Excelente';
+            
+            let conteudo = `
+                RELATÓRIO QUIZ 1 - CORRENTES MIGRATÓRIAS
+                Aluno: ${nome} | Turma: ${turma} | Bimestre: ${bimestre}
+                Data: ${new Date().toLocaleString()}
+                Pontuação: ${acertos}/20 | Nota: ${nota.toFixed(1)} | Mensão: ${mensao}
+                Tentativa: ${tentativas}
+                ----------------------------------------
+                Questões erradas:
+            `;
+            respostasAluno.forEach((r,i) => { if(r!==quizData[i].answer) conteudo += `Q${i+1}: ${quizData[i].question}\n`; });
+            
+            const win = window.open('', '_blank');
+            win.document.write(`<pre>${conteudo}</pre>`);
+            win.document.title = "Relatório Quiz";
+            win.print();
+        });
+
+        // Tela cheia
+        document.getElementById('btnTelaCheia').addEventListener('click', () => {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else document.exitFullscreen();
+        });
+
+        // Inicial
+        carregarQuestao(0);
+    })();
+</script>
+</body>
+</html>
