@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Material de Estudos - Tempo e Espaço (Avançado)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a5f7a, #0d3b4f);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #0d3b4f;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .audio-controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-audio {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-audio:hover {
+            background: rgba(255,255,255,0.4);
+            transform: scale(1.02);
+        }
+
+        .main-content {
+            padding: 30px;
+            min-height: 500px;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        h2 {
+            color: #0d3b4f;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            border-left: 5px solid #1a5f7a;
+            padding-left: 15px;
+        }
+
+        .text-content {
+            line-height: 1.6;
+            color: #333;
+            font-size: 1.05rem;
+            text-align: justify;
+        }
+
+        .text-content p {
+            margin-bottom: 15px;
+        }
+
+        .audio-controls-bottom {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 25px 0 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn-audio-bottom {
+            background: #1a5f7a;
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            min-width: 80px;
+        }
+
+        .btn-audio-bottom:hover {
+            background: #0d3b4f;
+            transform: scale(1.02);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            gap: 15px;
+        }
+
+        .btn-nav {
+            background: #1a5f7a;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-nav:hover {
+            background: #0d3b4f;
+            transform: translateY(-2px);
+        }
+
+        .btn-nav:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-end {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-end:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .progress-info {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .end-screen {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .end-screen h2 {
+            border-left: none;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 600px) {
+            .main-content {
+                padding: 20px;
+            }
+            h2 {
+                font-size: 1.3rem;
+            }
+            .btn-nav, .btn-audio, .btn-audio-bottom, .btn-end {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+            .audio-controls-bottom {
+                margin: 20px 0 15px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="logo">🌍 Tempo e Espaço (Avançado)</div>
+        <div class="audio-controls" id="audioControlsTop">
+            <button class="btn-audio" id="playBtnTop">▶️ Play</button>
+            <button class="btn-audio" id="pauseBtnTop">⏸️ Pause</button>
+            <button class="btn-audio" id="stopBtnTop">⏹️ Stop</button>
+        </div>
+    </div>
+    <div class="main-content" id="mainContent"></div>
+</div>
+
+<script>
+    // ==================== CONFIGURAÇÃO ====================
+    let currentPage = 0;
+    let currentUtterance = null;
+    let autoAdvanceTimer = null;
+    let isSpeaking = false;
+    let selectedVoice = null;
+    
+    // Conteúdo das páginas (11 páginas - versão avançada dissertativa)
+    const pages = [
+        {
+            title: "1. A produção social do espaço e a mediação do trabalho",
+            content: `
+                <p>O espaço geográfico não deve ser entendido como um palco vazio ou um recipiente passivo onde a sociedade se instala. Ao contrário dessa visão naturalizada, o espaço é continuamente produzido pela ação humana ao longo do tempo. O geógrafo brasileiro Milton Santos, uma das maiores referências da geografia crítica contemporânea, propôs uma definição precisa: o espaço é um conjunto indissociável de sistemas de objetos e sistemas de ações.</p>
+                <p>Os sistemas de objetos correspondem às materialidades construídas pela sociedade, como casas, estradas, fábricas, barragens, redes de energia e cabos de fibra ótica. Os sistemas de ações referem-se às relações sociais, econômicas, políticas e culturais que dão sentido e função a esses objetos. Um shopping center, por exemplo, não é apenas um edifício de concreto e vidro. Ele só existe como shopping porque há ações de consumo, trabalho, publicidade, circulação de pessoas e mercadorias, e decisões de investimento do capital. Sem as ações, o objeto permanece, mas perde sua função social.</p>
+                <p>A relação entre sociedade e natureza é mediada pelo trabalho. Foi Karl Marx quem afirmou que o trabalho é o "metabolismo entre o homem e a natureza". Essa expressão, carregada de significado biológico, indica que o trabalho é o processo pelo qual a sociedade troca matéria e energia com o meio ambiente. Por meio do trabalho, os seres humanos extraem recursos da natureza, transformam esses recursos em bens úteis e, ao fazê-lo, modificam o meio físico: abrem clareiras, constroem cidades, desviam rios, aplainam montanhas.</p>
+            `
+        },
+        {
+            title: "1. A produção social do espaço e a mediação do trabalho (continuação)",
+            content: `
+                <p>O problema contemporâneo é que esse metabolismo tornou-se profundamente desigual e insustentável. A sociedade urbano-industrial extrai recursos da natureza em um ritmo muito superior à capacidade de reposição dos ciclos naturais. Esse descompasso é mensurado por um indicador chamado pegada ecológica, que calcula a área de terra e água biologicamente produtiva necessária para sustentar um determinado padrão de consumo e absorver os resíduos gerados.</p>
+                <p>Os dados mais recentes da Global Footprint Network indicam que a humanidade consome os recursos de 1,7 planetas Terra por ano. Isso significa que estamos vivendo além da capacidade de regeneração do planeta, um fenômeno conhecido como overshoot ou superação ecológica. As consequências incluem esgotamento de recursos, perda de biodiversidade, poluição generalizada e aquecimento global.</p>
+                <p>O tempo, nesse contexto, manifesta-se em múltiplas escalas. O tempo geológico é extremamente lento, medido em milhões ou bilhões de anos. O tempo histórico opera em séculos ou milênios. O tempo social desenrola-se em décadas ou gerações. Por fim, o tempo cotidiano é o ritmo das atividades diárias. Uma característica central da modernidade é a aceleração do tempo social, fenômeno analisado pelo sociólogo alemão Hartmut Rosa.</p>
+            `
+        },
+        {
+            title: "2. Sociedades tradicionais e sociedades urbano-industriais",
+            content: `
+                <p>A oposição entre sociedades tradicionais e sociedades urbano-industriais é um recurso analítico valioso, mas é preciso evitar uma visão simplista ou evolucionista. Na realidade empírica, não existem sociedades puramente tradicionais ou puramente modernas. Há gradações, sobreposições e hibridismos. No entanto, as diferenças são suficientemente marcantes para justificar uma análise comparativa.</p>
+                <p>Nas sociedades tradicionais, a natureza é frequentemente percebida como sagrada ou dotada de agência própria. Há uma integração mais estreita entre o homem e o meio ambiente, e as práticas produtivas tendem a respeitar os ciclos naturais. A organização social baseia-se em laços de parentesco, comunidade e reciprocidade. A economia é predominantemente de subsistência, orientada pela troca e com baixa acumulação de riquezas. As técnicas são simples, com predomínio da energia humana ou animal. O impacto ambiental é local, reversível e de baixa escala.</p>
+                <p>Nas sociedades urbano-industriais, ao contrário, a natureza é predominantemente vista como recurso, estoque de matéria-prima ou externalidade. A organização social estrutura-se em classes sociais, com forte individualismo e mobilidade. A economia é orientada pelo mercado, pelo lucro e pela acumulação ampliada de capital. As técnicas são complexas, movidas por energia fóssil ou elétrica. O impacto ambiental é global, muitas vezes irreversível e de alta escala.</p>
+            `
+        },
+        {
+            title: "2. Sociedades tradicionais e urbano-industriais (continuação)",
+            content: `
+                <p>Milton Santos propôs uma periodização que ajuda a entender a evolução da relação sociedade-espaço. No meio natural, que predomina antes da Revolução Industrial, a natureza ainda se impõe sobre as ações humanas, que são limitadas, lentas e locais. No meio técnico, que emerge com a Revolução Industrial no final do século XVIII, as técnicas começam a modificar a natureza de forma mais intensa e sistemática. Surgem as fábricas, as ferrovias, os portos modernos, as cidades industriais.</p>
+                <p>No meio técnico-científico-informacional, que vivemos hoje, a técnica é aliada à ciência e à informação, e o espaço torna-se globalizado, fluido e verticalizado. As ações humanas ocorrem em tempo real, conectadas por redes digitais, satélites e sistemas de informação geográfica.</p>
+                <p>Um exemplo concreto desse meio técnico-científico-informacional é o agricultor do agronegócio no Mato Grosso. Ele utiliza GPS para orientar suas máquinas, sensoriamento remoto para monitorar suas lavouras, previsão do tempo por satélite para planejar o plantio e a colheita, e negocia sua soja na Bolsa de Chicago em tempo real. Esse agricultor opera plenamente no meio técnico-científico-informacional.</p>
+            `
+        },
+        {
+            title: "3. A dinâmica da natureza e os impactos antrópicos",
+            content: `
+                <p>A natureza possui seus próprios ciclos de regulação, conhecidos como ciclos biogeoquímicos. Entre os mais importantes estão o ciclo da água, o ciclo do carbono, o ciclo do nitrogênio e o ciclo do fósforo. Esses ciclos envolvem a circulação de elementos químicos entre os reservatórios da atmosfera, hidrosfera, litosfera e biosfera, e são regulados por processos físicos, químicos e biológicos que operam em diferentes escalas de tempo.</p>
+                <p>A ação humana interfere nesses ciclos naturais, muitas vezes de forma intensa e desregulada. A queima de combustíveis fósseis e o desmatamento aumentam a concentração de dióxido de carbono na atmosfera, intensificando o efeito estufa natural e provocando o aquecimento global. O esgoto industrial e doméstico não tratado, os agrotóxicos e os fertilizantes sintéticos poluem rios, lagos, aquíferos e oceanos. O desmatamento e a agricultura intensiva provocam erosão acelerada do solo, perda de fertilidade e desertificação.</p>
+                <p>A impermeabilização do solo por asfalto e concreto nas áreas urbanas altera o ciclo hidrológico, causando enchentes e alagamentos. A destruição de habitats naturais, combinada com a caça e a pesca predatórias, leva à extinção de espécies e à perda de biodiversidade, enfraquecendo os ecossistemas e seus serviços ambientais.</p>
+            `
+        },
+        {
+            title: "3. O Antropoceno: uma nova época geológica?",
+            content: `
+                <p>O químico e prêmio Nobel Paul Crutzen propôs, no início dos anos 2000, o termo Antropoceno para designar uma nova época geológica marcada pela ação humana como força geológica de escala planetária. Segundo Crutzen e seus seguidores, a humanidade tornou-se o principal agente de transformação do sistema Terra, rivalizando com forças naturais como o vulcanismo, a tectônica de placas e os ciclos orbitais.</p>
+                <p>Entre os principais marcadores estratigráficos do Antropoceno estão os radionuclídeos artificiais, resíduos dos testes nucleares atmosféricos realizados a partir da década de 1950. Há também os plásticos, presentes em praticamente todos os ambientes da Terra. O concreto, produzido em quantidades industriais, formará camadas diagnósticas nos estratos rochosos do futuro. O alumínio puro, um metal que não existe em estado nativo na natureza, tornou-se abundante em depósitos de lixo. E a chamada sexta extinção, uma extinção em massa de espécies causada pela ação humana.</p>
+                <p>O Antropoceno ainda não foi formalmente reconhecido pela União Internacional de Ciências Geológicas, que em 2024 rejeitou uma proposta nesse sentido. No entanto, o termo já é amplamente utilizado pela comunidade científica como uma poderosa ferramenta analítica para descrever a atual crise ambiental planetária.</p>
+            `
+        },
+        {
+            title: "4. A paisagem como documento histórico",
+            content: `
+                <p>A paisagem pode ser definida como tudo o que a visão alcança, incluindo elementos naturais e elementos construídos. No entanto, para a geografia cultural, essa definição visual é insuficiente. A paisagem não é apenas aquilo que se vê, mas também aquilo que se vivencia, se interpreta e se significa. O geógrafo britânico Denis Cosgrove definiu a paisagem como uma "maneira de ver o mundo", ou seja, um modo de olhar carregado de valores culturais, ideologias e relações de poder.</p>
+                <p>Uma mesma paisagem pode ser interpretada de formas radicalmente diferentes por diferentes atores sociais. Uma plantação de cana-de-açúcar no Nordeste brasileiro pode ser vista como progresso pelo empresário, como trabalho duro e exploração pelo trabalhador rural, como desmatamento pelo ativista ecológico, e como herança colonial pelo historiador. A paisagem é, portanto, um território de disputa de sentidos.</p>
+                <p>A paisagem também acumula diferentes tempos históricos sobrepostos, funcionando como um palimpsesto que pode ser lido pelo geógrafo atento. No Brasil, é possível identificar camadas temporais: a camada pré-colonial, a camada colonial, a camada imperial, a camada industrial e a camada contemporânea.</p>
+            `
+        },
+        {
+            title: "5. Cartografia crítica e geotecnologias",
+            content: `
+                <p>A cartografia evoluiu dramaticamente ao longo da história. No período pré-científico, os mapas eram rudimentares e carregados de simbolismo religioso. Na Grécia e Roma antigas, surgiram as primeiras projeções cartográficas e o sistema de coordenadas geográficas. No Renascimento, as grandes navegações exigiram mapas cada vez mais precisos. No período moderno, os levantamentos topográficos sistemáticos permitiram a produção de mapas nacionais de alta precisão. Na era contemporânea, os satélites, o GPS, os SIG e o sensoriamento remoto transformaram completamente a cartografia.</p>
+                <p>Toda projeção cartográfica, por definição, distorce a realidade em alguma dimensão espacial: área, forma, distância ou direção. A escolha de uma projeção não é uma decisão meramente técnica ou neutra. É uma escolha política. A projeção de Mercator, por exemplo, amplia exageradamente as áreas polares, fazendo com que a Europa apareça muito maior do que é na realidade, enquanto a África e a América do Sul são minimizadas.</p>
+                <p>A projeção de Peters, proposta em 1973, foi uma tentativa explícita de contrapor essa visão eurocêntrica, conservando as áreas, ainda que às custas da distorção das formas. Atualmente, a projeção de Robinson e a projeção Winkel-Tripel são consideradas bons compromissos entre a conservação de área e forma.</p>
+            `
+        },
+        {
+            title: "5. Geotecnologias avançadas",
+            content: `
+                <p>As geotecnologias modernas vão muito além da cartografia tradicional. O GPS diferencial permite aplicações com precisão centimétrica, como a agricultura de precisão e a navegação autônoma de veículos. O LiDAR utiliza pulsos de laser para mapear superfícies em três dimensões, sendo amplamente empregado em arqueologia para mapear sítios cobertos por florestas e em engenharia para modelar terrenos.</p>
+                <p>O SAR é um sistema de radar imageador capaz de produzir imagens de alta resolução mesmo com cobertura de nuvens, sendo essencial para o monitoramento do desmatamento na Amazônia. O SIG temporal permite analisar mudanças na superfície terrestre ao longo do tempo, como a expansão urbana, o desmatamento progressivo e a evolução da linha de costa.</p>
+                <p>Um exemplo emblemático no Brasil é o PRODES, do INPE, que produz taxas anuais de desmatamento na Amazônia desde 1988. Complementarmente, o DETER emite alertas quase diários sobre novos focos de desmatamento, permitindo ações mais rápidas de fiscalização pelos órgãos ambientais.</p>
+            `
+        },
+        {
+            title: "6. Mapas temáticos e análise territorial",
+            content: `
+                <p>Diferentemente dos mapas gerais, os mapas temáticos concentram-se em um único tema ou fenômeno. Existem vários tipos: mapas coropléticos (áreas coloridas conforme um indicador), mapas de ponto, mapas de símbolo proporcional, mapas de isolinha, mapas de fluxo e cartogramas.</p>
+                <p>O território, por sua vez, não deve ser reduzido a uma área delimitada por fronteiras. Para a geografia crítica, o território é um conceito relacional e multiescalar, que envolve poder, identidade, apropriação e dominação. Diferentes abordagens destacam diferentes dimensões: a abordagem política (Ratzel), a cultural (Claval, Haesbaert), a econômica (Santos), a simbólica (Bonnemaison) e a abordagem de rede (Castells).</p>
+                <p>O território pode ser analisado em múltiplas escalas: corporal, local, regional, nacional e global. Cada escala revela diferentes processos, atores e relações de poder.</p>
+            `
+        },
+        {
+            title: "6. Análise integrada: conflitos por terra na Amazônia",
+            content: `
+                <p>Um exemplo concreto de análise territorial integrada é o estudo dos conflitos por terra na Amazônia brasileira. Essa análise não se faz com um único mapa, mas com a sobreposição de múltiplos mapas temáticos em um ambiente de SIG.</p>
+                <p>O mapa de vegetação e uso da terra revela as áreas de floresta e as áreas desmatadas. O mapa fundiário mostra as propriedades públicas, privadas, assentamentos e terras indígenas. O mapa de queimadas identifica os focos de calor. O mapa de violência no campo indica onde ocorrem conflitos, assassinatos e ameaças.</p>
+                <p>A sobreposição dessas camadas permite identificar áreas críticas onde a grilagem de terras, o desmatamento ilegal e a violência se concentram. É essa metodologia que permite ao Instituto Socioambiental (ISA) e à Comissão Pastoral da Terra (CPT) produzirem seus relatórios anuais, e que subsidia as ações de fiscalização do Ibama e as políticas de regularização fundiária do Incra.</p>
+                <p>Este material foi elaborado para aprofundar os conceitos fundamentais da relação entre tempo, espaço, sociedade e natureza, com ênfase na análise crítica e no uso de geotecnologias para a compreensão dos fenômenos territoriais contemporâneos.</p>
+            `
+        }
+    ];
+    
+    const totalPages = pages.length;
+    const mainContent = document.getElementById('mainContent');
+    
+    // ==================== FUNÇÃO PARA SELECIONAR VOZ FEMININA ====================
+    function selectFemaleVoice() {
+        return new Promise((resolve) => {
+            if (!window.speechSynthesis) {
+                resolve(null);
+                return;
+            }
+            
+            let voices = window.speechSynthesis.getVoices();
+            
+            if (voices.length > 0) {
+                resolve(findFemaleVoice(voices));
+            } else {
+                window.speechSynthesis.onvoiceschanged = () => {
+                    voices = window.speechSynthesis.getVoices();
+                    resolve(findFemaleVoice(voices));
+                };
+            }
+        });
+    }
+    
+    function findFemaleVoice(voices) {
+        const femalePatterns = [
+            /google uk english female/i,
+            /microsoft maria/i,
+            /samantha/i,
+            /google português feminino/i,
+            /female/i,
+            /feminina/i,
+            /mulher/i,
+            /woman/i,
+            /vitoria/i,
+            /lucia/i,
+            /maria/i,
+            /ana/i
+        ];
+        
+        let portugueseVoices = voices.filter(v => v.lang.includes('pt') || v.lang.includes('BR'));
+        
+        for (const pattern of femalePatterns) {
+            const found = portugueseVoices.find(v => pattern.test(v.name));
+            if (found) {
+                console.log("Voz feminina encontrada (português):", found.name);
+                return found;
+            }
+        }
+        
+        for (const pattern of femalePatterns) {
+            const found = voices.find(v => pattern.test(v.name));
+            if (found) {
+                console.log("Voz feminina encontrada (outro idioma):", found.name);
+                return found;
+            }
+        }
+        
+        console.log("Nenhuma voz feminina encontrada. Usando voz padrão.");
+        return null;
+    }
+    
+    // ==================== FUNÇÕES DE ÁUDIO ====================
+    function stopAudio() {
+        if (window.speechSynthesis) {
+            window.speechSynthesis.cancel();
+        }
+        if (autoAdvanceTimer) {
+            clearTimeout(autoAdvanceTimer);
+            autoAdvanceTimer = null;
+        }
+        isSpeaking = false;
+        currentUtterance = null;
+    }
+    
+    function pauseAudio() {
+        if (window.speechSynthesis && window.speechSynthesis.speaking) {
+            window.speechSynthesis.pause();
+            if (autoAdvanceTimer) {
+                clearTimeout(autoAdvanceTimer);
+                autoAdvanceTimer = null;
+            }
+        }
+    }
+    
+    function getTextToRead() {
+        const activePage = document.querySelector('.page.active');
+        if (!activePage) return '';
+        const clone = activePage.cloneNode(true);
+        clone.querySelectorAll('button, .nav-buttons, .btn-audio, .btn-audio-bottom, .btn-nav, .btn-end, .audio-controls, .audio-controls-bottom, .header').forEach(el => el.remove());
+        return clone.innerText.trim();
+    }
+    
+    function startAutoAdvance() {
+        if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+        autoAdvanceTimer = setTimeout(() => {
+            if (currentPage < totalPages - 1) {
+                currentPage++;
+                renderPage();
+                const textToRead = getTextToRead();
+                if (textToRead) {
+                    speakText(textToRead);
+                }
+            }
+        }, 12000);
+    }
+    
+    function speakText(text) {
+        if (!window.speechSynthesis) {
+            alert("Seu navegador não suporta áudio.");
+            return;
+        }
+        
+        stopAudio();
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'pt-BR';
+        utterance.rate = 0.9;
+        
+        if (selectedVoice) {
+            utterance.voice = selectedVoice;
+        }
+        
+        utterance.onend = () => {
+            isSpeaking = false;
+            startAutoAdvance();
+        };
+        utterance.onerror = () => {
+            isSpeaking = false;
+        };
+        
+        currentUtterance = utterance;
+        isSpeaking = true;
+        window.speechSynthesis.speak(utterance);
+    }
+    
+    // ==================== FUNÇÃO DE RENDERIZAÇÃO ====================
+    function renderPage() {
+        const page = pages[currentPage];
+        const isLastPage = (currentPage === totalPages - 1);
+        
+        let html = `
+            <div class="page active">
+                <h2>${page.title}</h2>
+                <div class="text-content">
+                    ${page.content}
+                </div>
+                <div class="audio-controls-bottom" id="audioControlsBottom">
+                    <button class="btn-audio-bottom" id="playBtnBottom">▶️ Play</button>
+                    <button class="btn-audio-bottom" id="pauseBtnBottom">⏸️ Pause</button>
+                    <button class="btn-audio-bottom" id="stopBtnBottom">⏹️ Stop</button>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn-nav" id="prevBtn" ${currentPage === 0 ? 'disabled' : ''}>◀ Voltar</button>
+                    ${isLastPage ? 
+                        `<button class="btn-end" id="endBtn">🔚 Encerrar</button>` :
+                        `<button class="btn-nav" id="nextBtn">Avançar ▶</button>`
+                    }
+                </div>
+                <div class="progress-info">
+                    Página ${currentPage + 1} de ${totalPages}
+                </div>
+            </div>
+        `;
+        
+        mainContent.innerHTML = html;
+        
+        // Eventos de navegação
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const endBtn = document.getElementById('endBtn');
+        
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                if (currentPage > 0) {
+                    stopAudio();
+                    currentPage--;
+                    renderPage();
+                }
+            });
+        }
+        
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                if (currentPage < totalPages - 1) {
+                    stopAudio();
+                    currentPage++;
+                    renderPage();
+                }
+            });
+        }
+        
+        if (endBtn) {
+            endBtn.addEventListener('click', () => {
+                stopAudio();
+                mainContent.innerHTML = `
+                    <div class="end-screen">
+                        <h2>👋 Fim do Material!</h2>
+                        <p>Estudo concluído. Você pode fechar esta janela.</p>
+                        <button class="btn-end" id="closeBtn" style="margin-top: 30px;">Fechar</button>
+                    </div>
+                `;
+                document.getElementById('closeBtn')?.addEventListener('click', () => {
+                    window.close();
+                    alert("Você pode fechar esta janela.");
+                });
+            });
+        }
+        
+        setupAudioButtons();
+    }
+    
+    // ==================== CONFIGURAÇÃO DOS BOTÕES DE ÁUDIO ====================
+    function setupAudioButtons() {
+        // Botões da barra superior
+        const playBtnTop = document.getElementById('playBtnTop');
+        const pauseBtnTop = document.getElementById('pauseBtnTop');
+        const stopBtnTop = document.getElementById('stopBtnTop');
+        
+        // Botões da barra inferior
+        const playBtnBottom = document.getElementById('playBtnBottom');
+        const pauseBtnBottom = document.getElementById('pauseBtnBottom');
+        const stopBtnBottom = document.getElementById('stopBtnBottom');
+        
+        const playAction = () => {
+            const text = getTextToRead();
+            if (text) {
+                speakText(text);
+            }
+        };
+        
+        const pauseAction = () => {
+            pauseAudio();
+            if (autoAdvanceTimer) {
+                clearTimeout(autoAdvanceTimer);
+                autoAdvanceTimer = null;
+            }
+        };
+        
+        const stopAction = () => {
+            stopAudio();
+        };
+        
+        if (playBtnTop) playBtnTop.onclick = playAction;
+        if (pauseBtnTop) pauseBtnTop.onclick = pauseAction;
+        if (stopBtnTop) stopBtnTop.onclick = stopAction;
+        
+        if (playBtnBottom) playBtnBottom.onclick = playAction;
+        if (pauseBtnBottom) pauseBtnBottom.onclick = pauseAction;
+        if (stopBtnBottom) stopBtnBottom.onclick = stopAction;
+    }
+    
+    // ==================== INICIALIZAÇÃO ====================
+    async function init() {
+        selectedVoice = await selectFemaleVoice();
+        renderPage();
+        setupAudioButtons();
+    }
+    
+    init();
+</script>
+</body>
+</html>
