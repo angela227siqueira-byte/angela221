@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Quiz - Sociedades Tradicionais e Urbano-Industriais</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a5f7a, #0d3b4f);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #0d3b4f;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.2rem;
+        }
+
+        .progress-bar-container {
+            background: #e0e0e0;
+            height: 8px;
+            width: 100%;
+        }
+
+        .progress-bar {
+            background: #28a745;
+            height: 8px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .main-content {
+            padding: 30px;
+            min-height: 450px;
+        }
+
+        .name-screen, .quiz-screen, .result-screen {
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .name-form {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .name-form input {
+            width: 80%;
+            max-width: 300px;
+            padding: 12px;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        h2 {
+            color: #0d3b4f;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #0d3b4f;
+            line-height: 1.4;
+        }
+
+        .options {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .options li {
+            margin: 10px 0;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .options li:hover {
+            background: #e0e0e0;
+            transform: translateX(5px);
+        }
+
+        .options li.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .options li.disabled:hover {
+            transform: none;
+        }
+
+        .options li.selected {
+            background: #1a5f7a;
+            color: white;
+            border-color: #1a5f7a;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 12px;
+            display: none;
+            line-height: 1.5;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+            border-left: 4px solid #28a745;
+        }
+
+        .feedback.wrong {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+            border-left: 4px solid #dc3545;
+        }
+
+        .btn {
+            background: #1a5f7a;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            background: #0d3b4f;
+            transform: scale(1.02);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .result-stats {
+            text-align: center;
+            padding: 20px;
+            background: #f0f2f5;
+            border-radius: 16px;
+            margin-bottom: 25px;
+        }
+
+        .score {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .grade {
+            font-size: 1.3rem;
+            padding: 10px;
+            border-radius: 30px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        .grade.aprovado { background: #d4edda; color: #155724; }
+        .grade.reprovado { background: #f8d7da; color: #721c24; }
+
+        .mistake-list {
+            text-align: left;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .mistake-item {
+            background: white;
+            border-left: 4px solid #dc3545;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+        }
+
+        .question-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .main-content {
+                padding: 20px;
+            }
+            .question-text {
+                font-size: 1rem;
+            }
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🌍 Quiz: Sociedades Tradicionais e Urbano-Industriais</h1>
+    </div>
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="main-content" id="mainContent"></div>
+</div>
+
+<script>
+    // ==================== CONFIGURAÇÃO ====================
+    let studentName = "";
+    let currentQuestion = 0;
+    let quizStarted = false;
+    let userAnswers = [];
+    
+    // ==================== 20 QUESTÕES (TEMA 2) ====================
+    const questionsData = [
+        { text: "As sociedades tradicionais geralmente se caracterizam por:", options: ["Alta acumulação de capital e tecnologia avançada", "Organização social baseada em laços de parentesco e comunidade", "Predomínio da economia de mercado e lucro", "Grande mobilidade geográfica e individualismo"], correct: 1, justification: "Sociedades tradicionais têm organização comunitária e baseada em parentesco, diferentemente do individualismo moderno." },
+        
+        { text: "Nas sociedades urbano-industriais, a natureza é predominantemente vista como:", options: ["Sagrada e integrada ao homem", "Recurso ou externalidade a ser explorada", "Intocável e preservada", "Um organismo vivo com direitos próprios"], correct: 1, justification: "A visão utilitarista da natureza é característica das sociedades urbano-industriais." },
+        
+        { text: "A Revolução Industrial, iniciada no final do século XVIII, representou:", options: ["A manutenção das técnicas artesanais", "A substituição da energia humana/animal pela energia mecânica", "O fim do uso de combustíveis fósseis", "A redução da produção e do consumo"], correct: 1, justification: "A Revolução Industrial introduziu máquinas a vapor e energia mecânica, transformando a produção." },
+        
+        { text: "Qual das alternativas NÃO é uma característica típica das sociedades tradicionais?", options: ["Baixo impacto ambiental", "Técnicas simples com energia humana/animal", "Economia de mercado e acumulação de capital", "Organização territorial baseada em usos consuetudinários"], correct: 2, justification: "Economia de mercado e acumulação de capital são características das sociedades urbano-industriais, não das tradicionais." },
+        
+        { text: "O 'meio técnico', segundo Milton Santos, caracteriza-se por:", options: ["Predomínio da natureza intocada", "Emergência das técnicas e início da modificação intensa da natureza", "Globalização e fluidez do espaço", "Uso exclusivo de energia solar"], correct: 1, justification: "O meio técnico emerge com a Revolução Industrial, quando as técnicas começam a modificar a natureza de forma mais intensa." },
+        
+        { text: "O fenômeno da 'aceleração do tempo social' está mais associado a qual tipo de sociedade?", options: ["Sociedades tradicionais", "Sociedades nômades", "Sociedades urbano-industriais", "Sociedades agrárias"], correct: 2, justification: "A modernidade impôs o ritmo do relógio, da produtividade e dos prazos, caracterizando as sociedades urbano-industriais." },
+        
+        { text: "Nas sociedades tradicionais, o território geralmente é organizado com base em:", options: ["Propriedade privada e Estado-nação", "Fronteiras fixas e exércitos nacionais", "Usos consuetudinários e fronteiras difusas", "Especulação imobiliária e mercado de terras"], correct: 2, justification: "Sociedades tradicionais têm organização territorial baseada em usos comunitários e fronteiras menos rígidas." },
+        
+        { text: "O individualismo e a mobilidade social são características marcantes de qual tipo de sociedade?", options: ["Sociedades tribais", "Sociedades agrárias", "Sociedades tradicionais", "Sociedades urbano-industriais"], correct: 3, justification: "As sociedades urbano-industriais valorizam o indivíduo e permitem maior mobilidade social." },
+        
+        { text: "O 'meio técnico-científico-informacional' é caracterizado por:", options: ["A técnica isolada da ciência e da informação", "A combinação de técnica, ciência e informação em um espaço globalizado", "A ausência de tecnologias da informação", "Um espaço local e desconectado"], correct: 1, justification: "Essa fase atual combina técnica, ciência e informação, produzindo um espaço globalizado e fluido." },
+        
+        { text: "O impacto ambiental das sociedades urbano-industriais pode ser descrito como:", options: ["Local e reversível", "Global e muitas vezes irreversível", "Inexistente", "Limitado às áreas rurais"], correct: 1, justification: "As sociedades urbano-industriais geram impacto ambiental global, como aquecimento global e poluição generalizada." },
+        
+        { text: "As sociedades tradicionais geralmente apresentam:", options: ["Alta rotatividade de emprego e desemprego estrutural", "Baixa acumulação de riquezas e economia de subsistência", "Grande dependência de combustíveis fósseis", "Intensa especulação financeira"], correct: 1, justification: "Sociedades tradicionais têm economia de subsistência e baixa acumulação de riquezas." },
+        
+        { text: "A transição do meio natural para o meio técnico está associada a qual evento histórico?", options: ["Renascimento Cultural", "Revolução Industrial", "Primeira Guerra Mundial", "Queda do Muro de Berlim"], correct: 1, justification: "A Revolução Industrial marcou a transição para o meio técnico, com máquinas e produção em larga escala." },
+        
+        { text: "O agricultor do agronegócio que utiliza GPS, sensoriamento remoto e negocia commodities em tempo real opera em qual meio geográfico?", options: ["Meio natural", "Meio técnico simples", "Meio técnico-científico-informacional", "Meio pré-industrial"], correct: 2, justification: "O uso de alta tecnologia e conexão global caracteriza o meio técnico-científico-informacional." },
+        
+        { text: "Nas sociedades tradicionais, o tempo é predominantemente marcado por:", options: ["Relógio e produtividade", "Prazos e metas", "Ciclos naturais (dia/noite, estações, plantio/colheita)", "Jornada de trabalho fixa"], correct: 2, justification: "Sociedades tradicionais seguem o ritmo da natureza, não o relógio industrial." },
+        
+        { text: "A propriedade privada e o Estado-nação são elementos centrais na organização territorial de qual tipo de sociedade?", options: ["Sociedades de caçadores-coletores", "Sociedades tribais", "Sociedades tradicionais agrárias", "Sociedades urbano-industriais"], correct: 3, justification: "Propriedade privada e Estado-nação são características marcantes das sociedades urbano-industriais modernas." },
+        
+        { text: "A urbanização acelerada e a concentração populacional nas cidades são fenômenos típicos de:", options: ["Sociedades nômades", "Sociedades tradicionais", "Sociedades urbano-industriais", "Sociedades de subsistência"], correct: 2, justification: "A urbanização é um fenômeno característico das sociedades urbano-industriais." },
+        
+        { text: "Analise as afirmativas sobre sociedades tradicionais: I - Possuem forte integração entre homem e natureza. II - Apresentam técnicas simples com energia humana/animal. III - Têm economia orientada pelo lucro e acumulação. Assinale a alternativa correta:", options: ["Apenas I e II estão corretas", "Apenas I e III estão corretas", "Apenas II e III estão corretas", "Todas estão corretas"], correct: 0, justification: "Sociedades tradicionais têm economia de subsistência, não orientada pelo lucro." },
+        
+        { text: "A expressão 'meio técnico' foi proposta por qual importante geógrafo brasileiro?", options: ["Aziz Ab'Sáber", "Milton Santos", "José Carlos de Assis", "Roberto Lobato Corrêa"], correct: 1, justification: "Milton Santos desenvolveu a periodização dos meios geográficos: natural, técnico e técnico-científico-informacional." },
+        
+        { text: "O modo de vida das sociedades tradicionais tende a gerar:", options: ["Desmatamento em larga escala", "Poluição industrial", "Baixo impacto ambiental local e reversível", "Extinção acelerada de espécies"], correct: 2, justification: "Sociedades tradicionais geralmente causam impacto ambiental local e reversível." },
+        
+        { text: "A principal diferença entre sociedades tradicionais e urbano-industriais em relação ao trabalho é:", options: ["Ambas usam as mesmas técnicas", "Sociedades tradicionais têm trabalho assalariado generalizado", "Sociedades urbano-industriais têm maior divisão e especialização do trabalho", "Não há diferença significativa"], correct: 2, justification: "Sociedades urbano-industriais apresentam maior divisão e especialização do trabalho." }
+    ];
+    
+    // ==================== FUNÇÕES ====================
+    function updateProgressBar() {
+        const percent = ((currentQuestion + 1) / questionsData.length) * 100;
+        document.getElementById('progressBar').style.width = percent + '%';
+    }
+    
+    function renderNameScreen() {
+        const main = document.getElementById('mainContent');
+        main.innerHTML = `
+            <div class="name-screen name-form">
+                <h2>📝 Identificação</h2>
+                <p>Digite seu nome completo para iniciar o quiz:</p>
+                <input type="text" id="studentNameInput" placeholder="Seu nome" autocomplete="off">
+                <br>
+                <button class="btn btn-success" id="startQuizBtn">▶️ Iniciar Quiz</button>
+            </div>
+        `;
+        document.getElementById('startQuizBtn')?.addEventListener('click', () => {
+            const input = document.getElementById('studentNameInput');
+            if (input && input.value.trim()) {
+                studentName = input.value.trim();
+                quizStarted = true;
+                userAnswers = new Array(questionsData.length).fill(null);
+                currentQuestion = 0;
+                renderQuestion();
+            } else {
+                alert("Por favor, digite seu nome.");
+            }
+        });
+    }
+    
+    function renderQuestion() {
+        const q = questionsData[currentQuestion];
+        const isAnswered = userAnswers[currentQuestion] !== null;
+        const selectedAnswer = userAnswers[currentQuestion];
+        
+        let optionsHtml = '<ul class="options">';
+        q.options.forEach((opt, idx) => {
+            const isSelected = (selectedAnswer === idx);
+            optionsHtml += `<li data-opt="${idx}" class="${isAnswered ? 'disabled' : ''} ${isSelected ? 'selected' : ''}">${opt}</li>`;
+        });
+        optionsHtml += '</ul>';
+        
+        const feedbackHtml = isAnswered ? `
+            <div class="feedback ${userAnswers[currentQuestion] === q.correct ? 'correct' : 'wrong'}">
+                <strong>${userAnswers[currentQuestion] === q.correct ? '✓ Correto!' : '✗ Incorreto!'}</strong><br>
+                ${q.justification}
+            </div>
+        ` : '';
+        
+        const main = document.getElementById('mainContent');
+        main.innerHTML = `
+            <div class="quiz-screen">
+                <div class="question-info">
+                    <span>Questão ${currentQuestion + 1} de ${questionsData.length}</span>
+                    <span>${Math.round(((currentQuestion + 1) / questionsData.length) * 100)}%</span>
+                </div>
+                <div class="question-text">${currentQuestion + 1}. ${q.text}</div>
+                ${optionsHtml}
+                ${feedbackHtml}
+                <div class="nav-buttons">
+                    <button class="btn" id="prevBtn" ${currentQuestion === 0 ? 'disabled' : ''}>◀ Anterior</button>
+                    <button class="btn" id="nextBtn" ${!isAnswered ? 'disabled' : ''}>${currentQuestion === questionsData.length - 1 ? '✅ Finalizar' : 'Próxima ▶'}</button>
+                </div>
+            </div>
+        `;
+        
+        const options = document.querySelectorAll('.options li');
+        options.forEach(opt => {
+            opt.addEventListener('click', () => {
+                if (userAnswers[currentQuestion] !== null) return;
+                const selected = parseInt(opt.dataset.opt);
+                userAnswers[currentQuestion] = selected;
+                renderQuestion();
+            });
+        });
+        
+        document.getElementById('prevBtn')?.addEventListener('click', () => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                renderQuestion();
+            }
+        });
+        
+        document.getElementById('nextBtn')?.addEventListener('click', () => {
+            if (userAnswers[currentQuestion] === null) return;
+            if (currentQuestion === questionsData.length - 1) {
+                calculateResult();
+            } else {
+                currentQuestion++;
+                renderQuestion();
+            }
+        });
+        
+        updateProgressBar();
+    }
+    
+    function calculateResult() {
+        let correctCount = 0;
+        const mistakes = [];
+        
+        questionsData.forEach((q, idx) => {
+            const userAnswer = userAnswers[idx];
+            if (userAnswer === q.correct) {
+                correctCount++;
+            } else {
+                mistakes.push({
+                    number: idx + 1,
+                    question: q.text,
+                    userAnswer: userAnswer !== null ? q.options[userAnswer] : "Não respondida",
+                    correctAnswer: q.options[q.correct],
+                    justification: q.justification
+                });
+            }
+        });
+        
+        const approved = correctCount >= 14;
+        renderResultScreen(correctCount, approved, mistakes);
+    }
+    
+    function renderResultScreen(score, approved, mistakes) {
+        const main = document.getElementById('mainContent');
+        const gradeText = approved ? "APROVADO" : "REPROVADO";
+        const gradeClass = approved ? "aprovado" : "reprovado";
+        
+        let mistakesHtml = '';
+        if (mistakes.length > 0) {
+            mistakesHtml = `<h3>📋 Questões com erro:</h3><div class="mistake-list">`;
+            mistakes.forEach(m => {
+                mistakesHtml += `
+                    <div class="mistake-item">
+                        <strong>Questão ${m.number}</strong><br>
+                        <strong>Pergunta:</strong> ${m.question}<br>
+                        <strong>Sua resposta:</strong> ${m.userAnswer}<br>
+                        <strong>Resposta correta:</strong> ${m.correctAnswer}<br>
+                        <strong>Justificativa:</strong> ${m.justification}
+                    </div>
+                `;
+            });
+            mistakesHtml += `</div>`;
+        } else {
+            mistakesHtml = `<p style="color:#155724; background:#d4edda; padding:15px; border-radius:12px;">🎉 Parabéns! Você não errou nenhuma questão!</p>`;
+        }
+        
+        main.innerHTML = `
+            <div class="result-screen">
+                <div class="result-stats">
+                    <h2>📊 Resultado Final</h2>
+                    <p><strong>Aluno(a):</strong> ${studentName}</p>
+                    <p><strong>Data:</strong> ${new Date().toLocaleString('pt-BR')}</p>
+                    <div class="score">${score} / 20</div>
+                    <div class="grade ${gradeClass}">${gradeText}</div>
+                    ${approved ? '<p>✅ Você atingiu a nota mínima (14/20). Relatório liberado!</p>' : '<p>❌ Você não atingiu a nota mínima (14/20). Estude mais e refaça o quiz.</p>'}
+                </div>
+                ${mistakesHtml}
+                <div style="margin-top: 30px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    ${approved ? `<button class="btn btn-success" id="printReportBtn">📄 Gerar Relatório PDF</button>` : ''}
+                    <button class="btn btn-secondary" id="restartQuizBtn">🔄 Refazer Quiz</button>
+                </div>
+            </div>
+        `;
+        
+        if (approved) {
+            document.getElementById('printReportBtn')?.addEventListener('click', () => {
+                generatePDFReport(score, mistakes);
+            });
+        }
+        
+        document.getElementById('restartQuizBtn')?.addEventListener('click', () => {
+            userAnswers = new Array(questionsData.length).fill(null);
+            quizStarted = false;
+            currentQuestion = 0;
+            renderNameScreen();
+            document.getElementById('progressBar').style.width = '0%';
+        });
+    }
+    
+    function generatePDFReport(score, mistakes) {
+        const printWindow = window.open('', '_blank');
+        const dateStr = new Date().toLocaleString('pt-BR');
+        let mistakesPrint = '';
+        
+        if (mistakes.length > 0) {
+            mistakesPrint = '<h3>Questões com erro:</h3>';
+            mistakes.forEach(m => {
+                mistakesPrint += `
+                    <div style="margin-bottom: 20px; padding: 10px; border-bottom: 1px solid #ccc;">
+                        <strong>Questão ${m.number}</strong><br>
+                        <strong>Pergunta:</strong> ${m.question}<br>
+                        <strong>Sua resposta:</strong> ${m.userAnswer}<br>
+                        <strong>Resposta correta:</strong> ${m.correctAnswer}<br>
+                        <strong>Justificativa:</strong> ${m.justification}
+                    </div>
+                `;
+            });
+        } else {
+            mistakesPrint = '<p>Parabéns! Você acertou todas as questões!</p>';
+        }
+        
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Relatório - Quiz Sociedades Tradicionais e Urbano-Industriais</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.5; }
+                    h1 { color: #1a5f7a; }
+                    .header { text-align: center; margin-bottom: 30px; }
+                    .score { font-size: 24px; font-weight: bold; margin: 20px 0; }
+                    .approved { color: green; }
+                    @media print {
+                        body { margin: 20px; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>Relatório de Desempenho</h1>
+                    <p><strong>Aluno(a):</strong> ${studentName}</p>
+                    <p><strong>Data:</strong> ${dateStr}</p>
+                    <p><strong>Quiz:</strong> Sociedades Tradicionais e Urbano-Industriais</p>
+                    <div class="score">Nota: ${score} / 20</div>
+                    <div class="approved">✅ APROVADO (mínimo 14)</div>
+                </div>
+                ${mistakesPrint}
+                <hr>
+                <p style="font-size: 12px; color: #666;">Relatório gerado automaticamente pelo sistema de quiz.</p>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+    }
+    
+    renderNameScreen();
+</script>
+</body>
+</html>
