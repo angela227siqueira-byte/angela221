@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Quiz 2 · Mapas Temáticos e Análise Territorial</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, Helvetica, system-ui, sans-serif;
+            background: #eef3f7;
+            color: #1a2e3c;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .quiz-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+            padding: 28px 28px;
+            flex: 1;
+        }
+
+        .tela {
+            display: none;
+        }
+
+        .tela.ativa {
+            display: block;
+        }
+
+        /* Identificação */
+        .card-identificacao {
+            background: #fafcfe;
+            border-radius: 24px;
+            padding: 30px 28px;
+            border: 1px solid #dde6ed;
+        }
+
+        h2 {
+            color: #1a4659;
+            margin-bottom: 24px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        h3 {
+            color: #1e4b6e;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+            color: #1e3a4d;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #cddde8;
+            border-radius: 18px;
+            background: white;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus {
+            border-color: #1e4b6e;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(30, 75, 110, 0.1);
+        }
+
+        .btn {
+            background: #1e4b6e;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.15s;
+            border: 1px solid #16415e;
+        }
+
+        .btn:disabled {
+            background: #b0c7d8;
+            border-color: #98b3c7;
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        .btn:not(:disabled):hover {
+            background: #0e3852;
+        }
+
+        .btn-iniciar {
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        /* Quiz */
+        .quiz-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+
+        .progresso-area {
+            flex: 2;
+            min-width: 200px;
+        }
+
+        .questao-indicador {
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1e4b6e;
+        }
+
+        .barra-bg {
+            background: #dae3ec;
+            height: 12px;
+            border-radius: 40px;
+            overflow: hidden;
+        }
+
+        .barra-fill {
+            background: #1e4b6e;
+            height: 100%;
+            width: 4.166%; /* 1/24 */
+            border-radius: 40px;
+            transition: width 0.2s;
+        }
+
+        .ferramentas-topo {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-icone {
+            background: white;
+            border: 1.5px solid #c7d7e3;
+            border-radius: 40px;
+            padding: 8px 16px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-icone:hover {
+            background: #e3ecf3;
+        }
+
+        .questao-box {
+            margin: 20px 0 30px;
+        }
+
+        .enunciado {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 28px;
+            color: #0f3448;
+        }
+
+        .alternativas {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 30px;
+        }
+
+        .alt-item {
+            background: #f5f9fc;
+            border: 2px solid #d7e3ec;
+            border-radius: 60px;
+            padding: 16px 22px;
+            cursor: pointer;
+            transition: 0.1s;
+            font-size: 1.05rem;
+        }
+
+        .alt-item:hover {
+            background: #e2edf6;
+            border-color: #9fbcd3;
+        }
+
+        .alt-item.selecionada {
+            background: #d3e3f0;
+            border-color: #1e4b6e;
+        }
+
+        .alt-item.correta-destaque {
+            background: #d4edda;
+            border-color: #2e7d5e;
+        }
+
+        .alt-item.incorreta-destaque {
+            background: #f8d7da;
+            border-color: #b55a5a;
+        }
+
+        .feedback-area {
+            background: #f2f7fb;
+            border-radius: 24px;
+            padding: 22px 24px;
+            margin: 20px 0 25px;
+            border-left: 6px solid #1e4b6e;
+        }
+
+        .feedback-status {
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+        }
+
+        .feedback-correta {
+            margin: 12px 0;
+            font-weight: 500;
+        }
+
+        .justificativa {
+            color: #1e4057;
+            font-style: italic;
+        }
+
+        .navegacao-quiz {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-proximo {
+            min-width: 160px;
+        }
+
+        /* Resultado */
+        .resultado-card {
+            background: #fafcfe;
+            border-radius: 24px;
+            padding: 28px;
+        }
+
+        .pontuacao-destaque {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1e4b6e;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .mensao {
+            text-align: center;
+            font-size: 1.6rem;
+            margin: 10px 0 25px;
+        }
+
+        .lista-erros {
+            margin: 20px 0;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #d4e0e9;
+            border-radius: 16px;
+            padding: 16px;
+            background: white;
+        }
+
+        .botoes-resultado {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .info-tentativa {
+            margin: 10px 0;
+            color: #3f627c;
+        }
+
+        /* Cálculo destaque */
+        .calculo-box {
+            background: #e8f0f7;
+            padding: 12px 18px;
+            border-radius: 16px;
+            margin-top: 15px;
+            font-family: monospace;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 8px; }
+            .quiz-wrapper { padding: 18px 14px; }
+            .alt-item { padding: 14px 18px; }
+            .btn { width: 100%; }
+            .navegacao-quiz .btn { width: auto; }
+        }
+    </style>
+</head>
+<body>
+<div class="quiz-wrapper">
+    <!-- TELA 1: IDENTIFICAÇÃO -->
+    <div id="telaIdent" class="tela ativa">
+        <div class="card-identificacao">
+            <h2>🗺️ Quiz 2 · Mapas Temáticos</h2>
+            <p style="text-align: center; margin-bottom: 28px; color: #2e5f7a;">Análise territorial e linguagem cartográfica</p>
+            <div class="form-group">
+                <label>Nome completo *</label>
+                <input type="text" id="nomeAluno" placeholder="Digite seu nome" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label>Turma</label>
+                <select id="turmaSelect">
+                    <option value="Turma A">Turma A</option>
+                    <option value="Turma B">Turma B</option>
+                    <option value="Turma C">Turma C</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Bimestre</label>
+                <select id="bimestreSelect">
+                    <option value="1º Bimestre">1º Bimestre</option>
+                    <option value="2º Bimestre">2º Bimestre</option>
+                    <option value="3º Bimestre">3º Bimestre</option>
+                    <option value="4º Bimestre">4º Bimestre</option>
+                </select>
+            </div>
+            <button id="btnIniciar" class="btn btn-iniciar" disabled>▶ Iniciar Quiz</button>
+        </div>
+    </div>
+
+    <!-- TELA 2: QUIZ -->
+    <div id="telaQuiz" class="tela">
+        <div class="quiz-header">
+            <div class="progresso-area">
+                <div class="questao-indicador" id="questaoIndicador">Questão 1 de 24</div>
+                <div class="barra-bg">
+                    <div class="barra-fill" id="barraProgresso" style="width: 4.166%;"></div>
+                </div>
+            </div>
+            <div class="ferramentas-topo">
+                <button id="btnTelaCheia" class="btn-icone">⛶ Tela Cheia</button>
+            </div>
+        </div>
+
+        <div class="questao-box">
+            <div class="enunciado" id="enunciadoQuestao"></div>
+            <div class="alternativas" id="containerAlternativas"></div>
+        </div>
+
+        <div id="feedbackContainer" class="feedback-area" style="display: none;">
+            <div id="feedbackStatus" class="feedback-status"></div>
+            <div id="feedbackCorreta" class="feedback-correta"></div>
+            <div id="feedbackJustificativa" class="justificativa"></div>
+            <div id="calculoDetalhado" class="calculo-box" style="display: none;"></div>
+        </div>
+
+        <div class="navegacao-quiz">
+            <button id="btnProximo" class="btn btn-proximo" disabled>Próxima →</button>
+        </div>
+    </div>
+
+    <!-- TELA 3: RESULTADO -->
+    <div id="telaResultado" class="tela">
+        <div class="resultado-card">
+            <h2 id="resultadoTitulo">Resultado</h2>
+            <div id="infoAluno"></div>
+            <div class="pontuacao-destaque" id="pontuacaoFinal"></div>
+            <div class="mensao" id="mensagemMensao"></div>
+            <div id="listaErrosContainer" class="lista-erros"></div>
+            <div class="info-tentativa" id="tentativaInfo"></div>
+            <div class="botoes-resultado">
+                <button id="btnGerarPDF" class="btn" style="display: none;">📄 Gerar Relatório PDF</button>
+                <button id="btnRefazer" class="btn">⟲ Refazer Quiz</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function(){
+        "use strict";
+
+        // ---------- BANCO DE 24 QUESTÕES ----------
+        const quizData = [
+            // Q1
+            { question: "A escala cartográfica pode ser definida como:", options: ["A relação entre a distância real no terreno e o tempo de percurso entre dois pontos.", "O nível de detalhamento das cores utilizadas na representação cartográfica.", "A proporção entre a área do mapa e a área do território representado, sem considerar distâncias.", "A relação entre a distância no mapa e a distância real na superfície terrestre."], answer: 3, justification: "A escala cartográfica é a razão entre uma distância medida no mapa e a distância correspondente no terreno." },
+            // Q2
+            { question: "Um mapa na escala 1:250.000 significa que:", options: ["1 cm no mapa equivale a 250.000 cm na realidade (2,5 km).", "1 km no mapa equivale a 250.000 km na realidade.", "A área do mapa é 250.000 vezes menor que a área real.", "O mapa é 250.000 vezes maior que a realidade."], answer: 0, justification: "Escala 1:250.000 → 1 cm = 250.000 cm = 2,5 km." },
+            // Q3
+            { question: "Quanto menor o denominador da escala numérica (ex: 1:10.000), maior é a escala. Isso significa que:", options: ["Mapas de grande escala representam áreas menores com maior nível de detalhe.", "Mapas de grande escala representam áreas maiores com menor nível de detalhe.", "A escala não influencia o nível de detalhamento do mapa.", "Mapas de grande escala são usados para representar continentes inteiros."], answer: 0, justification: "Grande escala (1:10.000) = áreas pequenas com muito detalhe." },
+            // Q4
+            { question: "Toda projeção cartográfica implica em distorções porque:", options: ["A superfície da Terra é plana e pode ser representada sem alterações.", "A superfície da Terra é curva (geoide) e sua representação em um plano exige transformações matemáticas.", "As cores utilizadas nos mapas impedem a representação fiel das áreas.", "Os cartógrafos intencionalmente distorcem os mapas para manipular a informação."], answer: 1, justification: "A Terra é curva; representá-la em plano exige projeções que distorcem área, forma, distância ou direção." },
+            // Q5
+            { question: "A projeção de Mercator é amplamente utilizada, mas sua principal limitação é:", options: ["Conservar áreas, mas distorcer formas drasticamente.", "Ser equivalente, mas não preservar direções.", "Conservar ângulos (ser conforme), mas distorcer áreas – tornando a Groenlândia maior que a África.", "Distorcer tanto áreas quanto formas."], answer: 2, justification: "Mercator é conforme (preserva ângulos), útil para navegação, mas distorce áreas." },
+            // Q6
+            { question: "A legenda de um mapa temático tem a função de:", options: ["Decorar o mapa com cores bonitas.", "Explicar o significado dos símbolos, cores e traços utilizados.", "Ocultar informações irrelevantes.", "Substituir o título e a fonte do mapa."], answer: 1, justification: "A legenda é a chave de leitura do mapa." },
+            // Q7
+            { question: "Os mapas de coropletos (ou coropléticos) são caracterizados por:", options: ["Utilizar pontos para representar a distribuição de um fenômeno.", "Usar cores ou hachuras para representar a intensidade de um fenômeno por unidade de área.", "Representar fluxos por meio de setas.", "Distorcer o tamanho das unidades territoriais."], answer: 1, justification: "Mapas coropletos usam cores/hachuras por unidade de área." },
+            // Q8
+            { question: "Um mapa de fluxos é especialmente útil para representar:", options: ["A altitude de uma região por curvas de nível.", "A distribuição da população rural por pontos.", "Movimentos como migrações, circulação de mercadorias e rotas de transporte.", "A classificação da vegetação por cores."], answer: 2, justification: "Mapas de fluxos mostram direção e intensidade de deslocamentos." },
+            // Q9
+            { question: "As isolinhas (ou isopletas) são linhas que conectam pontos de igual valor. São exemplos:", options: ["Fronteiras políticas entre países.", "Curvas de nível (altitude), isotermas (temperatura) e isóbaras (pressão).", "Legendas e escalas gráficas.", "Símbolos pontuais que representam cidades."], answer: 1, justification: "Isolinhas conectam pontos de igual valor: curvas de nível, isotermas, isóbaras." },
+            // Q10
+            { question: "Os cartogramas se diferenciam dos mapas convencionais porque:", options: ["Representam apenas fenômenos físicos.", "São exclusivamente para áreas urbanas.", "Não utilizam cores nem legendas.", "Distorcem o tamanho das unidades territoriais proporcionalmente ao valor do fenômeno."], answer: 3, justification: "Cartogramas deformam o território conforme o valor do fenômeno." },
+            // Q11
+            { question: "Os mapas de pontos são eficazes para representar:", options: ["A distribuição de fenômenos localizáveis, como população rural.", "A densidade populacional de forma contínua.", "A hierarquia urbana por tamanho de símbolos.", "As variações de temperatura ao longo do ano."], answer: 0, justification: "Mapas de pontos mostram onde o fenômeno ocorre." },
+            // Q12
+            { question: "O método de classificação 'quebras naturais' (Jenks) é utilizado para:", options: ["Dividir os dados em classes de mesma largura.", "Garantir que cada classe tenha o mesmo número de observações.", "Minimizar a variância dentro de cada classe e maximizar entre classes.", "Permitir que o cartógrafo defina limites subjetivamente."], answer: 2, justification: "Jenks agrupa valores semelhantes e separa valores diferentes." },
+            // Q13
+            { question: "Um mapa completo deve conter:", options: ["Apenas título e cores.", "Título, legenda, escala, fonte dos dados, data e autoria.", "Apenas escala e orientação norte.", "Logotipos institucionais."], answer: 1, justification: "Elementos essenciais: título, legenda, escala, fonte, data, autoria." },
+            // Q14
+            { question: "Analise as afirmações sobre projeções:\nI. Peters é equivalente (preserva áreas), mas distorce formas.\nII. Mercator é conforme (preserva ângulos), mas distorce áreas.\nIII. Nenhuma projeção preserva simultaneamente todas as propriedades.\nEstá(ão) correta(s):", options: ["Apenas I.", "Apenas I e II.", "Apenas II e III.", "I, II e III."], answer: 3, justification: "Todas estão corretas. Peters (equivalente), Mercator (conforme), e é impossível preservar tudo." },
+            // Q15
+            { question: "Mapas temáticos se diferenciam dos mapas topográficos porque:", options: ["Mostram apenas acidentes geográficos.", "Representam distribuições, correlações, densidades ou fluxos de fenômenos específicos.", "Não utilizam escalas nem projeções.", "São exclusivamente de sensoriamento remoto."], answer: 1, justification: "Mapas temáticos mostram 'como se distribui' um fenômeno." },
+            // Q16
+            { question: "O geógrafo John Brian Harley alertou que 'nenhum mapa é neutro' porque:", options: ["Mapas são produzidos sem interferência humana.", "Mapas refletem escolhas que podem ocultar, exagerar ou distorcer a realidade.", "Cores são definidas aleatoriamente.", "A escala não influencia a mensagem."], answer: 1, justification: "Mapas são 'discursos sobre o poder' – cada escolha carrega intenções." },
+            // Q17
+            { question: "Sensoriamento remoto e GPS são tecnologias que:", options: ["Substituíram completamente os mapas tradicionais.", "Fornecem dados georreferenciados de alta precisão para elaboração de mapas.", "São exclusivamente militares.", "Não têm relação com a cartografia contemporânea."], answer: 1, justification: "São fontes fundamentais de dados para cartografia moderna." },
+            // Q18
+            { question: "Ao escolher uma paleta de cores para um mapa temático, deve-se considerar:", options: ["Apenas preferência estética.", "Que cores não têm significado cultural.", "Acessibilidade para daltônicos (evitar vermelho/verde).", "Que mapas em preto e branco são superiores."], answer: 2, justification: "Cores têm significados e devem considerar acessibilidade." },
+            // Q19
+            { question: "A frase 'o mapa não é o território' significa que:", options: ["O mapa é uma representação imperfeita e seletiva da realidade.", "O mapa é exatamente igual ao território.", "Mapas são inúteis.", "Apenas mapas digitais são confiáveis."], answer: 0, justification: "Mapa é abstração, sujeito a simplificações e distorções." },
+            // Q20 - Cálculo 1
+            { question: "Em um mapa na escala 1:500.000, a distância entre duas cidades é de 8 cm. Qual é a distância real entre elas em quilômetros?", options: ["4 km", "40 km", "400 km", "4.000 km"], answer: 1, justification: "Dr = 8 × 500.000 = 4.000.000 cm = 40 km.", calculo: "Dr = Dm × E = 8 cm × 500.000 = 4.000.000 cm ÷ 100.000 = 40 km" },
+            // Q21 - Cálculo 2
+            { question: "A distância real entre duas cidades é de 150 km. Em um mapa, essa distância é representada por 10 cm. Qual é a escala numérica do mapa?", options: ["1:150.000", "1:150.000.000", "1:15.000.000", "1:1.500.000"], answer: 3, justification: "Dr = 150 km = 15.000.000 cm. E = 10 / 15.000.000 = 1:1.500.000.", calculo: "150 km = 15.000.000 cm → E = Dm/Dr = 10/15.000.000 = 1:1.500.000" },
+            // Q22 - Cálculo 3
+            { question: "Em um mapa na escala 1:2.000.000, uma estrada tem 12 cm de comprimento. Qual é o comprimento real em km?", options: ["24 km", "2.400 km", "240 km", "24.000 km"], answer: 2, justification: "Dr = 12 × 2.000.000 = 24.000.000 cm = 240 km.", calculo: "Dr = 12 × 2.000.000 = 24.000.000 cm ÷ 100.000 = 240 km" },
+            // Q23 - Cálculo 4
+            { question: "Em um mapa, a distância entre duas cidades é de 25 cm. Escala 1:400.000. Qual a distância real em km?", options: ["100 km", "1.000 km", "10.000 km", "100.000 km"], answer: 0, justification: "Dr = 25 × 400.000 = 10.000.000 cm = 100 km.", calculo: "Dr = 25 × 400.000 = 10.000.000 cm ÷ 100.000 = 100 km" },
+            // Q24 - Síntese
+            { question: "A relação entre mapas temáticos e território pode ser resumida como:", options: ["Os mapas criam o território.", "Os mapas são mais importantes que as pessoas.", "Os mapas contam a história da ocupação do território, mas não o produzem diretamente.", "Mapas temáticos são irrelevantes."], answer: 2, justification: "O território é produzido por pessoas; mapas representam e comunicam essa produção." }
+        ];
+
+        const TOTAL_QUESTOES = 24;
+        let tentativas = 1;
+        let respostasAluno = new Array(TOTAL_QUESTOES).fill(null);
+        let questaoAtual = 0;
+        let selecionada = null;
+        let respondida = false;
+
+        // DOM Elements
+        const telaIdent = document.getElementById('telaIdent');
+        const telaQuiz = document.getElementById('telaQuiz');
+        const telaResultado = document.getElementById('telaResultado');
+        const inputNome = document.getElementById('nomeAluno');
+        const btnIniciar = document.getElementById('btnIniciar');
+        const turmaSelect = document.getElementById('turmaSelect');
+        const bimestreSelect = document.getElementById('bimestreSelect');
+
+        const questaoIndicador = document.getElementById('questaoIndicador');
+        const barraProgresso = document.getElementById('barraProgresso');
+        const enunciadoQuestao = document.getElementById('enunciadoQuestao');
+        const containerAlternativas = document.getElementById('containerAlternativas');
+        const feedbackContainer = document.getElementById('feedbackContainer');
+        const feedbackStatus = document.getElementById('feedbackStatus');
+        const feedbackCorreta = document.getElementById('feedbackCorreta');
+        const feedbackJustificativa = document.getElementById('feedbackJustificativa');
+        const calculoDetalhado = document.getElementById('calculoDetalhado');
+        const btnProximo = document.getElementById('btnProximo');
+
+        const resultadoTitulo = document.getElementById('resultadoTitulo');
+        const infoAluno = document.getElementById('infoAluno');
+        const pontuacaoFinal = document.getElementById('pontuacaoFinal');
+        const mensagemMensao = document.getElementById('mensagemMensao');
+        const listaErrosContainer = document.getElementById('listaErrosContainer');
+        const tentativaInfo = document.getElementById('tentativaInfo');
+        const btnGerarPDF = document.getElementById('btnGerarPDF');
+        const btnRefazer = document.getElementById('btnRefazer');
+
+        inputNome.addEventListener('input', () => btnIniciar.disabled = !inputNome.value.trim());
+
+        btnIniciar.addEventListener('click', () => {
+            telaIdent.classList.remove('ativa');
+            telaQuiz.classList.add('ativa');
+            carregarQuestao(0);
+        });
+
+        function carregarQuestao(index) {
+            questaoAtual = index;
+            const q = quizData[index];
+            enunciadoQuestao.textContent = `${index+1}. ${q.question}`;
+            questaoIndicador.textContent = `Questão ${index+1} de 24`;
+            barraProgresso.style.width = ((index+1)/24*100) + '%';
+            
+            let html = '';
+            q.options.forEach((opt, i) => {
+                const letra = String.fromCharCode(97 + i);
+                html += `<div class="alt-item" data-index="${i}"><strong>${letra})</strong> ${opt}</div>`;
+            });
+            containerAlternativas.innerHTML = html;
+            
+            respondida = false;
+            selecionada = null;
+            feedbackContainer.style.display = 'none';
+            calculoDetalhado.style.display = 'none';
+            btnProximo.disabled = true;
+            
+            if (respostasAluno[index] !== null) {
+                aplicarFeedback(respostasAluno[index]);
+                destacarAlternativas(q.answer, respostasAluno[index]);
+            }
+            
+            document.querySelectorAll('.alt-item').forEach(el => {
+                el.addEventListener('click', onAlternativaClick);
+            });
+        }
+
+        function onAlternativaClick(e) {
+            if (respondida) return;
+            const div = e.currentTarget;
+            const idx = parseInt(div.dataset.index);
+            selecionada = idx;
+            
+            document.querySelectorAll('.alt-item').forEach(el => el.classList.remove('selecionada'));
+            div.classList.add('selecionada');
+            
+            respostasAluno[questaoAtual] = idx;
+            respondida = true;
+            
+            const q = quizData[questaoAtual];
+            aplicarFeedback(idx);
+            destacarAlternativas(q.answer, idx);
+            btnProximo.disabled = false;
+        }
+
+        function aplicarFeedback(respostaIdx) {
+            const q = quizData[questaoAtual];
+            const acertou = (respostaIdx === q.answer);
+            feedbackStatus.textContent = acertou ? '✅ Correto!' : '❌ Incorreto.';
+            const letraCorreta = String.fromCharCode(97 + q.answer);
+            feedbackCorreta.textContent = `A resposta certa é: ${letraCorreta}) ${q.options[q.answer]}`;
+            feedbackJustificativa.textContent = q.justification;
+            
+            if (q.calculo) {
+                calculoDetalhado.textContent = '📐 ' + q.calculo;
+                calculoDetalhado.style.display = 'block';
+            } else {
+                calculoDetalhado.style.display = 'none';
+            }
+            
+            feedbackContainer.style.display = 'block';
+        }
+
+        function destacarAlternativas(correctIdx, selectedIdx) {
+            document.querySelectorAll('.alt-item').forEach((el, i) => {
+                el.classList.remove('correta-destaque', 'incorreta-destaque');
+                if (i === correctIdx) el.classList.add('correta-destaque');
+                else if (i === selectedIdx && selectedIdx !== correctIdx) el.classList.add('incorreta-destaque');
+            });
+        }
+
+        btnProximo.addEventListener('click', () => {
+            if (questaoAtual < TOTAL_QUESTOES - 1) {
+                carregarQuestao(questaoAtual + 1);
+            } else {
+                finalizarQuiz();
+            }
+        });
+
+        function finalizarQuiz() {
+            let acertos = 0;
+            respostasAluno.forEach((resp, i) => { if (resp === quizData[i].answer) acertos++; });
+            const nota = acertos * (10 / TOTAL_QUESTOES); // 24 questões = 10/24 ≈ 0,4167 por acerto
+            const aprovado = nota >= 7.0;
+            
+            if (!aprovado) {
+                tentativas++;
+                alert(`Nota: ${nota.toFixed(2)}. Você não atingiu 7,0. O quiz será reiniciado.`);
+                reiniciarQuiz();
+                return;
+            }
+            
+            telaQuiz.classList.remove('ativa');
+            telaResultado.classList.add('ativa');
+            
+            const nome = inputNome.value.trim();
+            const turma = turmaSelect.value;
+            const bimestre = bimestreSelect.value;
+            const dataHora = new Date().toLocaleString('pt-BR');
+            
+            infoAluno.innerHTML = `<strong>${nome}</strong> · ${turma} · ${bimestre}<br>${dataHora}`;
+            pontuacaoFinal.textContent = `${acertos} de 24 acertos · Nota ${nota.toFixed(2)}`;
+            
+            let mensao = '';
+            if (nota < 5.0) mensao = 'Não foi muito bem';
+            else if (nota < 6.5) mensao = 'Regular';
+            else if (nota < 8.5) mensao = 'Bom';
+            else mensao = 'Excelente';
+            mensagemMensao.textContent = mensao;
+            
+            let errosHtml = '<h3>Questões erradas:</h3><ul>';
+            respostasAluno.forEach((r, i) => {
+                if (r !== quizData[i].answer) {
+                    errosHtml += `<li><strong>Q${i+1}:</strong> ${quizData[i].question.substring(0,60)}...</li>`;
+                }
+            });
+            errosHtml += '</ul>';
+            listaErrosContainer.innerHTML = errosHtml;
+            tentativaInfo.textContent = `Tentativa nº ${tentativas}`;
+            btnGerarPDF.style.display = 'inline-block';
+        }
+
+        function reiniciarQuiz() {
+            respostasAluno = new Array(TOTAL_QUESTOES).fill(null);
+            questaoAtual = 0;
+            telaResultado.classList.remove('ativa');
+            telaQuiz.classList.add('ativa');
+            carregarQuestao(0);
+        }
+
+        btnRefazer.addEventListener('click', () => {
+            tentativas++;
+            reiniciarQuiz();
+        });
+
+        btnGerarPDF.addEventListener('click', () => {
+            const nome = inputNome.value;
+            const turma = turmaSelect.value;
+            const bimestre = bimestreSelect.value;
+            let acertos = respostasAluno.filter((r,i) => r === quizData[i].answer).length;
+            const nota = acertos * (10 / TOTAL_QUESTOES);
+            let mensao = nota < 5 ? 'Não foi muito bem' : nota < 6.5 ? 'Regular' : nota < 8.5 ? 'Bom' : 'Excelente';
+            
+            let conteudo = `
+                RELATÓRIO QUIZ 2 - MAPAS TEMÁTICOS
+                Aluno: ${nome} | Turma: ${turma} | Bimestre: ${bimestre}
+                Data: ${new Date().toLocaleString()}
+                Pontuação: ${acertos}/24 | Nota: ${nota.toFixed(2)} | Mensão: ${mensao}
+                Tentativa: ${tentativas}
+                ----------------------------------------
+                Questões erradas:
+            `;
+            respostasAluno.forEach((r,i) => { if(r!==quizData[i].answer) conteudo += `Q${i+1}: ${quizData[i].question}\n`; });
+            
+            const win = window.open('', '_blank');
+            win.document.write(`<pre>${conteudo}</pre>`);
+            win.document.title = "Relatório Quiz 2";
+            win.print();
+        });
+
+        document.getElementById('btnTelaCheia').addEventListener('click', () => {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else document.exitFullscreen();
+        });
+
+        carregarQuestao(0);
+    })();
+</script>
+</body>
+</html>
