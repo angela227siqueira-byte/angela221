@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Quiz: Paisagem & Cartografia</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: #f4f7f9;
+            color: #1e2b3c;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            margin: 0;
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px -10px rgba(0, 20, 30, 0.15);
+            padding: 28px 24px;
+            transition: all 0.2s ease;
+            border: 1px solid #e9edf2;
+        }
+
+        .screen {
+            display: block;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        h1 {
+            font-size: 1.9rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+            color: #0f2b3d;
+        }
+
+        .subtitle {
+            color: #5e7180;
+            margin-bottom: 32px;
+            font-weight: 400;
+            border-left: 5px solid #6a8d73;
+            padding-left: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #2c4356;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 16px 18px;
+            font-size: 1.1rem;
+            border: 1.5px solid #d6dee5;
+            border-radius: 20px;
+            background: white;
+            transition: border 0.2s;
+            font-family: inherit;
+            background-color: #fafcfd;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #6a8d73;
+            box-shadow: 0 0 0 4px rgba(106, 141, 115, 0.1);
+        }
+
+        button {
+            background: #2c4a3a;
+            color: white;
+            border: none;
+            padding: 16px 28px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 60px;
+            width: 100%;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.05s;
+            margin-top: 8px;
+            letter-spacing: 0.3px;
+            box-shadow: 0 6px 14px rgba(44, 74, 58, 0.2);
+        }
+
+        button:active { transform: scale(0.98); }
+        button:disabled {
+            background: #b4c4cf;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        button.secondary {
+            background: #eef3f7;
+            color: #1e3b4c;
+            box-shadow: none;
+            border: 1px solid #ccdae3;
+        }
+
+        .flex-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .flex-buttons button { width: 50%; }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            font-weight: 500;
+            color: #3e5e71;
+        }
+
+        .progress-bar-container {
+            background: #e2e9f0;
+            height: 12px;
+            border-radius: 20px;
+            margin: 16px 0 28px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: #6a8d73;
+            height: 100%;
+            width: 5%;
+            border-radius: 20px;
+            transition: width 0.3s;
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 28px;
+            line-height: 1.4;
+            color: #0b2a3b;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .option {
+            background: #f8fafc;
+            border: 1.5px solid #dce5ec;
+            border-radius: 18px;
+            padding: 18px 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.1s;
+            color: #1a3a4e;
+            font-weight: 500;
+        }
+
+        .option:hover { background: #edf3f9; border-color: #a9c1d2; }
+        .option.correct { background: #d4eee9; border-color: #2a8e7e; color: #0b352d; }
+        .option.incorrect { background: #ffe8e8; border-color: #d58f8f; color: #712b2b; opacity: 0.8; }
+        .option.disabled { pointer-events: none; opacity: 0.8; }
+
+        .feedback-box {
+            background: #eef3f7;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 16px 0 24px;
+            border-left: 8px solid #6a8d73;
+        }
+
+        .feedback-correct { color: #1a6e5a; font-weight: 700; margin-bottom: 8px; }
+        .feedback-incorrect { color: #b13e3e; font-weight: 700; margin-bottom: 8px; }
+        .justification { color: #254b61; }
+
+        .result-card { text-align: center; padding: 16px 0; }
+        .grade { font-size: 4.5rem; font-weight: 800; color: #2c4a3a; line-height: 1; }
+        .mention { font-size: 1.8rem; margin: 16px 0; }
+        .stats { background: #f0f5fa; border-radius: 24px; padding: 24px; margin: 24px 0; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea { position: absolute; left: 0; top: 0; width: 100%; padding: 20px; }
+        }
+
+        @media (max-width: 480px) {
+            .quiz-container { padding: 20px 16px; }
+            h1 { font-size: 1.7rem; }
+            .question-text { font-size: 1.2rem; }
+            .option { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+<div class="quiz-container">
+    <!-- TELA INICIAL -->
+    <div id="startScreen" class="screen">
+        <h1>🗺️ Paisagem & Cartografia</h1>
+        <div class="subtitle">Transformações e Representações</div>
+        <div class="form-group">
+            <label>👤 Nome completo</label>
+            <input type="text" id="studentName" placeholder="Ex: Fabrício" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label>📚 Turma</label>
+            <select id="studentClass">
+                <option value="A">A</option><option value="B">B</option>
+                <option value="C">C</option><option value="D">D</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>📅 Bimestre</label>
+            <select id="bimester">
+                <option value="1º">1º Bimestre</option><option value="2º">2º Bimestre</option>
+                <option value="3º">3º Bimestre</option><option value="4º">4º Bimestre</option>
+            </select>
+        </div>
+        <button id="startBtn" disabled>▶ Iniciar Quiz</button>
+        <div style="margin-top:16px; color:#6f8a9b;">Preencha seu nome para começar</div>
+    </div>
+
+    <!-- TELA DO QUIZ -->
+    <div id="quizScreen" class="screen hidden">
+        <div class="quiz-header">
+            <span id="questionCounter">Questão 1 de 20</span>
+            <span id="studentInfoDisplay">Aluno | Turma</span>
+        </div>
+        <div class="progress-bar-container">
+            <div id="progressBarFill" class="progress-bar-fill" style="width: 5%;"></div>
+        </div>
+        <div id="questionText" class="question-text"></div>
+        <div id="optionsContainer" class="options-container"></div>
+        <div id="feedbackArea" class="feedback-box hidden">
+            <div id="feedbackStatus"></div>
+            <div id="feedbackJustification" class="justification"></div>
+        </div>
+        <button id="nextBtn" class="hidden">Próxima ▶</button>
+        <button id="finishBtn" class="hidden">🏁 Finalizar Quiz</button>
+    </div>
+
+    <!-- TELA DE RESULTADO -->
+    <div id="resultScreen" class="screen hidden">
+        <h1>📋 Resultado</h1>
+        <div id="resultContent" class="result-card"></div>
+        <div id="resultActions" class="flex-buttons"></div>
+    </div>
+
+    <!-- TELA DE ENCERRAMENTO -->
+    <div id="endScreen" class="screen hidden">
+        <h1>✅ Obrigado!</h1>
+        <div style="padding: 30px 0; text-align: center;">
+            <p style="font-size:1.3rem; margin-bottom: 30px;">Obrigado por responder o quiz!</p>
+            <button id="exitBtn" style="background:#6a8d73;">🚪 Sair</button>
+        </div>
+    </div>
+</div>
+
+<!-- ÁREA OCULTA PARA IMPRESSÃO (PDF) -->
+<div id="printArea" style="display: none;"></div>
+
+<script>
+    (function(){
+        "use strict";
+
+        // ---------- BANCO DE QUESTÕES ----------
+        const questions = [
+            { question: "A cartografia é a ciência que se dedica:", options: ["Ao estudo dos astros e suas influências na Terra", "À previsão do tempo e fenômenos atmosféricos", "À representação gráfica da superfície terrestre e suas transformações", "Ao estudo das rochas e formações geológicas"], answer: 2, justification: "A cartografia é a ciência que estuda e desenvolve técnicas para representar graficamente a superfície terrestre, incluindo suas características naturais e as transformações causadas pela ação humana ao longo do tempo." },
+            { question: "Sobre a transformação da paisagem ao longo do tempo:\nI. A paisagem natural é aquela que não sofreu interferência humana direta\nII. A paisagem cultural ou antrópica é modificada pela ação humana\nIII. Toda paisagem atual é completamente natural, sem nenhuma intervenção humana\nEstá(ão) correta(s):", options: ["Apenas I", "Apenas I e II", "Apenas II e III", "I, II e III"], answer: 1, justification: "I e II estão corretas, pois a paisagem natural é aquela sem interferência humana (ou com interferência mínima), enquanto a paisagem cultural é modificada pelo ser humano. III está falsa porque praticamente toda paisagem atual sofre algum grau de intervenção humana." },
+            { question: "Sobre os elementos do mapa:\nI. O título indica o que o mapa representa\nII. A escala mostra a relação entre a distância no mapa e a distância real\nIII. A legenda explica os símbolos e cores utilizados no mapa\nA sequência correta (V para verdadeiro, F para falso) é:", options: ["V – V – V", "V – V – F", "V – F – V", "F – V – V"], answer: 0, justification: "As três afirmações são verdadeiras. Título, escala e legenda são elementos fundamentais de um mapa para sua correta interpretação." },
+            { question: "A escala cartográfica 1:100.000 significa que:", options: ["1 cm no mapa equivale a 100.000 cm na realidade (1 km)", "1 cm no mapa equivale a 1.000 cm na realidade (10 m)", "1 km no mapa equivale a 100.000 km na realidade", "A escala é gráfica, não numérica"], answer: 0, justification: "A escala numérica 1:100.000 indica que 1 unidade de medida no mapa corresponde a 100.000 unidades iguais na realidade. Assim, 1 cm no mapa equivale a 100.000 cm (1 km) no terreno." },
+            { question: "Sobre os tipos de escala:\nI. A escala numérica é representada por uma fração (ex: 1:50.000)\nII. A escala gráfica é representada por uma linha graduada\nIII. Quanto menor o denominador da escala numérica, menor o nível de detalhe\nEstá(ão) correta(s):", options: ["Apenas I", "Apenas I e II", "Apenas II e III", "I, II e III"], answer: 1, justification: "I e II estão corretas. III está falsa: quanto menor o denominador (ex: 1:10.000), maior o nível de detalhe. Quanto maior o denominador (ex: 1:1.000.000), menor o detalhe." },
+            { question: "Sobre as projeções cartográficas:\nI. As projeções cilíndricas são adequadas para representar regiões polares\nII. A projeção de Mercator é uma projeção cilíndrica que distorce áreas próximas aos polos\nIII. As projeções cônicas são boas para representar regiões de médias latitudes\nA sequência correta (V para verdadeiro, F para falso) é:", options: ["V – V – V", "F – V – V", "V – F – V", "F – V – F"], answer: 1, justification: "I é falsa (projeções cilíndricas distorcem muito os polos; as mais adequadas para polos são as azimutais). II e III são verdadeiras." },
+            { question: "A transformação da paisagem urbana ocorre principalmente devido:", options: ["Aos ciclos naturais de erosão e sedimentação", "À migração de espécies animais", "À expansão das cidades, construção de vias e edifícios", "Às erupções vulcânicas e terremotos"], answer: 2, justification: "A transformação da paisagem urbana é causada predominantemente pela ação humana, incluindo expansão territorial, construção de moradias, vias, edifícios e infraestrutura." },
+            { question: "Sobre o uso da tecnologia na cartografia:\nI. O GPS (Sistema de Posicionamento Global) permite localização precisa na superfície terrestre\nII. O Sensoriamento Remoto capta imagens da superfície por satélites ou drones\nIII. Os SIGs (Sistemas de Informação Geográfica) armazenam e analisam dados espaciais\nEstá(ão) correta(s):", options: ["Apenas I", "Apenas I e II", "Apenas II e III", "I, II e III"], answer: 3, justification: "As três afirmações estão corretas. GPS, Sensoriamento Remoto e SIG são tecnologias fundamentais para a cartografia moderna." },
+            { question: "Sobre as curvas de nível:\nI. As curvas de nível representam a altitude do terreno\nII. Quanto mais próximas as curvas de nível, mais íngreme é o relevo\nIII. As curvas de nível não são utilizadas em mapas topográficos\nA sequência correta (V para verdadeiro, F para falso) é:", options: ["V – V – V", "F – V – V", "V – F – V", "V – V – F"], answer: 3, justification: "I e II são verdadeiras. III é falsa: as curvas de nível são amplamente utilizadas em mapas topográficos exatamente para representar o relevo." },
+            { question: "O que são imagens de satélite?", options: ["Fotografias tiradas do espaço que permitem observar grandes extensões da superfície terrestre", "Desenhos artísticos feitos por computador", "Mapas antigos digitalizados", "Representações exclusivas do fundo dos oceanos"], answer: 0, justification: "Imagens de satélite são registros obtidos por sensores acoplados a satélites em órbita, permitindo a observação de grandes áreas da superfície terrestre e suas transformações." },
+            { question: "Sobre as transformações da paisagem rural:\nI. O avanço da agricultura e pecuária modifica a paisagem natural\nII. O desmatamento para plantio é uma das principais causas de transformação\nIII. A paisagem rural nunca sofre alterações ao longo do tempo\nEstá(ão) correta(s):", options: ["Apenas I", "Apenas I e II", "Apenas II e III", "I, II e III"], answer: 1, justification: "I e II estão corretas. III está falsa porque a paisagem rural está em constante transformação devido à ação humana." },
+            { question: "Sobre a orientação geográfica:\nI. Os pontos cardeais são: Norte, Sul, Leste e Oeste\nII. A rosa dos ventos é um símbolo usado em mapas para indicar direções\nIII. O Sol nasce no Oeste e se põe no Leste\nA sequência correta (V para verdadeiro, F para falso) é:", options: ["V – V – V", "V – V – F", "V – F – V", "F – V – V"], answer: 1, justification: "I e II são verdadeiras. III é falsa: o Sol nasce no Leste e se põe no Oeste." },
+            { question: "A escala 1:250.000 é classificada como:", options: ["Escala grande (grande detalhamento)", "Escala média (detalhamento intermediário)", "Escala pequena (pequeno detalhamento, grande área)", "Escala gráfica, não numérica"], answer: 2, justification: "Escalas pequenas (denominador grande, ex: 1:250.000 ou 1:1.000.000) representam grandes áreas com pouco detalhamento." },
+            { question: "Sobre a evolução histórica da cartografia:\nI. Os mapas mais antigos conhecidos foram feitos pelos babilônios em tábuas de argila\nII. Na Idade Média, os mapas tinham forte influência religiosa\nIII. As Grandes Navegações impulsionaram o desenvolvimento da cartografia\nEstá(ão) correta(s):", options: ["Apenas I", "Apenas I e II", "Apenas II e III", "I, II e III"], answer: 3, justification: "As três afirmações estão corretas e descrevem momentos importantes da evolução histórica da cartografia." },
+            { question: "Sobre a relação entre escala e área representada:\nI. Mapas de escala pequena representam grandes áreas com pouco detalhe\nII. Mapas de escala grande representam pequenas áreas com muito detalhe\nIII. Um mapa-múndi é um exemplo de escala grande\nA sequência correta (V para verdadeiro, F para falso) é:", options: ["V – V – V", "F – V – V", "V – F – V", "V – V – F"], answer: 3, justification: "I e II são verdadeiras. III é falsa: um mapa-múndi é um exemplo de escala pequena (grande área, pouco detalhe)." },
+            { question: "O que são coordenadas geográficas?", options: ["Linhas imaginárias que cruzam o planeta para localizar pontos na superfície", "As divisas entre países e estados", "As áreas de preservação ambiental", "Os nomes dados às ruas e avenidas"], answer: 0, justification: "Coordenadas geográficas (latitude e longitude) são um sistema de linhas imaginárias que permitem localizar qualquer ponto na superfície terrestre." },
+            { question: "Sobre a intervenção humana na paisagem costeira:\nI. A construção de portos e marinas altera a paisagem litorânea\nII. O aterramento de manguezais causa impactos ambientais\nIII. As praias nunca sofrem alteração pela ação humana\nEstá(ão) correta(s):", options: ["Apenas I", "Apenas I e II", "Apenas II e III", "I, II e III"], answer: 1, justification: "I e II estão corretas. III está falsa: as praias sofrem intensa alteração pela ação humana (urbanização, engorda artificial, poluição)." },
+            { question: "Sobre os mapas temáticos:\nI. Mapas temáticos representam fenômenos específicos (clima, população, vegetação)\nII. O mapa político é um exemplo de mapa temático\nIII. Mapas temáticos utilizam símbolos e cores para representar dados\nA sequência correta (V para verdadeiro, F para falso) é:", options: ["V – V – V", "V – F – V", "F – V – V", "V – V – F"], answer: 1, justification: "I e III são verdadeiras. II é falsa: o mapa político é um mapa de base/referência, não um mapa temático (que representa fenômenos específicos)." },
+            { question: "O que significa a sigla SIG (Sistemas de Informação Geográfica)?", options: ["Software utilizado para criar, armazenar, analisar e visualizar dados geoespaciais", "Sistema de localização por satélite", "Mapa impresso em alta resolução", "Técnica de desenho manual de mapas"], answer: 0, justification: "SIG é um sistema computacional que permite capturar, armazenar, analisar, gerenciar e visualizar dados georreferenciados." },
+            { question: "Sobre a importância da cartografia para a sociedade:\nI. A cartografia auxilia no planejamento urbano e ambiental\nII. Mapas são essenciais para navegação e logística de transportes\nIII. A cartografia não tem utilidade para o estudo de desastres naturais\nEstá(ão) correta(s):", options: ["Apenas I", "Apenas II e III", "Apenas I e II", "I, II e III"], answer: 2, justification: "I e II estão corretas. III está falsa: a cartografia é fundamental para o estudo e prevenção de desastres naturais (mapeamento de áreas de risco, rotas de fuga, etc.)." }
+        ];
+
+        // ---------- ESTADO ----------
+        let studentName = "", studentClass = "", bimester = "";
+        let currentIndex = 0;
+        let userAnswers = new Array(20).fill(null);
+        let attemptCount = parseInt(sessionStorage.getItem('quizAttempt2')) || 1;
+        let quizResults = null;
+
+        // Elementos
+        const startScreen = document.getElementById('startScreen');
+        const quizScreen = document.getElementById('quizScreen');
+        const resultScreen = document.getElementById('resultScreen');
+        const endScreen = document.getElementById('endScreen');
+        const nameInput = document.getElementById('studentName');
+        const classSelect = document.getElementById('studentClass');
+        const bimesterSelect = document.getElementById('bimester');
+        const startBtn = document.getElementById('startBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const finishBtn = document.getElementById('finishBtn');
+        const questionText = document.getElementById('questionText');
+        const optionsDiv = document.getElementById('optionsContainer');
+        const feedbackArea = document.getElementById('feedbackArea');
+        const feedbackStatus = document.getElementById('feedbackStatus');
+        const feedbackJust = document.getElementById('feedbackJustification');
+        const progressFill = document.getElementById('progressBarFill');
+        const counterSpan = document.getElementById('questionCounter');
+        const studentInfoDisplay = document.getElementById('studentInfoDisplay');
+
+        // ---------- FUNÇÕES ----------
+        function updateStartButton() { startBtn.disabled = !nameInput.value.trim(); }
+
+        function renderQuestion(index) {
+            const q = questions[index];
+            questionText.innerText = q.question;
+            counterSpan.innerText = `Questão ${index+1} de 20`;
+            progressFill.style.width = `${((index+1)/20)*100}%`;
+            
+            let html = '';
+            q.options.forEach((opt, i) => {
+                const letter = String.fromCharCode(65 + i);
+                let classes = 'option';
+                const selected = userAnswers[index];
+                if (selected !== null) {
+                    classes += ' disabled';
+                    if (i === q.answer) classes += ' correct';
+                    else if (i === selected) classes += ' incorrect';
+                }
+                html += `<div class="${classes}" data-opt-index="${i}">${letter}) ${opt}</div>`;
+            });
+            optionsDiv.innerHTML = html;
+
+            if (userAnswers[index] !== null) {
+                const isCorrect = (userAnswers[index] === q.answer);
+                feedbackStatus.innerHTML = isCorrect ? '✅ Correto!' : '❌ Incorreto';
+                feedbackStatus.className = isCorrect ? 'feedback-correct' : 'feedback-incorrect';
+                feedbackJust.innerText = q.justification;
+                feedbackArea.classList.remove('hidden');
+            } else {
+                feedbackArea.classList.add('hidden');
+            }
+
+            const isLast = (index === 19);
+            if (userAnswers[index] !== null) {
+                if (isLast) { nextBtn.classList.add('hidden'); finishBtn.classList.remove('hidden'); }
+                else { nextBtn.classList.remove('hidden'); finishBtn.classList.add('hidden'); }
+            } else {
+                nextBtn.classList.add('hidden'); finishBtn.classList.add('hidden');
+            }
+        }
+
+        function handleOptionClick(e) {
+            const opt = e.target.closest('.option');
+            if (!opt || userAnswers[currentIndex] !== null) return;
+            const idx = parseInt(opt.dataset.optIndex);
+            userAnswers[currentIndex] = idx;
+            renderQuestion(currentIndex);
+        }
+
+        function calculateResults() {
+            let correct = 0;
+            const wrong = [];
+            userAnswers.forEach((ans, i) => {
+                if (ans === questions[i].answer) correct++;
+                else wrong.push({ number: i+1, text: questions[i].question });
+            });
+            const nota = (correct / 20) * 10;
+            let mention = '';
+            if (nota < 5.0) mention = 'Não foi muito bem';
+            else if (nota < 6.5) mention = 'Regular';
+            else if (nota < 8.5) mention = 'Bom';
+            else mention = 'Excelente';
+            return { correct, nota: nota.toFixed(1), mention, wrong };
+        }
+
+        function showResultScreen() {
+            startScreen.classList.add('hidden'); quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden'); endScreen.classList.add('hidden');
+            
+            quizResults = calculateResults();
+            const content = document.getElementById('resultContent');
+            const actions = document.getElementById('resultActions');
+            
+            content.innerHTML = `
+                <div class="grade">${quizResults.nota}</div>
+                <div class="mention">${quizResults.mention}</div>
+                <div class="stats">✅ Acertos: ${quizResults.correct} / 20<br>📊 Nota: ${quizResults.nota}</div>
+            `;
+            actions.innerHTML = `
+                <button id="redoQuizBtn" class="secondary">🔄 Refazer Quiz</button>
+                <button id="sendReportBtn">📤 Enviar</button>
+            `;
+            document.getElementById('redoQuizBtn').addEventListener('click', resetQuiz);
+            document.getElementById('sendReportBtn').addEventListener('click', generateAndSend);
+        }
+
+        function generateAndSend() {
+            const date = new Date().toLocaleString('pt-BR');
+            const printDiv = document.getElementById('printArea');
+            let wrongHtml = '';
+            quizResults.wrong.forEach(w => { wrongHtml += `<p><strong>${w.number}.</strong> ${w.text}</p>`; });
+            if (wrongHtml === '') wrongHtml = '<p>Nenhuma questão errada! Parabéns!</p>';
+            
+            printDiv.innerHTML = `
+                <div style="font-family: Arial; padding: 20px; max-width: 800px; margin:auto;">
+                    <h2 style="color:#2c4a3a;">Relatório - Quiz Cartografia</h2>
+                    <p><strong>Nome:</strong> ${studentName} | <strong>Turma:</strong> ${studentClass} | <strong>Bimestre:</strong> ${bimester}</p>
+                    <p><strong>Data/Hora:</strong> ${date} | <strong>Tentativa:</strong> ${attemptCount}ª</p>
+                    <p><strong>Pontuação:</strong> ${quizResults.correct}/20 | <strong>Nota:</strong> ${quizResults.nota} | <strong>Mensão:</strong> ${quizResults.mention}</p>
+                    <hr>
+                    <h3>Questões erradas:</h3>
+                    ${wrongHtml}
+                </div>
+            `;
+            
+            window.print();
+            
+            // Após imprimir (ou cancelar), mostra tela de encerramento
+            setTimeout(() => {
+                resultScreen.classList.add('hidden');
+                endScreen.classList.remove('hidden');
+            }, 200);
+        }
+
+        function resetQuiz() {
+            sessionStorage.setItem('quizAttempt2', ++attemptCount);
+            userAnswers = new Array(20).fill(null);
+            currentIndex = 0;
+            startScreen.classList.remove('hidden');
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            endScreen.classList.add('hidden');
+            // Mantém nome preenchido
+            updateStartButton();
+            studentInfoDisplay.innerText = '';
+        }
+
+        // ---------- EVENTOS ----------
+        nameInput.addEventListener('input', updateStartButton);
+        startBtn.addEventListener('click', () => {
+            studentName = nameInput.value.trim();
+            studentClass = classSelect.value;
+            bimester = bimesterSelect.value;
+            studentInfoDisplay.innerText = `${studentName.split(' ')[0]} | ${studentClass} | ${bimester}`;
+            startScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            currentIndex = 0;
+            renderQuestion(0);
+        });
+
+        optionsDiv.addEventListener('click', handleOptionClick);
+        nextBtn.addEventListener('click', () => { if (currentIndex < 19) { currentIndex++; renderQuestion(currentIndex); } });
+        finishBtn.addEventListener('click', showResultScreen);
+        document.getElementById('exitBtn').addEventListener('click', () => { window.close(); });
+
+        // Init
+        updateStartButton();
+        sessionStorage.setItem('quizAttempt2', attemptCount);
+    })();
+</script>
+</body>
+</html>
