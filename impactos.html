@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Quiz: Antropoceno & Ação Antrópica</title>
+    <!-- Biblioteca para geração de PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: #f4f7f9;
+            color: #1e2b3c;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            margin: 0;
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px -10px rgba(0, 20, 30, 0.15);
+            padding: 28px 24px;
+            transition: all 0.2s ease;
+            border: 1px solid #e9edf2;
+        }
+
+        /* Tela Inicial */
+        .screen {
+            display: block;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        h1 {
+            font-size: 1.9rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+            color: #0f2b3d;
+        }
+
+        .subtitle {
+            color: #5e7180;
+            margin-bottom: 32px;
+            font-weight: 400;
+            border-left: 5px solid #3a9b8c;
+            padding-left: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #2c4356;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 16px 18px;
+            font-size: 1.1rem;
+            border: 1.5px solid #d6dee5;
+            border-radius: 20px;
+            background: white;
+            transition: border 0.2s;
+            font-family: inherit;
+            background-color: #fafcfd;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3a9b8c;
+            box-shadow: 0 0 0 4px rgba(58, 155, 140, 0.1);
+        }
+
+        button {
+            background: #1e3b4c;
+            color: white;
+            border: none;
+            padding: 16px 28px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 60px;
+            width: 100%;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.05s;
+            margin-top: 8px;
+            letter-spacing: 0.3px;
+            box-shadow: 0 6px 14px rgba(30, 59, 76, 0.2);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button:disabled {
+            background: #b4c4cf;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        button.secondary {
+            background: #eef3f7;
+            color: #1e3b4c;
+            box-shadow: none;
+            border: 1px solid #ccdae3;
+        }
+
+        .flex-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .flex-buttons button {
+            width: 50%;
+        }
+
+        /* Header do Quiz */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            font-weight: 500;
+            color: #3e5e71;
+        }
+
+        .progress-bar-container {
+            background: #e2e9f0;
+            height: 12px;
+            border-radius: 20px;
+            margin: 16px 0 28px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: #3a9b8c;
+            height: 100%;
+            width: 5%;
+            border-radius: 20px;
+            transition: width 0.3s;
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 28px;
+            line-height: 1.4;
+            color: #0b2a3b;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .option {
+            background: #f8fafc;
+            border: 1.5px solid #dce5ec;
+            border-radius: 18px;
+            padding: 18px 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.1s;
+            color: #1a3a4e;
+            font-weight: 500;
+        }
+
+        .option:hover {
+            background: #edf3f9;
+            border-color: #a9c1d2;
+        }
+
+        .option.correct {
+            background: #d4eee9;
+            border-color: #2a8e7e;
+            color: #0b352d;
+        }
+
+        .option.incorrect {
+            background: #ffe8e8;
+            border-color: #d58f8f;
+            color: #712b2b;
+            opacity: 0.8;
+        }
+
+        .option.disabled {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .feedback-box {
+            background: #eef3f7;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 16px 0 24px;
+            border-left: 8px solid #3a9b8c;
+        }
+
+        .feedback-correct {
+            color: #1a6e5a;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .feedback-incorrect {
+            color: #b13e3e;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .justification {
+            color: #254b61;
+        }
+
+        /* Tela Final */
+        .result-card {
+            text-align: center;
+            padding: 16px 0;
+        }
+
+        .grade {
+            font-size: 4.5rem;
+            font-weight: 800;
+            color: #1e3b4c;
+            line-height: 1;
+        }
+
+        .mention {
+            font-size: 1.8rem;
+            margin: 16px 0;
+        }
+
+        .stats {
+            background: #f0f5fa;
+            border-radius: 24px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+
+        .alert-message {
+            background: #fff1d6;
+            padding: 24px;
+            border-radius: 24px;
+            margin: 24px 0;
+        }
+        
+        .small-note {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #6f8a9b;
+        }
+
+        /* Responsivo */
+        @media (max-width: 480px) {
+            .quiz-container { padding: 20px 16px; }
+            h1 { font-size: 1.7rem; }
+            .question-text { font-size: 1.2rem; }
+            .option { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+<div class="quiz-container">
+    <!-- TELA DE IDENTIFICAÇÃO -->
+    <div id="startScreen" class="screen">
+        <h1>🌍 Antropoceno</h1>
+        <div class="subtitle">Impactos da Ação Antrópica</div>
+        <div class="form-group">
+            <label>👤 Seu nome completo</label>
+            <input type="text" id="studentName" placeholder="Ex: Fabrício Alves" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label>📚 Turma</label>
+            <select id="studentClass">
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>📅 Bimestre</label>
+            <select id="bimester">
+                <option value="1º">1º Bimestre</option>
+                <option value="2º">2º Bimestre</option>
+                <option value="3º">3º Bimestre</option>
+                <option value="4º">4º Bimestre</option>
+            </select>
+        </div>
+        <button id="startBtn" disabled>▶ Iniciar Quiz</button>
+        <div class="small-note">Preencha seu nome para começar</div>
+    </div>
+
+    <!-- TELA DO QUIZ -->
+    <div id="quizScreen" class="screen hidden">
+        <div class="quiz-header">
+            <span id="questionCounter">Questão 1 de 20</span>
+            <span id="studentInfoDisplay">Fabrício | A | 2º</span>
+        </div>
+        <div class="progress-bar-container">
+            <div id="progressBarFill" class="progress-bar-fill" style="width: 5%;"></div>
+        </div>
+        <div id="questionText" class="question-text">Carregando...</div>
+        <div id="optionsContainer" class="options-container"></div>
+        <div id="feedbackArea" class="feedback-box hidden">
+            <div id="feedbackStatus"></div>
+            <div id="feedbackJustification" class="justification"></div>
+        </div>
+        <button id="nextBtn" class="hidden">Próxima ▶</button>
+        <button id="finishBtn" class="hidden">🏁 Finalizar Quiz</button>
+    </div>
+
+    <!-- TELA DE RESULTADO -->
+    <div id="resultScreen" class="screen hidden">
+        <h1>📋 Resultado</h1>
+        <div id="resultContent" class="result-card"></div>
+        <div id="resultActions" class="flex-buttons"></div>
+    </div>
+</div>
+
+<script>
+    (function(){
+        "use strict";
+
+        // ---------- BANCO DE QUESTÕES (conforme fornecido) ----------
+        const questions = [
+            {
+                question: "O termo 'Antropoceno' propõe uma nova época geológica caracterizada principalmente por:",
+                options: ["O fim das glaciações e o início do período interglacial atual", "A influência humana como força geológica capaz de alterar o sistema Terra", "O aumento da biodiversidade devido ao aquecimento global", "A extinção natural de grandes mamíferos no Pleistoceno"],
+                answer: 1, // b
+                justification: "O Antropoceno é uma proposta de nova época geológica em que a ação humana (queima de combustíveis fósseis, desmatamento, urbanização, etc.) torna-se a principal força de transformação do sistema Terra, alterando ciclos biogeoquímicos, o clima e até a composição geológica do planeta."
+            },
+            {
+                question: "Analise as afirmações sobre as mudanças na paisagem causadas pela ação humana:\nI. O desmatamento da Amazônia impacta o regime de chuvas em outras regiões do Brasil\nII. A impermeabilização do solo nas cidades contribui para enchentes\nIII. A mineração em larga escala não altera significativamente o relevo local\nEstá(ão) correta(s):",
+                options: ["Apenas I", "Apenas II e III", "Apenas I e II", "I, II e III"],
+                answer: 2, // c
+                justification: "I está correta porque a Amazônia produz 'rios voadores' que influenciam as chuvas no Centro-Oeste, Sudeste e Sul. II está correta porque o asfalto e o concreto impedem a infiltração da água, aumentando o escoamento superficial e as enchentes. III está falsa porque a mineração (especialmente de grande porte) altera profundamente o relevo, abrindo crateras, removendo montanhas e gerando rejeitos."
+            },
+            {
+                question: "Considere as afirmações sobre o aquecimento global:\nI. O aumento da temperatura média do planeta está diretamente ligado à emissão de gases de efeito estufa\nII. O degelo das calotas polares contribui para a elevação do nível do mar\nIII. O aquecimento global afeta apenas regiões próximas ao Equador\nA sequência correta (V para verdadeiro, F para falso) é:",
+                options: ["V – V – F", "V – F – V", "F – V – V", "F – F – V"],
+                answer: 0, // a
+                justification: "I é verdadeira: o aumento da concentração de gases de efeito estufa (CO₂, metano) retém mais calor na atmosfera. II é verdadeira: o degelo das calotas polares e das geleiras continentais adiciona água aos oceanos. III é falsa: o aquecimento global afeta todo o planeta, embora com intensidades regionais diferentes (o Ártico, por exemplo, aquece mais rápido que a média global)."
+            },
+            {
+                question: "A principal diferença entre um recurso natural renovável e um não renovável é:",
+                options: ["O custo de extração no mercado internacional", "A localização geográfica do recurso", "A velocidade de reposição pela natureza em relação ao consumo humano", "O tipo de indústria que o utiliza"],
+                answer: 2,
+                justification: "Recursos renováveis (como energia solar, eólica, biomassa) se regeneram em escala de tempo humana. Recursos não renováveis (petróleo, carvão, minerais) levam milhões de anos para se formar e, uma vez extraídos, não se renovam em tempo útil para a sociedade."
+            },
+            {
+                question: "Sobre a relação entre agricultura e impactos ambientais:\nI. O uso intensivo de agrotóxicos pode contaminar lençóis freáticos\nII. As queimadas para preparo do solo liberam carbono armazenado na vegetação\nIII. A agricultura orgânica elimina completamente qualquer impacto ambiental\nEstá(ão) correta(s):",
+                options: ["Apenas I", "I, II e III", "Apenas II e III", "Apenas I e II"],
+                answer: 3,
+                justification: "I está correta: agrotóxicos podem lixiviar pelo solo e atingir aquíferos subterrâneos. II está correta: a queima libera CO₂ e outros gases, além de destruir a vegetação que armazenava carbono. III está falsa: a agricultura orgânica reduz impactos, mas ainda utiliza água, ocupa território e pode emitir gases."
+            },
+            {
+                question: "Sobre o efeito estufa:\nI. O efeito estufa é um fenômeno natural e essencial para a vida na Terra\nII. A intensificação do efeito estufa é causada pelo aumento da emissão de gases como CO₂ e metano\nIII. O efeito estufa artificial é benéfico porque aquece o planeta uniformemente",
+                options: ["V – V – F", "V – F – V", "F – V – V", "F – F – V"],
+                answer: 0,
+                justification: "I é verdadeira: sem o efeito estufa natural, a temperatura média da Terra seria cerca de -18°C. II é verdadeira: as atividades humanas aumentaram a concentração desses gases. III é falsa: a intensificação causa aquecimento global e mudanças climáticas severas."
+            },
+            {
+                question: "A poluição dos oceanos por plástico representa um grave problema ambiental porque:",
+                options: ["O plástico se decompõe rapidamente, liberando toxinas", "O plástico se fragmenta em microplásticos que entram na cadeia alimentar", "O plástico é absorvido pelos corais e transformado em calcário", "O plástico aumenta a temperatura da água do mar"],
+                answer: 1,
+                justification: "O plástico não se decompõe rapidamente (pode levar centenas de anos). Ele se fragmenta em partículas minúsculas (microplásticos) que são ingeridas por organismos marinhos, entrando na cadeia alimentar."
+            },
+            {
+                question: "Sobre as consequências do desmatamento:\nI. A perda de biodiversidade é uma das consequências diretas\nII. O desmatamento contribui para a erosão do solo\nIII. O desmatamento não afeta o clima local",
+                options: ["Apenas I", "I, II e III", "Apenas II e III", "Apenas I e II"],
+                answer: 3,
+                justification: "I está correta: destruição de habitats. II está correta: solo exposto. III está falsa: o desmatamento reduz a evapotranspiração e altera o clima local."
+            },
+            {
+                question: "Sobre a pegada ecológica:\nI. A pegada ecológica mede a quantidade de recursos naturais consumidos\nII. Países desenvolvidos geralmente têm pegada ecológica maior\nIII. A pegada ecológica não considera a emissão de carbono",
+                options: ["V – V – F", "V – F – V", "F – V – V", "F – F – V"],
+                answer: 0,
+                justification: "III é falsa: a pegada ecológica inclui a área necessária para absorver o carbono emitido."
+            },
+            {
+                question: "O conceito de 'desenvolvimento sustentável' busca equilibrar:",
+                options: ["Crescimento econômico, justiça social e proteção ambiental", "Apenas crescimento econômico e geração de empregos", "Apenas proteção ambiental e preservação de espécies", "Apenas justiça social e distribuição de renda"],
+                answer: 0,
+                justification: "O desenvolvimento sustentável (Relatório Brundtland) equilibra os pilares econômico, social e ambiental."
+            },
+            {
+                question: "Sobre as mudanças climáticas e seus efeitos:\nI. O aumento do nível do mar ameaça cidades litorâneas\nII. Eventos climáticos extremos tornam-se mais frequentes\nIII. As mudanças climáticas afetam apenas países tropicais",
+                options: ["Apenas I", "Apenas II e III", "Apenas I e II", "I, II e III"],
+                answer: 2,
+                justification: "III é falsa: as mudanças climáticas afetam todo o planeta."
+            },
+            {
+                question: "Sobre a camada de ozônio:\nI. A camada de ozônio protege a Terra dos raios ultravioleta\nII. A destruição da camada de ozônio é causada principalmente por gases como os CFCs\nIII. A camada de ozônio já foi completamente destruída e não há mais o que fazer",
+                options: ["V – V – F", "V – F – V", "F – V – V", "F – F – V"],
+                answer: 0,
+                justification: "III é falsa: a camada de ozônio está se recuperando graças ao Protocolo de Montreal."
+            },
+            {
+                question: "A principal fonte de emissão de metano (CH₄) associada à atividade humana é:",
+                options: ["A queima de combustíveis fósseis em veículos", "A produção de energia solar", "O desmatamento da Amazônia", "A pecuária (fermentação entérica do gado)"],
+                answer: 2, // ATENÇÃO: O gabarito original da Q13 marcava C, mas o texto justifica pecuária (D). Corrigindo para D (índice 3) conforme justificativa.
+                justification: "A fermentação entérica (digestão dos ruminantes) é a maior fonte antropogênica de metano. A queima de combustíveis emite principalmente CO₂."
+            },
+            {
+                question: "Sobre a gestão de resíduos sólidos:\nI. O lixo orgânico pode ser transformado em adubo por meio da compostagem\nII. A reciclagem reduz a necessidade de extração de novos recursos naturais\nIII. Os aterros sanitários eliminam completamente os impactos ambientais do lixo",
+                options: ["Apenas I", "Apenas I e II", "Apenas II e III", "I, II e III"],
+                answer: 1,
+                justification: "III é falsa: aterros ainda geram chorume e ocupam área."
+            },
+            {
+                question: "Sobre a Conferência das Nações Unidas sobre Mudanças Climáticas (COP):\nI. As COPs reúnem países para negociar acordos climáticos\nII. O Acordo de Paris (2015) foi firmado em uma COP\nIII. As decisões das COPs são juridicamente vinculantes para todos os países",
+                options: ["V – V – F", "V – F – V", "F – V – V", "F – F – V"],
+                answer: 0,
+                justification: "III é falsa: as decisões das COPs não são juridicamente vinculantes."
+            },
+            {
+                question: "O 'aquecimento global' é uma consequência direta:",
+                options: ["Do aumento da atividade solar nos últimos 50 anos", "Da intensificação do efeito estufa por ações humanas", "Da redução da camada de ozônio na estratosfera", "Do resfriamento natural dos oceanos"],
+                answer: 1,
+                justification: "Causado principalmente pelo aumento da concentração de gases de efeito estufa emitidos por atividades humanas."
+            },
+            {
+                question: "Sobre as energias renováveis:\nI. A energia solar é considerada limpa e renovável\nII. A energia eólica depende de ventos, que são recursos renováveis\nIII. As energias renováveis não causam nenhum impacto ambiental",
+                options: ["Apenas I", "I, II e III", "Apenas II e III", "Apenas I e II"],
+                answer: 3,
+                justification: "III é falsa: energias renováveis também têm impactos (uso de terra, fabricação de equipamentos)."
+            },
+            {
+                question: "Sobre a poluição do ar nas cidades:\nI. A queima de combustíveis fósseis em veículos contribui para a poluição do ar\nII. A poluição do ar pode causar doenças respiratórias na população\nIII. A poluição do ar afeta apenas áreas industriais, não centros urbanos",
+                options: ["V – V – F", "V – F – V", "F – V – V", "F – F – V"],
+                answer: 0,
+                justification: "III é falsa: grandes centros urbanos sofrem com poluição do ar de veículos e outras fontes."
+            },
+            {
+                question: "O 'Protocolo de Kyoto' (1997) foi um acordo internacional que:",
+                options: ["Estabeleceu metas de redução de emissões de gases de efeito estufa para países desenvolvidos", "Proibiu completamente o uso de combustíveis fósseis no mundo", "Criou a camada de ozônio artificialmente", "Estabeleceu cotas de pesca para os oceanos"],
+                answer: 0,
+                justification: "Kyoto foi o primeiro tratado com metas obrigatórias de redução para países desenvolvidos (Anexo I)."
+            },
+            {
+                question: "Sobre a relação entre consumo e impacto ambiental:\nI. O consumo consciente busca reduzir o desperdício de recursos\nII. A obsolescência programada incentiva o consumo de produtos com vida útil reduzida\nIII. O consumo excessivo não afeta o meio ambiente",
+                options: ["Apenas I", "Apenas II e III", "Apenas I e II", "I, II e III"],
+                answer: 2,
+                justification: "III é falsa: o consumo excessivo é um dos principais motores da extração de recursos e geração de resíduos."
+            }
+        ];
+
+        // Ajuste fino Q13 para D (índice 3)
+        questions[12].answer = 3; 
+
+        // ---------- ESTADO DA APLICAÇÃO ----------
+        let studentName = "", studentClass = "", bimester = "";
+        let currentIndex = 0;
+        let userAnswers = new Array(20).fill(null); 
+        let quizCompleted = false;
+        let attemptCount = parseInt(sessionStorage.getItem('quizAttempt')) || 1;
+        
+        // Elementos DOM
+        const startScreen = document.getElementById('startScreen');
+        const quizScreen = document.getElementById('quizScreen');
+        const resultScreen = document.getElementById('resultScreen');
+        const nameInput = document.getElementById('studentName');
+        const classSelect = document.getElementById('studentClass');
+        const bimesterSelect = document.getElementById('bimester');
+        const startBtn = document.getElementById('startBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const finishBtn = document.getElementById('finishBtn');
+        const questionText = document.getElementById('questionText');
+        const optionsDiv = document.getElementById('optionsContainer');
+        const feedbackArea = document.getElementById('feedbackArea');
+        const feedbackStatus = document.getElementById('feedbackStatus');
+        const feedbackJust = document.getElementById('feedbackJustification');
+        const progressFill = document.getElementById('progressBarFill');
+        const counterSpan = document.getElementById('questionCounter');
+        const studentInfoDisplay = document.getElementById('studentInfoDisplay');
+
+        // ---------- FUNÇÕES AUXILIARES ----------
+        function updateStartButton() {
+            startBtn.disabled = !nameInput.value.trim();
+        }
+
+        function renderQuestion(index) {
+            const q = questions[index];
+            questionText.innerText = q.question;
+            counterSpan.innerText = `Questão ${index+1} de 20`;
+            progressFill.style.width = `${((index+1)/20)*100}%`;
+            
+            let html = '';
+            q.options.forEach((opt, i) => {
+                const letter = String.fromCharCode(65 + i);
+                let classes = 'option';
+                const selected = userAnswers[index];
+                
+                if (selected !== null) {
+                    classes += ' disabled';
+                    if (i === q.answer) classes += ' correct';
+                    else if (i === selected) classes += ' incorrect';
+                }
+                html += `<div class="${classes}" data-opt-index="${i}">${letter}) ${opt}</div>`;
+            });
+            optionsDiv.innerHTML = html;
+
+            // Exibir feedback se já respondida
+            if (userAnswers[index] !== null) {
+                const isCorrect = (userAnswers[index] === q.answer);
+                feedbackStatus.innerHTML = isCorrect ? '✅ Correto!' : '❌ Incorreto';
+                feedbackStatus.className = isCorrect ? 'feedback-correct' : 'feedback-incorrect';
+                feedbackJust.innerText = q.justification;
+                feedbackArea.classList.remove('hidden');
+            } else {
+                feedbackArea.classList.add('hidden');
+            }
+
+            // Gerenciar botões
+            const isLast = (index === 19);
+            if (userAnswers[index] !== null) {
+                if (isLast) {
+                    nextBtn.classList.add('hidden');
+                    finishBtn.classList.remove('hidden');
+                } else {
+                    nextBtn.classList.remove('hidden');
+                    finishBtn.classList.add('hidden');
+                }
+            } else {
+                nextBtn.classList.add('hidden');
+                finishBtn.classList.add('hidden');
+            }
+        }
+
+        function handleOptionClick(e) {
+            const optionDiv = e.target.closest('.option');
+            if (!optionDiv) return;
+            if (userAnswers[currentIndex] !== null) return; // já respondida
+            
+            const selectedIndex = parseInt(optionDiv.dataset.optIndex);
+            userAnswers[currentIndex] = selectedIndex;
+            
+            renderQuestion(currentIndex);
+        }
+
+        function calculateResults() {
+            let correct = 0;
+            const wrongDetails = [];
+            userAnswers.forEach((ans, idx) => {
+                if (ans === questions[idx].answer) correct++;
+                else {
+                    wrongDetails.push({
+                        number: idx+1,
+                        text: questions[idx].question
+                    });
+                }
+            });
+            const score = (correct / 20) * 10;
+            let mention = '';
+            if (score < 5.0) mention = 'Não foi muito bem';
+            else if (score < 6.5) mention = 'Regular';
+            else if (score < 8.5) mention = 'Bom';
+            else mention = 'Excelente';
+            
+            return { correct, score: score.toFixed(1), mention, wrongDetails };
+        }
+
+        function showResultScreen() {
+            startScreen.classList.add('hidden');
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+            
+            const res = calculateResults();
+            const notaNum = parseFloat(res.score);
+            const aprovado = notaNum >= 7.0;
+            
+            const contentDiv = document.getElementById('resultContent');
+            const actionsDiv = document.getElementById('resultActions');
+            
+            let html = `<div class="grade">${res.score}</div>`;
+            html += `<div class="mention">${res.mention}</div>`;
+            html += `<div class="stats">✅ Acertos: ${res.correct} / 20<br>📊 Nota: ${res.score}</div>`;
+            
+            if (aprovado) {
+                html += `<p style="color:#1a6e5a;">🎉 Parabéns! Você foi aprovado(a)!</p>`;
+                actionsDiv.innerHTML = `<button id="pdfReportBtn" class="secondary">📄 Gerar Relatório PDF</button>
+                                        <button id="redoQuizBtn">🔄 Refazer Quiz</button>`;
+            } else {
+                html += `<div class="alert-message">📚 Continue estudando! Você conseguirá na próxima tentativa. 💪</div>`;
+                actionsDiv.innerHTML = `<button id="redoQuizBtn" style="width:100%">🔄 Refazer Quiz</button>`;
+            }
+            contentDiv.innerHTML = html;
+            
+            document.getElementById('redoQuizBtn')?.addEventListener('click', resetQuiz);
+            document.getElementById('pdfReportBtn')?.addEventListener('click', ()=>{
+                generatePDF(res, aprovado);
+            });
+        }
+
+        function generatePDF(res, aprovado) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const date = new Date().toLocaleString('pt-BR');
+            let y = 20;
+            doc.setFontSize(16);
+            doc.text('Relatório de Desempenho - Quiz Antropoceno', 20, y);
+            y += 12;
+            doc.setFontSize(11);
+            doc.text(`Nome: ${studentName} | Turma: ${studentClass} | Bimestre: ${bimester}`, 20, y);
+            y += 8;
+            doc.text(`Data/Hora: ${date} | Tentativa: ${attemptCount}`, 20, y);
+            y += 10;
+            doc.text(`Pontuação: ${res.correct}/20 | Nota: ${res.score} | Mensão: ${res.mention}`, 20, y);
+            y += 12;
+            
+            if (res.wrongDetails.length > 0) {
+                doc.text('Questões erradas:', 20, y);
+                y += 7;
+                res.wrongDetails.forEach(w => {
+                    const line = `${w.number}. ${w.text.substring(0, 80)}...`;
+                    if (y > 270) { doc.addPage(); y = 20; }
+                    doc.text(line, 25, y);
+                    y += 6;
+                });
+            } else {
+                doc.text('Nenhuma questão errada! Perfeito!', 20, y);
+            }
+            doc.save(`Relatorio_${studentName.replace(/\s/g,'_')}.pdf`);
+        }
+
+        function resetQuiz() {
+            sessionStorage.setItem('quizAttempt', ++attemptCount);
+            // Reset completo
+            userAnswers = new Array(20).fill(null);
+            currentIndex = 0;
+            quizCompleted = false;
+            
+            startScreen.classList.remove('hidden');
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            nameInput.value = '';
+            updateStartButton();
+            studentInfoDisplay.innerText = '';
+        }
+
+        // ---------- EVENT LISTENERS ----------
+        nameInput.addEventListener('input', updateStartButton);
+        
+        startBtn.addEventListener('click', () => {
+            studentName = nameInput.value.trim();
+            studentClass = classSelect.value;
+            bimester = bimesterSelect.value;
+            studentInfoDisplay.innerText = `${studentName.split(' ')[0]} | ${studentClass} | ${bimester}`;
+            
+            startScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            currentIndex = 0;
+            renderQuestion(currentIndex);
+        });
+
+        optionsDiv.addEventListener('click', handleOptionClick);
+
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < 19) {
+                currentIndex++;
+                renderQuestion(currentIndex);
+            }
+        });
+
+        finishBtn.addEventListener('click', () => {
+            quizCompleted = true;
+            showResultScreen();
+        });
+
+        // Inicialização
+        updateStartButton();
+        sessionStorage.setItem('quizAttempt', attemptCount);
+    })();
+</script>
+</body>
+</html>
