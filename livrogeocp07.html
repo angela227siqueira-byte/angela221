@@ -1,0 +1,661 @@
+html
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz: Territórios e Fronteiras - Geografia</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a472a, #0d2818);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+        .quiz-container {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 25px;
+            transition: 0.3s;
+        }
+        h1 {
+            text-align: center;
+            color: #1a472a;
+            font-size: 26px;
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+        .sub {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+        .attempt-counter {
+            text-align: center;
+            background: #e8f0e8;
+            padding: 8px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #1a472a;
+        }
+        .nome-area {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+        .nome-area label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+            color: #1a472a;
+        }
+        .nome-area input {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 2px solid #cbd5e1;
+            border-radius: 30px;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .nome-area input:focus {
+            outline: none;
+            border-color: #1a472a;
+        }
+        .btn-iniciar {
+            background: #1a472a;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 40px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .btn-iniciar:hover {
+            background: #0d2b1a;
+        }
+        .progress-area {
+            margin-bottom: 20px;
+        }
+        .progress-bar-bg {
+            background: #e0e0e0;
+            border-radius: 12px;
+            height: 12px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: #1a472a;
+            width: 0%;
+            height: 12px;
+            transition: width 0.3s;
+            border-radius: 12px;
+        }
+        .progress-text {
+            text-align: right;
+            font-size: 13px;
+            margin-top: 6px;
+            color: #555;
+        }
+        .timer-area {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #dee2e6;
+        }
+        .timer-label {
+            font-weight: bold;
+            color: #1a472a;
+        }
+        .timer-clock {
+            font-size: 28px;
+            font-weight: bold;
+            font-family: monospace;
+            background: #2d2d2d;
+            color: #fff;
+            padding: 5px 15px;
+            border-radius: 30px;
+        }
+        .timer-clock.warning {
+            background: #dc3545;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        .question {
+            display: none;
+            margin-bottom: 25px;
+        }
+        .question.active {
+            display: block;
+        }
+        .question-text {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1a2a3a;
+            line-height: 1.4;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .options li button {
+            width: 100%;
+            text-align: left;
+            background: #f0f4f8;
+            border: 1px solid #cbd5e1;
+            padding: 14px 18px;
+            border-radius: 16px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #1e2a3a;
+            font-weight: 500;
+        }
+        .options li button:hover:not(:disabled) {
+            background: #e2e8f0;
+            transform: scale(1.01);
+            border-color: #1a472a;
+        }
+        .feedback {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 16px;
+            display: none;
+            line-height: 1.5;
+        }
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .feedback.wrong {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .justification {
+            font-size: 14px;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        .next-btn, .voltar-inicio-btn {
+            background: #1a472a;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.2s;
+            font-weight: bold;
+        }
+        .voltar-inicio-btn {
+            background: #6c757d;
+            margin-right: 12px;
+        }
+        .voltar-inicio-btn:hover {
+            background: #495057;
+        }
+        .next-btn:hover {
+            background: #0d2b1a;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .export-btn {
+            background: #0d6efd;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .export-btn:hover {
+            background: #0b5ed7;
+        }
+        #score-screen, #congrats-screen {
+            text-align: center;
+            display: none;
+        }
+        .final-mensagem {
+            font-size: 22px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .final-nota {
+            font-size: 48px;
+            font-weight: bold;
+            color: #1a472a;
+            margin: 15px 0;
+        }
+        .congrats {
+            font-size: 28px;
+            color: #1a472a;
+            margin-bottom: 20px;
+        }
+        hr {
+            margin: 20px 0;
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 12px;
+            color: #aaa;
+        }
+        .hidden {
+            display: none;
+        }
+        .screen {
+            display: block;
+        }
+        @media (max-width: 550px) {
+            .quiz-container { padding: 20px; }
+            .question-text { font-size: 18px; }
+            .timer-clock { font-size: 22px; padding: 3px 10px; }
+        }
+    </style>
+</head>
+<body>
+<div class="quiz-container" id="quizContainer">
+    <h1>🗺️ Quiz: Territórios e Fronteiras</h1>
+    <div class="sub">Capítulo 7 - Geografia | Estado, poder e território</div>
+
+    <!-- Contador de tentativas -->
+    <div class="attempt-counter" id="attemptCounter">📊 Tentativas neste quiz: 0</div>
+
+    <!-- Tela de Nome -->
+    <div id="nomeScreen" class="screen">
+        <div class="nome-area">
+            <label>📝 Digite seu nome para começar:</label>
+            <input type="text" id="alunoNome" placeholder="Seu nome aqui" maxlength="50">
+            <br>
+            <button class="btn-iniciar" onclick="iniciarQuiz()">▶️ Iniciar Quiz</button>
+        </div>
+    </div>
+
+    <!-- Área do Quiz (inicialmente oculta) -->
+    <div id="quizArea" style="display:none;">
+        <div class="progress-area">
+            <div class="progress-bar-bg">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">0 / 20</div>
+        </div>
+
+        <div class="timer-area" id="timerArea">
+            <span class="timer-label">⏱️ Tempo restante desta questão:</span>
+            <span class="timer-clock" id="timerClock">04:00</span>
+        </div>
+
+        <div id="questions-area"></div>
+    </div>
+
+    <!-- Tela de Pontuação -->
+    <div id="score-screen" class="screen" style="display:none;">
+        <h2>🏁 Fim do Quiz!</h2>
+        <div id="final-result"></div>
+        <div class="button-group" id="resultButtons">
+            <button class="voltar-inicio-btn" onclick="voltarPrimeiraPergunta()">🔄 Voltar à primeira questão</button>
+        </div>
+    </div>
+
+    <!-- Tela de Congratulações -->
+    <div id="congrats-screen" class="screen" style="display:none;">
+        <div class="congrats">🎉 PARABÉNS! 🎉</div>
+        <div id="congratsMessage"></div>
+        <div class="button-group">
+            <button class="voltar-inicio-btn" onclick="voltarPrimeiraPergunta()">🔄 Voltar à primeira questão</button>
+        </div>
+    </div>
+
+    <footer>✅ Baseado no Capítulo 7 • Temporizador: 4 min/questão</footer>
+</div>
+
+<script>
+    const quizData = [
+        { q: "Friedrich Ratzel foi o primeiro a tratar a relação entre Estado, poder e território como objeto de estudo da geografia.", type: "vf", options: ["Verdadeiro", "Falso"], answer: 0, just: "Ratzel publicou 'Geografia política' em 1897, marcando o início da investigação científica dessas relações." },
+        { q: "O conceito de fronteira política internacional foi desenvolvido durante a Idade Média, na Europa feudal fragmentada.", type: "vf", options: ["Verdadeiro", "Falso"], answer: 1, just: "A noção contemporânea de fronteira desenvolveu-se no final da Idade Média, com a unificação do poder pelas monarquias." },
+        { q: "O Estado unitário apresenta governo único com plena jurisdição nacional, e suas entidades subnacionais não têm legislação própria.", type: "vf", options: ["Verdadeiro", "Falso"], answer: 0, just: "Correto. Exemplos: França, China, Itália. As entidades subnacionais têm funções administrativas, sem autonomia política." },
+        { q: "A Muralha de Adriano, construída pelos romanos, é um exemplo de fronteira natural baseada em acidentes geográficos.", type: "vf", options: ["Verdadeiro", "Falso"], answer: 1, just: "A Muralha de Adriano é uma fronteira artificial (construída), não natural. Foi erguida para separar o Império Romano dos povos da atual Escócia." },
+        { q: "O sistema federal foi adotado pela primeira vez nos Estados Unidos em 1787, como forma de estabelecer unidade nacional.", type: "vf", options: ["Verdadeiro", "Falso"], answer: 0, just: "Correto. Os EUA foram pioneiros no sistema federativo, que concede autonomia às unidades federadas." },
+        { q: "O Tratado de Madri (1750) entre Portugal e Espanha delineou os contornos aproximados do território atual do Brasil.", type: "vf", options: ["Verdadeiro", "Falso"], answer: 0, just: "Correto. O Tratado de Madri substituiu o de Tordesilhas e definiu grande parte das atuais fronteiras brasileiras." },
+        { q: "No Brasil, os territórios federais (ex: Acre, Roraima) não dispunham de autonomia política e seus governadores eram nomeados pelo governo federal.", type: "vf", options: ["Verdadeiro", "Falso"], answer: 0, just: "Correto. Os territórios federais eram áreas de fronteira pouco povoadas, sem assembleias legislativas." },
+        { q: "A Proclamação da República (1889) transformou o Brasil em Estado unitário, concentrando poder na União.", type: "vf", options: ["Verdadeiro", "Falso"], answer: 1, just: "Ao contrário: a Constituição de 1891 organizou o Brasil como Estado federal, concedendo autonomia aos estados." },
+        { q: "O Sudão do Sul tornou-se independente em 2011, após décadas de guerras civis com o norte do Sudão.", type: "vf", options: ["Verdadeiro", "Falso"], answer: 0, just: "Correto. O Sudão do Sul é o país mais novo do mundo, resultado de conflitos étnicos e religiosos." },
+        { q: "As projeções cartográficas são neutras e não carregam intencionalidades políticas ou ideológicas.", type: "vf", options: ["Verdadeiro", "Falso"], answer: 1, just: "Falso. Toda projeção envolve escolhas que privilegiam certas áreas (ex: Mercator favorece o hemisfério norte)." },
+        { q: "O que significa o termo 'Cortina de Ferro' no contexto da Guerra Fria?", type: "mc", options: ["Muro construído na Alemanha", "Fronteira estratégica que separava Europa Ocidental (capitalista) da Oriental (socialista)", "Tratado de aliança militar", "Política de não alinhamento"], answer: 1, just: "A Cortina de Ferro foi a fronteira ideológica que dividiu a Europa durante a Guerra Fria." },
+        { q: "Qual das opções abaixo NÃO é uma característica do Estado unitário?", type: "mc", options: ["Governo único com jurisdição nacional", "Entidades subnacionais sem legislação própria", "Autonomia política das províncias ou estados", "Constituição nacional única"], answer: 2, just: "Autonomia política das províncias é característica do Estado federal, não do unitário." },
+        { q: "O Tratado de Tordesilhas (1494) estabelecia a divisão de terras entre:", type: "mc", options: ["Portugal e França", "Espanha e Inglaterra", "Portugal e Espanha", "Holanda e Portugal"], answer: 2, just: "O Tratado de Tordesilhas dividiu as terras 'descobertas e a descobrir' entre Portugal e Espanha." },
+        { q: "A cartografia social ou etnocartografia tem como principal objetivo:", type: "mc", options: ["Produzir mapas esteticamente mais bonitos", "Empoderar comunidades tradicionais no mapeamento de seus territórios", "Substituir a cartografia oficial", "Vender mapas para empresas"], answer: 1, just: "A cartografia social permite que comunidades mapeiem seus próprios desafios, saberes e reivindicações territoriais." },
+        { q: "Qual região da Índia é disputada com o Paquistão desde a independência em 1947?", type: "mc", options: ["Punjab", "Caxemira", "Bangladesh", "Goa"], answer: 1, just: "A região da Caxemira, de maioria muçulmana, ficou sob controle indiano e é reivindicada pelo Paquistão." },
+        { q: "O sistema de organização política em que o poder é compartilhado entre governo central e unidades federadas (estados, províncias) é chamado de:", type: "mc", options: ["Estado unitário", "Confederação", "Federação", "Império"], answer: 2, just: "Na federação, as unidades federadas têm autonomia política, mas subordinadas à Constituição Federal." },
+        { q: "O geógrafo __________ foi o primeiro a tratar a geografia política como objeto científico, publicando 'Geografia política' em 1897.", type: "fill", options: ["Friedrich Ratzel", "Milton Santos", "Peter Haggett", "Carl Sauer"], answer: 0, just: "Friedrich Ratzel é considerado o pai da geografia política moderna." },
+        { q: "A __________ é a norma jurídica que ordena as relações entre as instituições do Estado e define direitos e deveres dos cidadãos.", type: "fill", options: ["Lei Ordinária", "Constituição", "Medida Provisória", "Emenda"], answer: 1, just: "A Constituição é a lei máxima do Estado, organizando o poder e garantindo direitos." },
+        { q: "Os mapas elaborados pelos cartógrafos europeus fixaram o __________ na parte superior das representações, sem justificativa científica.", type: "fill", options: ["Equador", "Hemisfério Norte", "Trópico de Câncer", "Polo Sul"], answer: 1, just: "Essa escolha eurocêntrica privilegiava a Europa e a América do Norte." },
+        { q: "O aplicativo 'Tô no Mapa' é uma ferramenta de __________ que permite a comunidades tradicionais registrarem seus territórios.", type: "fill", options: ["cartografia social", "geolocalização comercial", "vigilância estatal", "navegação GPS"], answer: 0, just: "O 'Tô no Mapa' apoia povos tradicionais na defesa de seus territórios por meio do automapeamento." }
+    ];
+
+    let currentIndex = 0;
+    let score = 0;
+    let totalQuestions = quizData.length;
+    let answered = false;
+    let timerInterval = null;
+    let timeLeft = 240;
+    let alunoNome = "";
+    let tentativas = 0;
+    let quizAtivo = false;
+    let respostasDadas = new Array(totalQuestions).fill(false);
+
+    function formatTime(seconds) {
+        let mins = Math.floor(seconds / 60);
+        let secs = seconds % 60;
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function atualizarContador() {
+        document.getElementById('attemptCounter').innerHTML = `📊 Tentativas neste quiz: ${tentativas}`;
+    }
+
+    function atualizarBarraProgresso() {
+        let respondidas = respostasDadas.filter(r => r === true).length;
+        let percent = (respondidas / totalQuestions) * 100;
+        document.getElementById('progressFill').style.width = percent + '%';
+        document.getElementById('progressText').innerHTML = `${respondidas} / ${totalQuestions} respondidas`;
+    }
+
+    function pararTimer() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+    }
+
+    function iniciarTimer() {
+        pararTimer();
+        timeLeft = 240;
+        const timerClock = document.getElementById('timerClock');
+        timerClock.textContent = formatTime(timeLeft);
+        timerClock.classList.remove('warning');
+        
+        timerInterval = setInterval(() => {
+            if (!answered && quizAtivo && currentIndex < totalQuestions && !respostasDadas[currentIndex]) {
+                timeLeft--;
+                timerClock.textContent = formatTime(timeLeft);
+                if (timeLeft <= 60) {
+                    timerClock.classList.add('warning');
+                }
+                if (timeLeft <= 0) {
+                    pararTimer();
+                    if (!answered && !respostasDadas[currentIndex]) {
+                        const qData = quizData[currentIndex];
+                        const feedbackDiv = document.getElementById(`feedback-${currentIndex}`);
+                        if (feedbackDiv) {
+                            feedbackDiv.style.display = 'block';
+                            const botoes = document.querySelectorAll(`#opcoes-${currentIndex} .option-btn`);
+                            botoes.forEach(btn => btn.disabled = true);
+                            feedbackDiv.className = 'feedback wrong';
+                            let respostaCorreta = qData.options[qData.answer];
+                            feedbackDiv.innerHTML = `<strong>⏰ Tempo esgotado!</strong> A resposta certa é: ${respostaCorreta}<div class="justification">📖 ${qData.just}</div>`;
+                            const nextBtn = document.getElementById('nextBtn');
+                            if (nextBtn) nextBtn.style.display = 'block';
+                            answered = true;
+                            respostasDadas[currentIndex] = true;
+                            atualizarBarraProgresso();
+                        }
+                    }
+                }
+            }
+        }, 1000);
+    }
+
+    function carregarPergunta() {
+        if (!quizAtivo) return;
+        pararTimer();
+        const qArea = document.getElementById('questions-area');
+        const qData = quizData[currentIndex];
+        
+        let opcoesHtml = `<ul class="options" id="opcoes-${currentIndex}">`;
+        qData.options.forEach((opt, idx) => {
+            opcoesHtml += `<li><button class="option-btn" data-idx="${idx}">${opt}</button></li>`;
+        });
+        opcoesHtml += `</ul>`;
+        
+        let html = `<div class="question active" id="perguntaAtual">
+            <div class="question-text">${currentIndex+1}. ${qData.q}</div>
+            ${opcoesHtml}
+            <div id="feedback-${currentIndex}" class="feedback"></div>
+            <button class="next-btn" id="nextBtn" style="display:none;">➡️ Próxima Questão</button>
+        </div>`;
+        qArea.innerHTML = html;
+        
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                if (answered || respostasDadas[currentIndex]) return;
+                const selected = parseInt(btn.dataset.idx);
+                verificarResposta(selected, currentIndex);
+            });
+        });
+        
+        // Se já respondeu essa pergunta antes
+        if (respostasDadas[currentIndex]) {
+            const feedbackDiv = document.getElementById(`feedback-${currentIndex}`);
+            if (feedbackDiv && feedbackDiv.innerHTML !== "") {
+                feedbackDiv.style.display = 'block';
+                const botoes = document.querySelectorAll(`#opcoes-${currentIndex} .option-btn`);
+                botoes.forEach(btn => btn.disabled = true);
+                const nextBtn = document.getElementById('nextBtn');
+                if (nextBtn) nextBtn.style.display = 'block';
+                answered = true;
+                atualizarBarraProgresso();
+                return;
+            }
+        }
+        
+        answered = false;
+        atualizarBarraProgresso();
+        iniciarTimer();
+    }
+
+    function verificarResposta(selected, idx) {
+        if (answered || respostasDadas[idx] || !quizAtivo) return;
+        pararTimer();
+        
+        const qData = quizData[idx];
+        const feedbackDiv = document.getElementById(`feedback-${idx}`);
+        const botoes = document.querySelectorAll(`#opcoes-${idx} .option-btn`);
+        botoes.forEach(btn => btn.disabled = true);
+        
+        let isCorrect = (selected === qData.answer);
+        if (isCorrect) {
+            score++;
+            feedbackDiv.className = 'feedback correct';
+            feedbackDiv.innerHTML = `<strong>✅ Correto!</strong>`;
+        } else {
+            feedbackDiv.className = 'feedback wrong';
+            let respostaCorreta = qData.options[qData.answer];
+            feedbackDiv.innerHTML = `<strong>❌ Incorreto.</strong> A resposta certa é: ${respostaCorreta}`;
+        }
+        feedbackDiv.innerHTML += `<div class="justification">📖 ${qData.just}</div>`;
+        feedbackDiv.style.display = 'block';
+        
+        const nextBtn = document.getElementById('nextBtn');
+        if (nextBtn) nextBtn.style.display = 'block';
+        answered = true;
+        respostasDadas[idx] = true;
+        atualizarBarraProgresso();
+        
+        // Verificar se todas foram respondidas
+        let todasRespondidas = respostasDadas.every(r => r === true);
+        if (todasRespondidas) {
+            finalizarQuiz();
+        }
+    }
+
+    function proximaPergunta() {
+        if (!quizAtivo) return;
+        pararTimer();
+        if (currentIndex + 1 < totalQuestions) {
+            currentIndex++;
+            carregarPergunta();
+        } else {
+            finalizarQuiz();
+        }
+    }
+
+    function finalizarQuiz() {
+        pararTimer();
+        quizAtivo = false;
+        
+        let nota = (score / totalQuestions) * 10;
+        let aprovado = (score >= 13);
+        
+        document.getElementById('questions-area').style.display = 'none';
+        document.getElementById('timerArea').style.display = 'none';
+        
+        if (aprovado) {
+            document.getElementById('congratsMessage').innerHTML = `
+                <div class="final-nota">${nota.toFixed(1)} / 10</div>
+                <p><strong>${alunoNome}</strong>, você acertou ${score} de ${totalQuestions} questões!</p>
+                <p>🏆 Parabéns! Você atingiu a pontuação necessária (≥ 65%).</p>
+                <hr>
+                <div class="button-group">
+                    <button class="export-btn" onclick="exportarResultado()">📎 Exportar Resultado</button>
+                </div>
+            `;
+            document.getElementById('congrats-screen').style.display = 'block';
+            document.getElementById('score-screen').style.display = 'none';
+        } else {
+            let mensagem = "";
+            let mensao = "";
+            if (nota < 5) { mensao = "Não foi muito bem 😔"; mensagem = "Estude mais um pouco! Reveja o capítulo sobre territórios e fronteiras."; }
+            else if (nota >= 5 && nota < 6.5) { mensao = "Regular 😐"; mensagem = "Você está no caminho, mas pode avançar mais."; }
+            else if (nota >= 6.5 && nota < 8.5) { mensao = "Bom 🙂"; mensagem = "Bom desempenho! Continue assim."; }
+            else { mensao = "Excelente 🎉"; mensagem = "Parabéns! Você domina o assunto de geopolítica."; }
+            
+            document.getElementById('final-result').innerHTML = `
+                <div class="final-nota">${nota.toFixed(1)} / 10</div>
+                <div class="final-mensagem">${mensao}</div>
+                <p>${mensagem}</p>
+                <p style="margin-top:15px;">✅ Você acertou ${score} de ${totalQuestions} questões.</p>
+                <p style="color:#dc3545;">⚠️ Você precisa de 65% de acertos (13 questões) para liberar a exportação do resultado.</p>
+                <hr>
+            `;
+            document.getElementById('score-screen').style.display = 'block';
+            document.getElementById('congrats-screen').style.display = 'none';
+        }
+    }
+
+    function voltarPrimeiraPergunta() {
+        pararTimer();
+        currentIndex = 0;
+        score = 0;
+        answered = false;
+        respostasDadas = new Array(totalQuestions).fill(false);
+        quizAtivo = true;
+        
+        document.getElementById('questions-area').style.display = 'block';
+        document.getElementById('timerArea').style.display = 'flex';
+        document.getElementById('score-screen').style.display = 'none';
+        document.getElementById('congrats-screen').style.display = 'none';
+        
+        carregarPergunta();
+    }
+
+    function exportarResultado() {
+        let nota = (score / totalQuestions) * 10;
+        let data = new Date();
+        let texto = `RELATÓRIO DO QUIZ - GEOGRAFIA (Capítulo 7)
+----------------------------------------
+👤 Nome do aluno: ${alunoNome}
+📅 Data: ${data.toLocaleString()}
+🎯 Tentativa número: ${tentativas}
+----------------------------------------
+✅ Acertos: ${score} de ${totalQuestions}
+📊 Nota: ${nota.toFixed(1)} / 10
+🏆 Status: ${score >= 13 ? "APROVADO (≥ 65%)" : "REPROVADO (< 65%)"}
+----------------------------------------
+📚 Fonte: Capítulo 7 - Territórios e Fronteiras dos Estados Nacionais
+💡 Dica de estudo: Reveja os conceitos de Estado unitário x federal, tratados coloniais e projeções cartográficas.`;
+        
+        const blob = new Blob([texto], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `quiz_geografia_${alunoNome.replace(/\s/g, '_')}_${data.toISOString().slice(0,19)}.txt`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+    }
+
+    function iniciarQuiz() {
+        const nomeInput = document.getElementById('alunoNome').value.trim();
+        if (nomeInput === "") {
+            alert("Por favor, digite seu nome para começar o quiz.");
+            return;
+        }
+        alunoNome = nomeInput;
+        tentativas++;
+        atualizarContador();
+        
+        currentIndex = 0;
+        score = 0;
+        answered = false;
+        respostasDadas = new Array(totalQuestions).fill(false);
+        quizAtivo = true;
+        
+        document.getElementById('nomeScreen').style.display = 'none';
+        document.getElementById('quizArea').style.display = 'block';
+        document.getElementById('score-screen').style.display = 'none';
+        document.getElementById('congrats-screen').style.display = 'none';
+        document.getElementById('timerArea').style.display = 'flex';
+        
+        carregarPergunta();
+    }
+
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('next-btn')) {
+            proximaPergunta();
+        }
+    });
+</script>
+</body>
+</html>
