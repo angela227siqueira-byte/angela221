@@ -97,7 +97,7 @@
     <div style="margin-bottom: 32px; border-left: 5px solid #6a8d73; padding-left: 16px; color: #5e7180;">
       Material de Leitura Avançado
     </div>
-    <div class="form-group"><label>👤 Seu nome completo</label><input type="text" id="studentName" placeholder="Ex: Fabrício Siqueira"></div>
+    <div class="form-group"><label>👤 Seu nome completo</label><input type="text" id="studentName" placeholder="Ex: Seu Nome Completo"></div>
     <div class="form-group"><label>📚 Turma</label><select id="studentClass"><option value="">Selecione</option><option value="A">Turma A</option><option value="B">Turma B</option><option value="C">Turma C</option><option value="D">Turma D</option></select></div>
     <div class="form-group"><label>📅 Bimestre</label><select id="studentBimester"><option value="">Selecione</option><option value="1">1º Bimestre</option><option value="2">2º Bimestre</option><option value="3">3º Bimestre</option><option value="4">4º Bimestre</option></select></div>
     <button id="startReadingBtn" class="nav-btn" style="width:100%;" disabled>▶ Iniciar Leitura</button>
@@ -170,10 +170,24 @@
         <h2 style="text-align:center;">POLÍTICA E TRABALHO</h2>
         <div class="epigraph">"A natureza não se revolta contra nós porque a maltratamos. Ela apenas reage. E a reação, muitas vezes, é devastadora."<br>– José Lutzenberger</div>
         <p style="margin-top:30px;">Este material explora a relação entre produção econômica, impactos ambientais e justiça social. Prepare-se para uma leitura que convida à reflexão sobre o mundo que construímos e o futuro que desejamos.</p>
-        <div class="figure-container"><img src="https://s2-g1.glbimg.com/mqVGvArwS_zgM3KqWcgqH4l3_ZM=/0x0:1772x1168/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/F/V/8EIE7tQ7ODRmypKo9Xdg/001606a.jpg" class="content-image" alt="Natureza"></div>
+        <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; margin: 20px 0;">
+    <div style="flex: 1; min-width: 150px;">
+        <img src="https://s2-g1.glbimg.com/mqVGvArwS_zgM3KqWcgqH4l3_ZM=/0x0:1772x1168/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/F/V/8EIE7tQ7ODRmypKo9Xdg/001606a.jpg" class="content-image" style="width: 100%; border-radius: 12px;">
+    </div>
+    <div style="flex: 2;">
+        <p>Este material explora a relação entre produção econômica, impactos ambientais e justiça social. Prepare-se para uma leitura que convida à reflexão sobre o mundo que construímos e o futuro que desejamos.</p>
+    </div>
+</div>
       `},
       { title: "Introdução – O trabalho que transforma o mundo", content: `
-        <div class="figure-container"><img src="https://www.ambientelegal.com.br/wp-content/uploads/Sustentabilidade1-2.jpg" class="content-image" alt="Sustentabilidade"></div>
+        <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; margin: 20px 0;">
+    <div style="flex: 1; min-width: 150px;">
+        <img src="https://www.ambientelegal.com.br/wp-content/uploads/Sustentabilidade1-2.jpg" class="content-image" style="width: 100%; border-radius: 12px;">
+    </div>
+    <div style="flex: 2;">
+        <p>O trabalho humano é, ao mesmo tempo, a fonte da nossa sobrevivência e a origem dos maiores desequilíbrios que o planeta já conheceu. Desde que os primeiros agricultores revolucionaram a terra, passando pela industrialização que transformou cidades em polos de produção e poluição, até a era digital, o ser humano nunca produziu tanto – e nunca cobrou um preço tão alto da natureza.</p>
+    </div>
+</div>
         <p>O trabalho humano é, ao mesmo tempo, a fonte da nossa sobrevivência e a origem dos maiores desequilíbrios que o planeta já conheceu. Desde que os primeiros agricultores revolucionaram a terra, passando pela industrialização que transformou cidades em polos de produção e poluição, até a era digital, o ser humano nunca produziu tanto – e nunca cobrou um preço tão alto da natureza.</p>
         <p>A relação entre política e trabalho, neste início de século XXI, não pode mais ser analisada sem considerar os limites ambientais do planeta. A pergunta que orienta este material é simples, mas incômoda: <strong>é possível produzir, gerar emprego e renda, sem destruir as bases naturais que sustentam a vida?</strong></p>
         <p>Os quatro temas que se seguem exploram essa questão a partir de ângulos diferentes. O primeiro examina como a produção econômica impacta áreas rurais e urbanas, criando problemas que muitas vezes ignoram fronteiras. O segundo mergulha no desafio cotidiano dos resíduos sólidos – aquilo que descartamos e que insiste em voltar. O terceiro revela a teia de consequências socioeconômicas e ambientais geradas por práticas como agropecuária intensiva, mineração e exploração de petróleo. O quarto, finalmente, apresenta as legislações que tentam ordenar essa relação conflituosa entre desenvolvimento e preservação.</p>
@@ -185,39 +199,88 @@
         <p>Nas áreas urbanas, a concentração de pessoas, indústrias e veículos produz um conjunto de impactos que degradam a qualidade de vida. A poluição do ar, causada principalmente pela queima de combustíveis fósseis no transporte e em processos industriais, está associada a doenças respiratórias e cardiovasculares que afetam desproporcionalmente as populações mais pobres, muitas vezes moradoras de periferias próximas a grandes avenidas ou complexos industriais.</p>
         <p>A impermeabilização do solo – a substituição de terra vegetal e vegetação por asfalto, concreto e edifícios – agrava as enchentes urbanas. Sem áreas verdes para absorver a água das chuvas, o escoamento superficial se torna mais rápido e volumoso, sobrecarregando sistemas de drenagem e causando tragédias anuais em cidades como São Paulo, Rio de Janeiro e Belo Horizonte.</p>
         <p>Outro fenômeno característico é a chamada "ilha de calor". A ausência de vegetação combinada com a profusão de superfícies escuras e a liberação de calor por veículos e equipamentos eleva a temperatura dos centros urbanos em vários graus em relação às áreas vizinhas. Isso aumenta o consumo de energia para refrigeração, agrava problemas respiratórios e torna a vida nas cidades mais desconfortável – especialmente para quem não tem acesso a ar-condicionado ou áreas verdes.</p>
-        <div class="figure-container"><img src="https://static.mundoeducacao.uol.com.br/mundoeducacao/2021/10/grafico-variacao-temperatura-cidade.png" class="content-image" alt="Ilha de calor"></div>
+        <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; margin: 20px 0;">
+    <div style="flex: 1; min-width: 150px;">
+        <img src="https://static.mundoeducacao.uol.com.br/mundoeducacao/2021/10/grafico-variacao-temperatura-cidade.png" class="content-image" style="width: 100%; border-radius: 12px;">
+    </div>
+    <div style="flex: 2;">
+        <p>Outro fenômeno característico é a chamada "ilha de calor". A ausência de vegetação combinada com a profusão de superfícies escuras e a liberação de calor por veículos e equipamentos eleva a temperatura dos centros urbanos em vários graus em relação às áreas vizinhas. Isso aumenta o consumo de energia para refrigeração, agrava problemas respiratórios e torna a vida nas cidades mais desconfortável – especialmente para quem não tem acesso a ar-condicionado ou áreas verdes.</p>
+    </div>
+</div>
         <h3>1.2. O campo que se esgota</h3>
         <p>No meio rural, os impactos da produção econômica são igualmente graves, mas assumem outras formas. O desmatamento para abertura de pastagens ou plantações é, no Brasil, um dos principais motores da perda de biodiversidade e das emissões de gases de efeito estufa. A Amazônia, o Cerrado e o Pantanal têm visto suas fronteiras agrícolas avançarem sobre áreas de floresta nativa, com consequências que vão muito além das fronteiras nacionais.</p>
-        <div class="figure-container"><img src="https://agro.insper.edu.br/storage/articles/May2023/O3tlWUKTaAc5gbf9yoF6.jpg" class="content-image" alt="Campo e agricultura"></div>
+        <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; margin: 20px 0;">
+    <div style="flex: 1; min-width: 150px;">
+        <img src="https://agro.insper.edu.br/storage/articles/May2023/O3tlWUKTaAc5gbf9yoF6.jpg" class="content-image" style="width: 100%; border-radius: 12px;">
+    </div>
+    <div style="flex: 2;">
+        <p>No meio rural, os impactos da produção econômica são igualmente graves, mas assumem outras formas. O desmatamento para abertura de pastagens ou plantações é, no Brasil, um dos principais motores da perda de biodiversidade e das emissões de gases de efeito estufa. A Amazônia, o Cerrado e o Pantanal têm visto suas fronteiras agrícolas avançarem sobre áreas de floresta nativa, com consequências que vão muito além das fronteiras nacionais.</p>
+    </div>
+</div>
         <p>O uso intensivo de fertilizantes e agrotóxicos contamina solos e águas subterrâneas. Esses produtos químicos, ao serem carregados pelas chuvas, atingem rios e lagos, afetando a vida aquática e, em última instância, a saúde das populações que dependem dessas águas para consumo e irrigação. A mecanização pesada compacta o solo, reduzindo sua capacidade de infiltração e aumentando a erosão.</p>
         <h3>1.3. A conta que não fecha</h3>
         <p>A relação entre produção econômica e impactos ambientais revela uma contradição central do capitalismo contemporâneo: os custos da degradação raramente são pagos por quem polui. Economistas chamam esses prejuízos de "externalidades negativas" – efeitos colaterais da produção que recaem sobre a sociedade como um todo e sobre as futuras gerações. A fumaça da fábrica não fica na fábrica. O esgoto que a indústria lança no rio não fica na indústria. O custo do tratamento da água, das doenças respiratórias, das enchentes e da perda de biodiversidade é socializado, enquanto os lucros da produção são privados.</p>
-        <div class="figure-container"><img src="https://thumbs.dreamstime.com/b/conceito-de-polui%C3%A7%C3%A3o-industrial-emiss%C3%B5es-das-f%C3%A1bricas-e-impacto-ambiental-na-paisagem-uma-vis%C3%A3o-paisag%C3%ADstica-da-com-as-um-387524182.jpg" class="content-image" alt="Poluição industrial"></div>
+        <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; margin: 20px 0;">
+    <div style="flex: 1; min-width: 150px;">
+        <img src="https://thumbs.dreamstime.com/b/conceito-de-polui%C3%A7%C3%A3o-industrial-emiss%C3%B5es-das-f%C3%A1bricas-e-impacto-ambiental-na-paisagem-uma-vis%C3%A3o-paisag%C3%ADstica-da-com-as-um-387524182.jpg" class="content-image" style="width: 100%; border-radius: 12px;">
+    </div>
+    <div style="flex: 2;">
+        <p>A relação entre produção econômica e impactos ambientais revela uma contradição central do capitalismo contemporâneo: os custos da degradação raramente são pagos por quem polui. Economistas chamam esses prejuízos de "externalidades negativas" – efeitos colaterais da produção que recaem sobre a sociedade como um todo e sobre as futuras gerações. A fumaça da fábrica não fica na fábrica. O esgoto que a indústria lança no rio não fica na indústria. O custo do tratamento da água, das doenças respiratórias, das enchentes e da perda de biodiversidade é socializado, enquanto os lucros da produção são privados.</p>
+    </div>
+</div>
         <p>Essa assimetria é o ponto de partida para qualquer discussão séria sobre política ambiental.</p>
       `},
       { title: "2. Gestão de resíduos sólidos e sustentabilidade socioambiental", content: `
         <div class="epigraph">"Na natureza, nada se cria, nada se perde, tudo se transforma." – Antoine Lavoisier</div>
         <h3>2.1. O que sobra do consumo</h3>
         <p>O modelo econômico dominante é linear: extrai-se da natureza, fabrica-se, consome-se e descarta-se. Esse "pegar-fazer-descartar" gera volumes crescentes de resíduos sólidos que a maioria dos municípios brasileiros não tem capacidade de processar adequadamente. Dados recentes indicam que cerca de 40% dos resíduos coletados no Brasil ainda vão parar em lixões a céu aberto – áreas sem qualquer infraestrutura de proteção ambiental, onde o chorume (líquido poluente resultante da decomposição) contamina o solo e os lençóis freáticos.</p>
-        <div class="figure-container"><img src="https://imagens.publico.pt/imagens.aspx/1887382?tp=UH&db=IMAGENS&type=JPG" class="content-image" alt="Resíduos sólidos"></div>
+        <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; margin: 20px 0;">
+    <div style="flex: 1; min-width: 150px;">
+        <img src="https://imagens.publico.pt/imagens.aspx/1887382?tp=UH&db=IMAGENS&type=JPG" class="content-image" style="width: 100%; border-radius: 12px;">
+    </div>
+    <div style="flex: 2;">
+        <p>O modelo econômico dominante é linear: extrai-se da natureza, fabrica-se, consome-se e descarta-se. Esse "pegar-fazer-descartar" gera volumes crescentes de resíduos sólidos que a maioria dos municípios brasileiros não tem capacidade de processar adequadamente. Dados recentes indicam que cerca de 40% dos resíduos coletados no Brasil ainda vão parar em lixões a céu aberto – áreas sem qualquer infraestrutura de proteção ambiental, onde o chorume (líquido poluente resultante da decomposição) contamina o solo e os lençóis freáticos.</p>
+    </div>
+</div>
         <h3>2.2. A Política Nacional de Resíduos Sólidos</h3>
         <p>A Lei 12.305, de 2010, representou um avanço significativo ao estabelecer a responsabilidade compartilhada pelo ciclo de vida dos produtos. Isso significa que fabricantes, importadores, distribuidores e comerciantes passaram a ser responsáveis pelos resíduos gerados pelos produtos que colocam no mercado – um princípio conhecido como logística reversa.</p>
         <p>Na prática, a lei determina que embalagens de agrotóxicos, pilhas, baterias, pneus, lâmpadas fluorescentes, eletroeletrônicos e seus componentes devem ser recolhidos pelos próprios fabricantes e destinados adequadamente. Apesar do avanço legal, a implementação ainda é desigual: muitos municípios não dispõem de sistemas eficientes de coleta seletiva, e a reciclagem no Brasil ainda está muito aquém do seu potencial.</p>
         <h3>2.3. Os catadores e a economia circular</h3>
         <p>Um dos aspectos mais importantes da gestão de resíduos no Brasil é o papel desempenhado pelos catadores de materiais recicláveis. São eles que, muitas vezes, garantem a reciclagem de boa parte do que a população descarta, trabalhando em condições precárias e com baixa remuneração. A inclusão desses trabalhadores na gestão formal dos resíduos – com direitos trabalhistas, equipamentos de proteção e participação nos ganhos – é um dos desafios centrais da sustentabilidade socioambiental.</p>
-        <div class="figure-container"><img src="https://ogimg.infoglobo.com.br/in/7061534-a3c-2e2/FT1086A/catadores-lixao-gramacho.jpg" class="content-image" alt="Catadores de materiais recicláveis"></div>
+        <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; margin: 20px 0;">
+    <div style="flex: 1; min-width: 150px;">
+        <img src="https://ogimg.infoglobo.com.br/in/7061534-a3c-2e2/FT1086A/catadores-lixao-gramacho.jpg" class="content-image" style="width: 100%; border-radius: 12px;">
+    </div>
+    <div style="flex: 2;">
+        <p>Um dos aspectos mais importantes da gestão de resíduos no Brasil é o papel desempenhado pelos catadores de materiais recicláveis. São eles que, muitas vezes, garantem a reciclagem de boa parte do que a população descarta, trabalhando em condições precárias e com baixa remuneração. A inclusão desses trabalhadores na gestão formal dos resíduos – com direitos trabalhistas, equipamentos de proteção e participação nos ganhos – é um dos desafios centrais da sustentabilidade socioambiental.</p>
+    </div>
+</div>
         <p>O conceito de economia circular propõe uma alternativa ao modelo linear: em vez de extrair, fabricar, consumir e descartar, a ideia é projetar produtos que possam ser reparados, reutilizados, remanufaturados e, no fim da vida útil, reciclados em novos produtos. Nesse modelo, o resíduo de um processo vira insumo de outro. É uma mudança radical, que exige repensar desde o design dos produtos até as políticas públicas de incentivo.</p>
         <h3>2.4. Reduzir, reutilizar, reciclar – e repensar</h3>
         <p>Os chamados "3 Rs" – reduzir, reutilizar e reciclar – continuam sendo a base de qualquer estratégia sustentável. Mas a ordem dos fatores é importante: primeiro, reduzir o consumo e a geração de resíduos; segundo, reutilizar produtos sempre que possível; e, por último, reciclar o que não puder ser evitado. A reciclagem é importante, mas não resolve o problema de fundo: a sociedade produz mais resíduos do que a natureza pode absorver.</p>
       `},
       { title: "3. Impactos socioeconômicos e na biodiversidade (Parte 1)", content: `
         <p>Este é o coração do material. As atividades produtivas não afetam apenas o ambiente natural – elas transformam relações sociais, deslocam populações, criam conflitos e, muitas vezes, aprofundam desigualdades históricas.</p>
-        <div class="figure-container"><img src="https://s4.static.brasilescola.uol.com.br/be/2020/09/queimadas.jpg" class="content-image" alt="Queimadas"></div>
+        <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; margin: 20px 0;">
+    <div style="flex: 1; min-width: 150px;">
+        <img src="https://s4.static.brasilescola.uol.com.br/be/2020/09/queimadas.jpg" class="content-image" style="width: 100%; border-radius: 12px;">
+    </div>
+    <div style="flex: 2;">
+        <p>Este é o coração do material. As atividades produtivas não afetam apenas o ambiente natural – elas transformam relações sociais, deslocam populações, criam conflitos e, muitas vezes, aprofundam desigualdades históricas.</p>
+    </div>
+</div>
         <h3>3.1. Práticas agropecuárias e extrativas</h3>
         <p>O agronegócio brasileiro é, ao mesmo tempo, um dos mais produtivos e um dos mais impactantes do mundo. A expansão da soja, da cana-de-açúcar e da pecuária sobre áreas de floresta nativa tem gerado conflitos territoriais com comunidades indígenas, quilombolas e agricultores familiares. O desmatamento associado a essas atividades é responsável por uma parcela significativa das emissões brasileiras de gases de efeito estufa.</p>
         <p>As queimadas, utilizadas para limpar áreas ou renovar pastagens, liberam grandes quantidades de carbono e afetam a saúde das populações vizinhas, especialmente crianças e idosos. Durante a estação seca, a fumaça das queimadas na Amazônia e no Cerrado chega a atingir cidades distantes centenas de quilômetros, como São Paulo e Porto Alegre.</p>
         <p>O assoreamento dos rios – o acúmulo de sedimentos no leito – é outra consequência grave do desmatamento e da erosão do solo. Reduz a capacidade de armazenamento de água dos reservatórios, aumenta o risco de enchentes, prejudica a navegação e compromete a geração de energia hidrelétrica. A erosão do solo, por sua vez, leva à perda de nutrientes e à desertificação de áreas antes férteis.</p>
-        <div class="figure-container"><img src="https://static.mundoeducacao.uol.com.br/mundoeducacao/conteudo/esquema-de-assoreamento-de-rios.jpg" class="content-image" alt="Assoreamento de rios"></div>
+        <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; margin: 20px 0;">
+    <div style="flex: 1; min-width: 150px;">
+        <img src="https://static.mundoeducacao.uol.com.br/mundoeducacao/conteudo/esquema-de-assoreamento-de-rios.jpg" class="content-image" style="width: 100%; border-radius: 12px;">
+    </div>
+    <div style="flex: 2;">
+        <p>O assoreamento dos rios – o acúmulo de sedimentos no leito – é outra consequência grave do desmatamento e da erosão do solo. Reduz a capacidade de armazenamento de água dos reservatórios, aumenta o risco de enchentes, prejudica a navegação e compromete a geração de energia hidrelétrica. A erosão do solo, por sua vez, leva à perda de nutrientes e à desertificação de áreas antes férteis.</p>
+    </div>
+</div>
         <h3>3.2. A cadeia produtiva do petróleo</h3>
         <p>A exploração de petróleo e gás natural gera impactos em todas as suas etapas. Na fase de exploração e perfuração, há o risco de vazamentos que contaminam oceanos e rios – um exemplo trágico foi o acidente da Bacia de Campos, no litoral do Rio de Janeiro, que afetou comunidades pesqueiras e praias em toda a região. No transporte, os dutos e navios petroleiros também estão sujeitos a acidentes. No refino, o processo emite poluentes atmosféricos e gera efluentes líquidos contaminados.</p>
         <p>As populações mais afetadas pela cadeia do petróleo são, em geral, as mais pobres: pescadores artesanais, ribeirinhos e moradores de periferias próximas a refinarias. Perdem sua fonte de renda, sua qualidade de vida e, muitas vezes, sua saúde.</p>
@@ -225,7 +288,14 @@
       { title: "3. Impactos socioeconômicos e na biodiversidade (Parte 2)", content: `
         <h3>3.3. Mineração: o buraco que não fecha</h3>
         <p>A mineração de minérios como ferro, bauxita, ouro e nióbio é uma atividade de alto impacto. A remoção de grandes volumes de solo e rocha altera profundamente o relevo, cria crateras que se tornam passivos ambientais permanentes e gera rejeitos – lama tóxica que, em casos de rompimento de barragens, causa tragédias de proporções gigantescas.</p>
-        <div class="figure-container"><img src="https://ims.com.br/wp-content/uploads/2017/09/a-lama-de-mariana-ao-mar.jpg" class="content-image" alt="Desastre de Mariana"></div>
+        <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; margin: 20px 0;">
+    <div style="flex: 1; min-width: 150px;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Rompimento_da_barragem_de_Mariana.jpg/800px-Rompimento_da_barragem_de_Mariana.jpg" class="content-image" style="width: 100%; border-radius: 12px;">
+    </div>
+    <div style="flex: 2;">
+        <p>Os desastres de Mariana (2015) e Brumadinho (2019), em Minas Gerais, expuseram ao país e ao mundo a vulnerabilidade das comunidades que vivem sob a sombra da mineração. Em Mariana, a lama de rejeitos percorreu centenas de quilômetros pelo Rio Doce, chegando ao oceano Atlântico, matando peixes, destruindo a vegetação ribeirinha e inviabilizando a pesca e o abastecimento de água em dezenas de municípios. Em Brumadinho, uma barragem se rompeu sem aviso, soterrando trabalhadores da própria mineradora e comunidades próximas em uma avalanche de lama.</p>
+    </div>
+</div>
         <p>Os desastres de Mariana (2015) e Brumadinho (2019), em Minas Gerais, expuseram ao país e ao mundo a vulnerabilidade das comunidades que vivem sob a sombra da mineração. Em Mariana, a lama de rejeitos percorreu centenas de quilômetros pelo Rio Doce, chegando ao oceano Atlântico, matando peixes, destruindo a vegetação ribeirinha e inviabilizando a pesca e o abastecimento de água em dezenas de municípios. Em Brumadinho, uma barragem se rompeu sem aviso, soterrando trabalhadores da própria mineradora e comunidades próximas em uma avalanche de lama.</p>
         <p>Ambos os casos escancararam a fragilidade da fiscalização, a impunidade das grandes empresas e a ausência de políticas efetivas de reparação. Até hoje, as comunidades afetadas lutam por indenizações e pela recuperação dos territórios destruídos.</p>
         <h3>3.4. Poluição do ar, do solo e das águas</h3>
@@ -233,7 +303,14 @@
         <p>Os impactos na biodiversidade são igualmente graves. Espécies inteiras desaparecem quando seu habitat é destruído ou contaminado. A perda de polinizadores, como abelhas, afeta a produção agrícola. A destruição de manguezais remove barreiras naturais contra tempestades e reduz a reprodução de espécies marinhas.</p>
         <h3>3.5. Justiça ambiental</h3>
         <p>Um conceito que vem ganhando força é o de justiça ambiental: o direito de todas as pessoas a um ambiente saudável, independentemente de sua raça, classe social ou localização geográfica. Estudos mostram que populações negras, indígenas e de baixa renda são desproporcionalmente afetadas pela poluição e pelos desastres ambientais. Não por acaso: é nessas áreas que se instalam aterros sanitários, refinarias, mineradoras e outras atividades de alto risco.</p>
-        <div class="figure-container"><img src="https://portalmatogrosso.com.br/wp-content/uploads/2024/11/695f2cf5f067f0d8aaa495fc9499fd6f.jpeg" class="content-image" alt="Justiça ambiental"></div>
+        <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; margin: 20px 0;">
+    <div style="flex: 1; min-width: 150px;">
+        <img src="https://portalmatogrosso.com.br/wp-content/uploads/2024/11/695f2cf5f067f0d8aaa495fc9499fd6f.jpeg" class="content-image" style="width: 100%; border-radius: 12px;">
+    </div>
+    <div style="flex: 2;">
+        <p>Um conceito que vem ganhando força é o de justiça ambiental: o direito de todas as pessoas a um ambiente saudável, independentemente de sua raça, classe social ou localização geográfica. Estudos mostram que populações negras, indígenas e de baixa renda são desproporcionalmente afetadas pela poluição e pelos desastres ambientais. Não por acaso: é nessas áreas que se instalam aterros sanitários, refinarias, mineradoras e outras atividades de alto risco.</p>
+    </div>
+</div>
         <p>A luta por justiça ambiental é, portanto, uma luta contra o racismo ambiental e contra a desigualdade.</p>
       `},
       { title: "4. Legislações para uso e preservação dos recursos naturais", content: `
@@ -249,7 +326,14 @@
         <p>A Política Nacional de Recursos Hídricos introduziu conceitos inovadores. A bacia hidrográfica tornou-se a unidade territorial de gestão – uma ideia poderosa, pois a água não respeita fronteiras municipais ou estaduais. Foram criados instrumentos como a outorga (autorização para uso da água) e a cobrança (reconhecimento do valor econômico da água). Os Comitês de Bacia, compostos por governo, usuários e sociedade civil, são espaços de gestão participativa.</p>
         <h3>4.5. Política Nacional de Resíduos Sólidos (Lei 12.305/2010)</h3>
         <p>Já discutida no tema 2, essa lei estabeleceu a responsabilidade compartilhada e a logística reversa. Um de seus objetivos é a eliminação dos lixões e a destinação ambientalmente adequada dos rejeitos.</p>
-        <div class="figure-container"><img src="https://www.gov.br/dnocs/pt-br/assuntos/noticias/campanha-de-sustentabilidade-do-dnocs-aborda-destinacao-correta-de-residuos-solidos/banner-site.jpg" class="content-image" alt="Resíduos sólidos - campanha"></div>
+        <div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; margin: 20px 0;">
+    <div style="flex: 1; min-width: 150px;">
+        <img src="https://www.gov.br/dnocs/pt-br/assuntos/noticias/campanha-de-sustentabilidade-do-dnocs-aborda-destinacao-correta-de-residuos-solidos/banner-site.jpg" class="content-image" style="width: 100%; border-radius: 12px;">
+    </div>
+    <div style="flex: 2;">
+        <p>Já discutida no tema 2, essa lei estabeleceu a responsabilidade compartilhada e a logística reversa. Um de seus objetivos é a eliminação dos lixões e a destinação ambientalmente adequada dos rejeitos.</p>
+    </div>
+</div>
         <h3>4.6. Lei de Crimes Ambientais (Lei 9.605/1998)</h3>
         <p>Essa lei tipifica condutas lesivas ao meio ambiente e estabelece penas que vão desde multas até detenção. Pode ser aplicada tanto a pessoas físicas quanto jurídicas. Na prática, a aplicação da lei esbarra na dificuldade de investigação, na morosidade da justiça e na impunidade de grandes poluidores.</p>
         <h3>4.7. A tensão permanente</h3>
