@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Material de Leitura: Política e Trabalho</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #1e2b3c;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            margin: 0;
+        }
+
+        .reader-container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px -10px rgba(0, 20, 30, 0.1);
+            padding: 28px 24px;
+            border: 1px solid #e9edf2;
+        }
+
+        .screen {
+            display: block;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1a3a4e;
+            text-align: left;
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 600;
+            margin: 20px 0 12px;
+            color: #2c4a5e;
+        }
+
+        h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 16px 0 10px;
+            color: #3a5a6e;
+        }
+
+        .content-text {
+            font-size: 16px;
+            text-align: justify;
+            padding: 0 8px;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 12px;
+            margin-bottom: 20px;
+        }
+
+        .content-text p {
+            margin-bottom: 16px;
+        }
+
+        .epigraph {
+            font-style: italic;
+            text-align: right;
+            margin: 24px 0;
+            color: #4a6a7e;
+            border-right: 4px solid #7b6c8c;
+            padding-right: 20px;
+        }
+
+        /* Barra de ferramentas */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e2e9f0;
+        }
+
+        .toolbar-group {
+            display: flex;
+            gap: 6px;
+            background: #f0f4f8;
+            padding: 6px 10px;
+            border-radius: 40px;
+        }
+
+        .toolbar-btn {
+            background: white;
+            border: 1px solid #d0dce6;
+            border-radius: 30px;
+            padding: 10px 16px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            color: #2c4a5e;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            min-width: 48px;
+        }
+
+        .toolbar-btn:hover {
+            background: #e6edf4;
+            border-color: #a0b8cc;
+        }
+
+        .toolbar-btn.active {
+            background: #4a3b5c;
+            border-color: #4a3b5c;
+            color: white;
+        }
+
+        .font-btn {
+            padding: 10px 14px;
+            font-weight: 600;
+        }
+
+        /* Progresso */
+        .progress-area {
+            margin: 16px 0 20px;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            color: #4a6a7e;
+            font-weight: 500;
+        }
+
+        .progress-bar-bg {
+            background: #e2e9f0;
+            height: 10px;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: #6a8d73;
+            height: 100%;
+            width: 10%;
+            border-radius: 20px;
+            transition: width 0.3s;
+        }
+
+        /* Navegação */
+        .nav-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .nav-btn {
+            background: #4a3b5c;
+            color: white;
+            border: none;
+            padding: 16px 28px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 60px;
+            width: 50%;
+            cursor: pointer;
+            transition: background 0.2s;
+            box-shadow: 0 6px 14px rgba(74, 59, 92, 0.15);
+        }
+
+        .nav-btn:disabled {
+            background: #b4c4cf;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .nav-btn.secondary {
+            background: #eef3f7;
+            color: #1e3b4c;
+            box-shadow: none;
+            border: 1px solid #ccdae3;
+        }
+
+        /* Tela inicial */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #2c4356;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px 18px;
+            font-size: 1.1rem;
+            border: 1.5px solid #d6dee5;
+            border-radius: 20px;
+            background: #fafcfd;
+        }
+
+        /* Relatório */
+        .report-box {
+            background: #f0f5fa;
+            border-radius: 24px;
+            padding: 24px;
+            margin: 24px 0;
+            text-align: left;
+        }
+
+        @media print {
+            body * { visibility: hidden; }
+            .reader-container, .reader-container * { visibility: visible; }
+            .reader-container { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; }
+            .toolbar, .nav-buttons, .progress-area { display: none !important; }
+            .content-text { max-height: none; overflow: visible; }
+        }
+
+        @media (max-width: 600px) {
+            .reader-container { padding: 16px; }
+            .toolbar { justify-content: center; }
+            .toolbar-btn { padding: 8px 12px; font-size: 0.9rem; }
+            .content-text { max-height: 50vh; }
+        }
+    </style>
+</head>
+<body>
+<div class="reader-container">
+    <!-- TELA INICIAL -->
+    <div id="startScreen" class="screen">
+        <h1>📚 Política e Trabalho</h1>
+        <div style="margin-bottom: 32px; color: #5e7180; border-left: 5px solid #6a8d73; padding-left: 16px;">
+            Material de Leitura Avançado
+        </div>
+        <div class="form-group">
+            <label>👤 Seu nome completo</label>
+            <input type="text" id="studentName" placeholder="Ex: Fabrício" autocomplete="off">
+        </div>
+        <button id="startReadingBtn" class="nav-btn" style="width:100%;" disabled>▶ Iniciar Leitura</button>
+        <p style="margin-top: 20px; color: #6f8a9b; font-size: 0.9rem;">Digite seu nome para começar</p>
+    </div>
+
+    <!-- TELA DE LEITURA -->
+    <div id="readingScreen" class="screen hidden">
+        <!-- Barra de ferramentas superior -->
+        <div class="toolbar">
+            <div class="toolbar-group">
+                <button id="playBtn" class="toolbar-btn" title="Ouvir">🔊</button>
+                <button id="pauseBtn" class="toolbar-btn" title="Pausar">⏸️</button>
+                <button id="stopBtn" class="toolbar-btn" title="Parar">⏹️</button>
+            </div>
+            <div class="toolbar-group">
+                <button id="speed1x" class="toolbar-btn active" data-speed="1">1x</button>
+                <button id="speed15x" class="toolbar-btn" data-speed="1.5">1.5x</button>
+            </div>
+            <div class="toolbar-group">
+                <button id="fontMinus" class="toolbar-btn font-btn" title="Diminuir fonte">A-</button>
+                <button id="fontReset" class="toolbar-btn font-btn" title="Fonte padrão">A</button>
+                <button id="fontPlus" class="toolbar-btn font-btn" title="Aumentar fonte">A+</button>
+                <button id="printBtn" class="toolbar-btn" title="Gerar PDF">🖨️</button>
+            </div>
+        </div>
+
+        <!-- Título da página atual -->
+        <h1 id="pageTitle">Título</h1>
+
+        <!-- Conteúdo textual -->
+        <div id="pageContent" class="content-text">
+            Carregando...
+        </div>
+
+        <!-- Barra de progresso -->
+        <div class="progress-area">
+            <div class="progress-text">
+                <span id="pageIndicator">Página 1 de 10</span>
+                <span id="progressPercent">10%</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div id="progressFill" class="progress-bar-fill" style="width: 10%;"></div>
+            </div>
+        </div>
+
+        <!-- Navegação -->
+        <div class="nav-buttons">
+            <button id="prevBtn" class="nav-btn secondary" disabled>◀ Voltar</button>
+            <button id="nextBtn" class="nav-btn">Avançar ▶</button>
+        </div>
+    </div>
+
+    <!-- TELA DE ENCERRAMENTO / RELATÓRIO -->
+    <div id="endScreen" class="screen hidden">
+        <h1>📋 Relatório de Leitura</h1>
+        <div id="reportContent" class="report-box"></div>
+        <button id="closeBtn" class="nav-btn" style="width:100%;">🚪 Encerrar Sessão</button>
+    </div>
+</div>
+
+<script>
+    (function(){
+        "use strict";
+
+        // ---------- CONTEÚDO DAS PÁGINAS ----------
+        const pages = [
+            // Página 0: placeholder (não usada diretamente - índice começa em 1)
+            { title: "", content: "" },
+            // Página 1: Título + Epígrafe
+            { title: "Política e Trabalho", content: `
+                <h2 style="text-align:center; margin-top:20px;">POLÍTICA E TRABALHO</h2>
+                <div class="epigraph">
+                    "A natureza não se revolta contra nós porque a maltratamos. Ela apenas reage. E a reação, muitas vezes, é devastadora."<br>
+                    – José Lutzenberger
+                </div>
+                <p style="margin-top:30px;">Este material explora a relação entre produção econômica, impactos ambientais e justiça social. Prepare-se para uma leitura que convida à reflexão sobre o mundo que construímos e o futuro que desejamos.</p>
+            `},
+            // Página 2: Introdução
+            { title: "Introdução – O trabalho que transforma o mundo", content: `
+                <p>O trabalho humano é, ao mesmo tempo, a fonte da nossa sobrevivência e a origem dos maiores desequilíbrios que o planeta já conheceu. Desde que os primeiros agricultores revolucionaram a terra, passando pela industrialização que transformou cidades em polos de produção e poluição, até a era digital, o ser humano nunca produziu tanto – e nunca cobrou um preço tão alto da natureza.</p>
+                <p>A relação entre política e trabalho, neste início de século XXI, não pode mais ser analisada sem considerar os limites ambientais do planeta. A pergunta que orienta este material é simples, mas incômoda: <strong>é possível produzir, gerar emprego e renda, sem destruir as bases naturais que sustentam a vida?</strong></p>
+                <p>Os quatro temas que se seguem exploram essa questão a partir de ângulos diferentes. O primeiro examina como a produção econômica impacta áreas rurais e urbanas. O segundo mergulha no desafio dos resíduos sólidos. O terceiro revela a teia de consequências socioeconômicas e ambientais. O quarto apresenta as legislações que tentam ordenar essa relação conflituosa.</p>
+                <p>Ao final, a ideia não é oferecer respostas prontas, mas provocar uma reflexão: o trabalho que transforma o mundo precisa, urgentemente, aprender a transformar a si mesmo.</p>
+            `},
+            // Página 3: Tema 1 - Impactos ambientais rural/urbano
+            { title: "1. Impactos ambientais em áreas rurais e urbanas", content: `
+                <p>A produção econômica não acontece no vazio. Ela ocupa território, consome recursos, emite poluentes e gera resíduos.</p>
+                <h3>1.1. A cidade que sufoca</h3>
+                <p>Nas áreas urbanas, a concentração de pessoas, indústrias e veículos produz impactos que degradam a qualidade de vida. A poluição do ar está associada a doenças respiratórias e cardiovasculares que afetam desproporcionalmente as populações mais pobres. A impermeabilização do solo agrava as enchentes urbanas. Outro fenômeno é a "ilha de calor": a ausência de vegetação eleva a temperatura dos centros urbanos.</p>
+                <h3>1.2. O campo que se esgota</h3>
+                <p>No meio rural, o desmatamento para pastagens ou plantações é um dos principais motores da perda de biodiversidade. O uso intensivo de fertilizantes e agrotóxicos contamina solos e águas. A mecanização pesada compacta o solo, aumentando a erosão.</p>
+                <h3>1.3. A conta que não fecha</h3>
+                <p>Os custos da degradação raramente são pagos por quem polui – são as "externalidades negativas". O custo do tratamento da água e das doenças é socializado, enquanto os lucros da produção são privados.</p>
+            `},
+            // Página 4: Tema 2 - Gestão de resíduos sólidos
+            { title: "2. Gestão de resíduos sólidos e sustentabilidade", content: `
+                <div class="epigraph">"Na natureza, nada se cria, nada se perde, tudo se transforma." – Antoine Lavoisier</div>
+                <h3>2.1. O que sobra do consumo</h3>
+                <p>O modelo linear (extrair-fabricar-consumir-descartar) gera volumes crescentes de resíduos. Cerca de 40% dos resíduos no Brasil ainda vão para lixões, contaminando solo e lençóis freáticos.</p>
+                <h3>2.2. Política Nacional de Resíduos Sólidos (Lei 12.305/2010)</h3>
+                <p>Estabeleceu a responsabilidade compartilhada e a logística reversa. Fabricantes devem recolher embalagens de agrotóxicos, pilhas, baterias, pneus e eletroeletrônicos.</p>
+                <h3>2.3. Os catadores e a economia circular</h3>
+                <p>Catadores garantem boa parte da reciclagem no Brasil. A economia circular propõe projetar produtos para serem reparados, reutilizados e reciclados.</p>
+                <h3>2.4. Reduzir, reutilizar, reciclar – e repensar</h3>
+                <p>A ordem importa: primeiro reduzir, depois reutilizar, por fim reciclar.</p>
+            `},
+            // Página 5: Tema 3 (Parte 1) - Impactos socioeconômicos
+            { title: "3. Impactos socioeconômicos e socioambientais (Parte 1)", content: `
+                <h3>3.1. Práticas agropecuárias e extrativas</h3>
+                <p>O agronegócio brasileiro é produtivo, mas também impactante. A expansão da soja e da pecuária gera conflitos com comunidades indígenas e quilombolas. As queimadas liberam carbono e afetam a saúde. O assoreamento dos rios reduz a capacidade de reservatórios e prejudica a geração de energia.</p>
+                <h3>3.2. A cadeia produtiva do petróleo</h3>
+                <p>A exploração de petróleo gera impactos em todas as etapas. Vazamentos contaminam oceanos e afetam comunidades pesqueiras. As populações mais pobres são as mais afetadas.</p>
+            `},
+            // Página 6: Tema 3 (Parte 2) - Mineração e justiça ambiental
+            { title: "3. Impactos socioeconômicos e socioambientais (Parte 2)", content: `
+                <h3>3.3. Mineração: o buraco que não fecha</h3>
+                <p>A mineração altera profundamente o relevo e gera rejeitos tóxicos. Os desastres de Mariana (2015) e Brumadinho (2019) expuseram a vulnerabilidade das comunidades e a fragilidade da fiscalização.</p>
+                <h3>3.4. Poluição do ar, do solo e das águas</h3>
+                <p>A poluição não conhece fronteiras. Agrotóxicos chegam aos rios; mercúrio da garimpagem contamina peixes. A perda de polinizadores afeta a agricultura.</p>
+                <h3>3.5. Justiça ambiental</h3>
+                <p>O direito de todas as pessoas a um ambiente saudável. Populações negras, indígenas e de baixa renda são desproporcionalmente afetadas pela poluição – é o racismo ambiental.</p>
+            `},
+            // Página 7: Tema 4 - Legislações
+            { title: "4. Legislações para uso e preservação dos recursos naturais", content: `
+                <h3>4.1. Constituição Federal de 1988</h3>
+                <p>Art. 225: "Todos têm direito ao meio ambiente ecologicamente equilibrado..."</p>
+                <h3>4.2. Política Nacional do Meio Ambiente (Lei 6.938/1981)</h3>
+                <p>Criou o licenciamento ambiental.</p>
+                <h3>4.3. Código Florestal (Lei 12.651/2012)</h3>
+                <p>Define APPs e Reserva Legal (80% na Amazônia, 35% no Cerrado).</p>
+                <h3>4.4. Lei das Águas (Lei 9.433/1997)</h3>
+                <p>Gestão por bacia hidrográfica, outorga e cobrança pelo uso da água.</p>
+                <h3>4.5. Lei de Crimes Ambientais (Lei 9.605/1998)</h3>
+                <p>Tipifica condutas lesivas e estabelece penas.</p>
+                <h3>4.6. A tensão permanente</h3>
+                <p>Desenvolvimento versus proteção. A resposta está em modelos produtivos sustentáveis.</p>
+            `},
+            // Página 8: Conclusão
+            { title: "Conclusão – O trabalho que precisa aprender a se transformar", content: `
+                <div class="epigraph">"Não temos mais o direito de pensar na natureza como algo separado de nós. Somos parte dela. E quando a destruímos, destruímos a nós mesmos." – Ailton Krenak</div>
+                <p>Os impactos ambientais são reais e urgentes. As desigualdades se aprofundam quando o custo da degradação recai sobre os mais vulneráveis. Mas existe um caminho: as legislações existem, a tecnologia pode ser aliada, e a participação social é fundamental.</p>
+                <p>O trabalho que transforma o mundo precisa aprender a transformar a si mesmo. Isso significa reconhecer a natureza como patrimônio comum, incorporar o custo ambiental na produção, valorizar os trabalhadores da gestão ambiental e planejar o futuro com base na sustentabilidade.</p>
+                <p><strong>A decisão é nossa. E o tempo é agora.</strong></p>
+            `}
+        ];
+
+        const TOTAL_PAGES = pages.length - 1; // 8 páginas de conteúdo (índices 1 a 8)
+
+        // ---------- ESTADO ----------
+        let studentName = "";
+        let currentPage = 1;
+        let startTime = null;
+        let endTime = null;
+        let speechSynth = window.speechSynthesis;
+        let utterance = null;
+        let isPlaying = false;
+        let currentSpeed = 1.0;
+        let autoAdvanceTimer = null;
+        
+        // Configurações de fonte
+        let bodyFontSize = 16;
+        let titleFontSize = 24;
+        const MIN_BODY = 12, MAX_BODY = 28;
+        const MIN_TITLE = 18, MAX_TITLE = 36;
+
+        // Elementos DOM
+        const startScreen = document.getElementById('startScreen');
+        const readingScreen = document.getElementById('readingScreen');
+        const endScreen = document.getElementById('endScreen');
+        const nameInput = document.getElementById('studentName');
+        const startBtn = document.getElementById('startReadingBtn');
+        const pageTitle = document.getElementById('pageTitle');
+        const pageContent = document.getElementById('pageContent');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const progressFill = document.getElementById('progressFill');
+        const progressPercent = document.getElementById('progressPercent');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const speed1x = document.getElementById('speed1x');
+        const speed15x = document.getElementById('speed15x');
+        const fontMinus = document.getElementById('fontMinus');
+        const fontReset = document.getElementById('fontReset');
+        const fontPlus = document.getElementById('fontPlus');
+        const printBtn = document.getElementById('printBtn');
+        const reportContent = document.getElementById('reportContent');
+        const closeBtn = document.getElementById('closeBtn');
+
+        // ---------- FUNÇÕES ----------
+        function updateStartButton() {
+            startBtn.disabled = !nameInput.value.trim();
+        }
+
+        function updateProgress() {
+            const percent = (currentPage / TOTAL_PAGES) * 100;
+            progressFill.style.width = `${percent}%`;
+            progressPercent.textContent = `${Math.round(percent)}%`;
+            pageIndicator.textContent = `Página ${currentPage} de ${TOTAL_PAGES}`;
+        }
+
+        function updateNavButtons() {
+            prevBtn.disabled = (currentPage === 1);
+            if (currentPage === TOTAL_PAGES) {
+                nextBtn.textContent = '🏁 Encerrar';
+            } else {
+                nextBtn.textContent = 'Avançar ▶';
+            }
+        }
+
+        function applyFontSizes() {
+            document.querySelector('h1').style.fontSize = titleFontSize + 'px';
+            document.querySelectorAll('h2').forEach(h => h.style.fontSize = (titleFontSize - 2) + 'px');
+            document.querySelectorAll('h3').forEach(h => h.style.fontSize = (titleFontSize - 4) + 'px');
+            pageContent.style.fontSize = bodyFontSize + 'px';
+        }
+
+        function loadPage(pageNum) {
+            const page = pages[pageNum];
+            pageTitle.textContent = page.title;
+            pageContent.innerHTML = page.content;
+            applyFontSizes();
+            updateProgress();
+            updateNavButtons();
+            
+            // Para qualquer áudio em andamento
+            stopAudio();
+        }
+
+        // ---------- ÁUDIO ----------
+        function getPageText() {
+            // Extrai texto visível da página para leitura
+            const title = pageTitle.textContent;
+            const content = pageContent.textContent.replace(/\s+/g, ' ').trim();
+            return `${title}. ${content}`;
+        }
+
+        function stopAudio() {
+            if (autoAdvanceTimer) {
+                clearTimeout(autoAdvanceTimer);
+                autoAdvanceTimer = null;
+            }
+            speechSynth.cancel();
+            isPlaying = false;
+            utterance = null;
+        }
+
+        function pauseAudio() {
+            if (speechSynth.speaking && !speechSynth.paused) {
+                speechSynth.pause();
+                isPlaying = false;
+            }
+        }
+
+        function resumeAudio() {
+            if (speechSynth.paused) {
+                speechSynth.resume();
+                isPlaying = true;
+            }
+        }
+
+        function speakCurrentPage(autoNext = true) {
+            stopAudio();
+            
+            const text = getPageText();
+            utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'pt-BR';
+            utterance.rate = currentSpeed;
+            
+            utterance.onstart = () => { isPlaying = true; };
+            utterance.onend = () => {
+                isPlaying = false;
+                if (autoNext && currentPage < TOTAL_PAGES) {
+                    // Aguarda 6 segundos e avança
+                    autoAdvanceTimer = setTimeout(() => {
+                        currentPage++;
+                        loadPage(currentPage);
+                        speakCurrentPage(true);
+                    }, 6000);
+                } else if (currentPage === TOTAL_PAGES) {
+                    // Última página: não avança
+                }
+            };
+            utterance.onerror = () => { isPlaying = false; };
+            
+            speechSynth.speak(utterance);
+        }
+
+        // ---------- NAVEGAÇÃO ----------
+        function nextPage() {
+            if (currentPage < TOTAL_PAGES) {
+                stopAudio();
+                currentPage++;
+                loadPage(currentPage);
+                // Se estava tocando antes? Não retoma automaticamente.
+            } else {
+                // Encerrar
+                showReport();
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                stopAudio();
+                currentPage--;
+                loadPage(currentPage);
+            }
+        }
+
+        function showReport() {
+            stopAudio();
+            endTime = new Date();
+            
+            readingScreen.classList.add('hidden');
+            endScreen.classList.remove('hidden');
+            
+            const startStr = startTime.toLocaleString('pt-BR');
+            const endStr = endTime.toLocaleString('pt-BR');
+            const duration = Math.round((endTime - startTime) / 1000 / 60);
+            
+            reportContent.innerHTML = `
+                <p><strong>👤 Aluno:</strong> ${studentName}</p>
+                <p><strong>📅 Início:</strong> ${startStr}</p>
+                <p><strong>📅 Término:</strong> ${endStr}</p>
+                <p><strong>⏱️ Duração:</strong> ${duration} minutos</p>
+                <p><strong>📖 Páginas lidas:</strong> ${TOTAL_PAGES}</p>
+                <hr style="margin:20px 0;">
+                <p>Obrigado por concluir a leitura! O material continua disponível para consulta.</p>
+            `;
+        }
+
+        // ---------- EVENTOS ----------
+        nameInput.addEventListener('input', updateStartButton);
+        
+        startBtn.addEventListener('click', () => {
+            studentName = nameInput.value.trim();
+            startTime = new Date();
+            currentPage = 1;
+            
+            startScreen.classList.add('hidden');
+            readingScreen.classList.remove('hidden');
+            endScreen.classList.add('hidden');
+            
+            loadPage(1);
+            applyFontSizes();
+        });
+
+        prevBtn.addEventListener('click', prevPage);
+        nextBtn.addEventListener('click', nextPage);
+
+        // Áudio
+        playBtn.addEventListener('click', () => {
+            if (utterance && speechSynth.paused) {
+                resumeAudio();
+            } else {
+                speakCurrentPage(true);
+            }
+        });
+        
+        pauseBtn.addEventListener('click', pauseAudio);
+        
+        stopBtn.addEventListener('click', () => {
+            stopAudio();
+        });
+
+        speed1x.addEventListener('click', () => {
+            currentSpeed = 1.0;
+            speed1x.classList.add('active');
+            speed15x.classList.remove('active');
+            if (utterance) utterance.rate = currentSpeed;
+        });
+        
+        speed15x.addEventListener('click', () => {
+            currentSpeed = 1.5;
+            speed15x.classList.add('active');
+            speed1x.classList.remove('active');
+            if (utterance) utterance.rate = currentSpeed;
+        });
+
+        // Fonte
+        fontMinus.addEventListener('click', () => {
+            bodyFontSize = Math.max(MIN_BODY, bodyFontSize - 2);
+            titleFontSize = Math.max(MIN_TITLE, titleFontSize - 2);
+            applyFontSizes();
+        });
+        
+        fontReset.addEventListener('click', () => {
+            bodyFontSize = 16;
+            titleFontSize = 24;
+            applyFontSizes();
+        });
+        
+        fontPlus.addEventListener('click', () => {
+            bodyFontSize = Math.min(MAX_BODY, bodyFontSize + 2);
+            titleFontSize = Math.min(MAX_TITLE, titleFontSize + 2);
+            applyFontSizes();
+        });
+
+        printBtn.addEventListener('click', () => {
+            window.print();
+        });
+
+        closeBtn.addEventListener('click', () => {
+            if (confirm('Deseja encerrar a sessão? Obrigado pela leitura!')) {
+                window.close();
+            }
+        });
+
+        // Inicialização
+        updateStartButton();
+        applyFontSizes();
+        
+        // Garantir que vozes estejam carregadas
+        speechSynth.addEventListener('voiceschanged', () => {});
+    })();
+</script>
+</body>
+</html>
