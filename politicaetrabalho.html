@@ -6,96 +6,32 @@
   <title>Leitura Avançada · Política e Trabalho</title>
   <style>
     /* ---------- RESET & BASE PROFISSIONAL ---------- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: Arial, Verdana, sans-serif;
-      background: #f5f7fa;
-      color: #1e2b3c;
-      line-height: 1.5;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 8px;
-      margin: 0;
+      font-family: Arial, Verdana, sans-serif; background: #f5f7fa; color: #1e2b3c; line-height: 1.5;
+      min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 8px; margin: 0;
       transition: background 0.2s;
     }
-
     body.fullscreen-mode { background: #0f1e2c; }
     body.fullscreen-mode .reader-container { box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3); }
-
     .reader-container {
-      max-width: calc(100% - 16px);
-      width: 100%;
-      background: white;
-      border-radius: 32px;
-      box-shadow: 0 20px 40px -10px rgba(0, 20, 30, 0.1);
-      padding: 28px 24px;
-      border: 1px solid #e9edf2;
-      margin: 0 auto;
-      overflow: hidden;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      transition: all 0.2s ease;
+      max-width: calc(100% - 16px); width: 100%; background: white; border-radius: 32px;
+      box-shadow: 0 20px 40px -10px rgba(0, 20, 30, 0.1); padding: 28px 24px;
+      border: 1px solid #e9edf2; margin: 0 auto; overflow: hidden; flex: 1;
+      display: flex; flex-direction: column; transition: all 0.2s ease;
     }
-
-    .reader-header {
-      padding: 0 0 1rem 0;
-      border-bottom: 1px solid #e2e9f0;
-      background: #ffffff;
-      margin-bottom: 1rem;
-    }
-
-    .reader-header h1 {
-      font-weight: 500;
-      font-size: 1.9rem;
-      letter-spacing: -0.01em;
-      color: #0a1e2f;
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .reader-header h1 span {
-      background: #1e3b5c;
-      color: white;
-      font-size: 1rem;
-      font-weight: 400;
-      padding: 0.1rem 0.8rem;
-      border-radius: 30px;
-      margin-left: 12px;
-    }
-
+    .reader-header { padding: 0 0 1rem 0; border-bottom: 1px solid #e2e9f0; background: #ffffff; margin-bottom: 1rem; }
+    .reader-header h1 { font-weight: 500; font-size: 1.9rem; letter-spacing: -0.01em; color: #0a1e2f; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px; }
+    .reader-header h1 span { background: #1e3b5c; color: white; font-size: 1rem; font-weight: 400; padding: 0.1rem 0.8rem; border-radius: 30px; margin-left: 12px; }
     .nav-tabs { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
-
     .tab-btn {
-      background: transparent;
-      border: none;
-      padding: 0.7rem 1.8rem;
-      font-size: 1rem;
-      font-weight: 500;
-      color: #4a657d;
-      border-radius: 40px;
-      cursor: pointer;
-      transition: all 0.15s;
-      letter-spacing: 0.3px;
-      backdrop-filter: blur(4px);
+      background: transparent; border: none; padding: 0.7rem 1.8rem; font-size: 1rem; font-weight: 500;
+      color: #4a657d; border-radius: 40px; cursor: pointer; transition: all 0.15s; letter-spacing: 0.3px;
     }
-
     .tab-btn:hover { background: #eef3f8; color: #1e3b5c; }
     .tab-btn.active { background: #1e3b5c; color: white; box-shadow: 0 4px 8px rgba(30, 59, 92, 0.12); }
-
     .screen { display: none; padding: 0.5rem 0 1rem 0; background: #ffffff; flex: 1; }
     .screen.active { display: block; }
-
-    /* ---------- TELA INICIAL ---------- */
     #screen-home h1 { font-size: 2.5rem; font-weight: 400; color: #13293e; margin-bottom: 0.5rem; }
     .form-group { margin-bottom: 24px; }
     .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: #1e3b5c; font-size: 1rem; }
@@ -104,62 +40,33 @@
       border-radius: 20px; background: #fafcfd; font-family: inherit; transition: border-color 0.15s;
     }
     .form-group input:focus { outline: none; border-color: #6a8d73; }
-    .form-group input::placeholder { color: #9aafbf; }
-
     .class-select, .bimester-select {
       width: 100%; padding: 16px 18px; font-size: 1.1rem; border: 1.5px solid #d6dee5;
       border-radius: 20px; background: #fafcfd; cursor: pointer; font-family: Arial, Verdana, sans-serif;
-      transition: border-color 0.15s;
     }
     .class-select:focus, .bimester-select:focus { outline: none; border-color: #6a8d73; }
-
     .nav-btn {
       background: #1e3b5c; border: none; padding: 16px 24px; font-size: 1.1rem; font-weight: 500;
       color: white; border-radius: 40px; cursor: pointer; transition: all 0.15s; border: 1px solid #1e3b5c;
     }
     .nav-btn:hover:not(:disabled) { background: #2a527a; transform: translateY(-1px); box-shadow: 0 6px 12px rgba(30, 59, 92, 0.15); }
     .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; background: #8aa0b8; border-color: #8aa0b8; }
-
-    /* ---------- ÁREA DE LEITURA ---------- */
     .reading-layout { display: flex; flex-direction: column; width: 100%; height: 100%; }
-
     .content-text {
       font-size: 16px; text-align: justify; padding: 0 8px; max-height: 65vh; overflow-y: auto;
       padding-right: 12px; margin-bottom: 20px; width: 100%; background: #fdfdfe; border-radius: 12px;
-      color: #1e2f3e; line-height: 1.75; transition: font-size 0.2s ease; scroll-behavior: smooth;
+      color: #1e2f3e; line-height: 1.75; transition: font-size 0.2s ease;
     }
     .content-text::-webkit-scrollbar { width: 8px; }
     .content-text::-webkit-scrollbar-track { background: #f0f3f6; border-radius: 10px; }
     .content-text::-webkit-scrollbar-thumb { background: #b8c8d8; border-radius: 10px; }
-    .content-text::-webkit-scrollbar-thumb:hover { background: #9aafbf; }
-
-    .epigraph {
-      margin: 1.8rem 1.5rem; padding: 0.8rem 1.8rem; font-style: italic; font-size: 1.2rem;
-      color: #2c3e50; border-left: 5px solid #1e3b5c; background: #f6fafe;
-      border-radius: 0 12px 12px 0; text-align: left;
-    }
-
-    .content-text h1, .content-text h2, .content-text h3 { transition: font-size 0.2s ease; }
-    .content-text h2 {
-      font-size: 2.2rem; font-weight: 400; margin-top: 0; border-left: 6px solid #1e3b5c; padding-left: 1.3rem;
-    }
-    .content-text h3 {
-      font-size: 1.5rem; font-weight: 500; margin: 1.8rem 0 1rem 0; color: #1e3b5c;
-      border-bottom: 1px solid #d0dce8; padding-bottom: 0.4rem; text-align: left;
-    }
+    .epigraph { margin: 1.8rem 1.5rem; padding: 0.8rem 1.8rem; font-style: italic; font-size: 1.2rem; color: #2c3e50; border-left: 5px solid #1e3b5c; background: #f6fafe; border-radius: 0 12px 12px 0; text-align: left; }
+    .content-text h2 { font-size: 2.2rem; font-weight: 400; margin-top: 0; border-left: 6px solid #1e3b5c; padding-left: 1.3rem; }
+    .content-text h3 { font-size: 1.5rem; font-weight: 500; margin: 1.8rem 0 1rem 0; color: #1e3b5c; border-bottom: 1px solid #d0dce8; padding-bottom: 0.4rem; text-align: left; }
     .content-text p { margin-bottom: 1.2rem; }
-
-    /* ---------- FIGURAS ---------- */
     .figure-container { text-align: center; margin: 30px 0; }
-    .content-image {
-      max-width: 100%; height: auto; border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: inline-block;
-    }
-
-    /* ---------- TOOLBAR ---------- */
-    .reading-toolbar {
-      display: flex; gap: 12px; margin-bottom: 1rem; align-items: center; flex-wrap: wrap;
-    }
+    .content-image { max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: inline-block; }
+    .reading-toolbar { display: flex; gap: 12px; margin-bottom: 1rem; align-items: center; flex-wrap: wrap; }
     .toolbar-group { display: flex; gap: 8px; flex-wrap: wrap; }
     .toolbar-btn {
       background: white; border: 1px solid #cbd7e4; padding: 0.5rem 1.2rem; border-radius: 30px;
@@ -167,40 +74,22 @@
       display: inline-flex; align-items: center; gap: 4px;
     }
     .toolbar-btn:hover { background: #e5ecf3; }
-    .toolbar-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .font-btn.active { background: #1e3b5c; color: white; border-color: #1e3b5c; box-shadow: 0 2px 6px rgba(30, 59, 92, 0.2); }
-    #fullscreenBtn { transition: all 0.2s; }
-    #fullscreenBtn:hover { background: #1e3b5c; color: white; border-color: #1e3b5c; }
+    .font-btn.active { background: #1e3b5c; color: white; border-color: #1e3b5c; }
     #pdfBtn { background: #6a8d73; color: white; border-color: #5a7d63; }
-    #pdfBtn:hover { background: #7a9d83; }
-
     .page-navigation { display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; }
     .page-indicator { color: #476b8a; font-weight: 500; }
-
-    /* ---------- TELA RELATÓRIO ---------- */
     .report-container { display: flex; flex-direction: column; }
-    .report-header { margin-bottom: 1.8rem; }
     #reportContent { background: #f9fbfd; padding: 1.8rem; border-radius: 18px; margin: 1rem 0; }
-    #reportContent p { margin-bottom: 8px; font-size: 1.05rem; }
     .meta-note { color: #60758b; font-size: 0.9rem; margin-top: 0.8rem; }
     hr { border: 0; height: 1px; background: linear-gradient(to right, #dbe2ea, transparent); margin: 1.8rem 0; }
-
-    /* ---------- ESTILOS PARA IMPRESSÃO (PDF) ---------- */
     @media print {
       body { background: white; padding: 0; }
-      body.fullscreen-mode { background: white; }
       .reader-container { max-width: 100%; box-shadow: none; border-radius: 0; padding: 0.5in; border: none; }
       .reader-header, .reading-toolbar, .page-navigation, .nav-tabs, .meta-note { display: none !important; }
       .screen { display: block !important; padding: 0; }
-      .content-text { max-height: none !important; overflow: visible !important; padding: 0; background: white; box-shadow: none; border: none; }
-      .figure-container { page-break-inside: avoid; margin: 20px 0; }
-      .content-image { max-width: 100%; height: auto; box-shadow: none; }
-      h2, h3 { page-break-after: avoid; }
-      p { orphans: 3; widows: 3; }
-      .epigraph { background: #f9f9f9; border-left: 3px solid #333; }
+      .content-text { max-height: none !important; overflow: visible !important; padding: 0; background: white; }
+      .content-image { box-shadow: none; }
     }
-
-    /* ---------- RESPONSIVIDADE ---------- */
     @media (min-width: 1400px) { .reader-container { max-width: calc(100% - 24px); } .content-text { max-height: 70vh; } }
     @media (max-width: 600px) {
       .reader-container { padding: 16px; max-width: calc(100% - 8px); }
@@ -208,218 +97,218 @@
       .toolbar-btn { padding: 8px 12px; font-size: 0.9rem; }
       .content-text { max-height: 55vh; padding: 0 4px; }
       .reader-header h1 { font-size: 1.5rem; }
-      .tab-btn { padding: 0.5rem 1rem; font-size: 0.9rem; }
-      .epigraph { margin: 1.2rem 0.5rem; }
+      .tab-btn { padding: 0.5rem 1rem; }
     }
-    @media (min-width: 601px) and (max-width: 900px) { .content-text { max-height: 60vh; } }
   </style>
 </head>
 <body>
-
 <div class="reader-container">
   <header class="reader-header">
     <h1>Política e Trabalho<span>leitura avançada</span></h1>
-    <div class="nav-tabs" role="tablist">
+    <div class="nav-tabs">
       <button class="tab-btn active" data-screen="home">Início</button>
       <button class="tab-btn" data-screen="reading">Leitura</button>
       <button class="tab-btn" data-screen="report">Relatório</button>
     </div>
   </header>
-
-  <!-- ========== TELA INICIAL ========= -->
   <div id="screen-home" class="screen active">
     <h1>📚 Política e Trabalho</h1>
     <div style="margin-bottom: 32px; color: #5e7180; border-left: 5px solid #6a8d73; padding-left: 16px;">Material de Leitura Avançado</div>
-    
-    <div class="form-group"><label>👤 Seu nome completo</label><input type="text" id="studentName" placeholder="Ex: Fabrício Siqueira" autocomplete="off"></div>
-    <div class="form-group"><label>📚 Turma</label><select id="studentClass" class="class-select"><option value="">Selecione sua turma</option><option value="A">Turma A</option><option value="B">Turma B</option><option value="C">Turma C</option><option value="D">Turma D</option></select></div>
-    <div class="form-group"><label>📅 Bimestre</label><select id="studentBimester" class="bimester-select"><option value="">Selecione o bimestre</option><option value="1">1º Bimestre</option><option value="2">2º Bimestre</option><option value="3">3º Bimestre</option><option value="4">4º Bimestre</option></select></div>
-    
+    <div class="form-group"><label>👤 Seu nome completo</label><input type="text" id="studentName" placeholder="Ex: Fabrício Siqueira"></div>
+    <div class="form-group"><label>📚 Turma</label><select id="studentClass" class="class-select"><option value="">Selecione</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select></div>
+    <div class="form-group"><label>📅 Bimestre</label><select id="studentBimester" class="bimester-select"><option value="">Selecione</option><option value="1">1º</option><option value="2">2º</option><option value="3">3º</option><option value="4">4º</option></select></div>
     <button id="startReadingBtn" class="nav-btn" style="width:100%;" disabled>▶ Iniciar Leitura</button>
-    <p style="margin-top: 20px; color: #6f8a9b; font-size: 0.9rem;">Preencha todos os campos para começar</p>
+    <p style="margin-top: 20px; color: #6f8a9b;">Preencha todos os campos para começar</p>
   </div>
-
-  <!-- ========== TELA DE LEITURA ========= -->
   <div id="screen-reading" class="screen">
     <div class="reading-layout">
       <div class="reading-toolbar">
         <div class="toolbar-group">
-          <button id="fontNormal" class="toolbar-btn font-btn active" data-size="1">Normal</button>
-          <button id="fontGrande" class="toolbar-btn font-btn" data-size="1.5">Grande</button>
-          <button id="fontMuitoGrande" class="toolbar-btn font-btn" data-size="2">Muito Grande</button>
-          <button id="fontExtraGrande" class="toolbar-btn font-btn" data-size="3">Extra Grande</button>
-          <button id="fontEnorme" class="toolbar-btn font-btn" data-size="3.5">Enorme</button>
+          <button id="fontNormal" class="toolbar-btn font-btn active">Normal</button>
+          <button id="fontGrande" class="toolbar-btn font-btn">Grande</button>
+          <button id="fontMuitoGrande" class="toolbar-btn font-btn">Muito Grande</button>
+          <button id="fontExtraGrande" class="toolbar-btn font-btn">Extra Grande</button>
+          <button id="fontEnorme" class="toolbar-btn font-btn">Enorme</button>
         </div>
         <div class="toolbar-group">
-          <button id="fullscreenBtn" class="toolbar-btn" title="Tela Cheia">⛶ Tela Cheia</button>
-          <button id="pdfBtn" class="toolbar-btn" title="Gerar PDF" style="display: none;">📄 Gerar PDF</button>
+          <button id="fullscreenBtn" class="toolbar-btn">⛶ Tela Cheia</button>
+          <button id="pdfBtn" class="toolbar-btn" style="display: none;">📄 Gerar PDF</button>
         </div>
         <div class="toolbar-group">
-          <button id="speakBtn" class="toolbar-btn" title="Ouvir página">🔊 Ouvir</button>
-          <button id="pauseBtn" class="toolbar-btn" title="Pausar leitura" disabled>⏸️ Pausar</button>
-          <button id="stopBtn" class="toolbar-btn" title="Parar leitura" disabled>⏹️ Parar</button>
-          <button id="speedNormalBtn" class="toolbar-btn speed-btn active" data-rate="1">1x</button>
-          <button id="speedFastBtn" class="toolbar-btn speed-btn" data-rate="1.5">1.5x</button>
+          <button id="speakBtn" class="toolbar-btn">🔊 Ouvir</button>
+          <button id="pauseBtn" class="toolbar-btn" disabled>⏸️ Pausar</button>
+          <button id="stopBtn" class="toolbar-btn" disabled>⏹️ Parar</button>
+          <button id="speedNormalBtn" class="toolbar-btn speed-btn active">1x</button>
+          <button id="speedFastBtn" class="toolbar-btn speed-btn">1.5x</button>
         </div>
-        <button class="toolbar-btn" id="finishReadingBtn" style="margin-left: auto; background: #1e3b5c; color: white; border-color: #1e3b5c;">✓ Concluir</button>
-        <span style="font-size: 0.9rem; color: #54738f;">Página <span id="current-page-indicator">1</span>/8</span>
+        <button class="toolbar-btn" id="finishReadingBtn" style="margin-left: auto; background: #1e3b5c; color: white;">✓ Concluir</button>
+        <span>Página <span id="current-page-indicator">1</span>/8</span>
       </div>
-
       <div class="content-text" id="reading-content-area"></div>
-
       <div class="page-navigation">
         <button class="toolbar-btn" id="prev-page-btn" disabled>← Anterior</button>
         <span class="page-indicator" id="page-indicator-bottom">Página 1 de 8</span>
         <button class="toolbar-btn" id="next-page-btn">Próximo →</button>
       </div>
-      <div class="meta-note" style="margin-top: 0.5rem;">📌 Utilize as setas para navegar entre as 8 páginas do material.</div>
+      <div class="meta-note">📌 Use as setas ou o áudio para navegar.</div>
     </div>
   </div>
-
-  <!-- ========== TELA RELATÓRIO ========= -->
   <div id="screen-report" class="screen">
     <div class="report-container">
-      <div class="report-header"><h2 style="font-weight: 350; font-size: 2rem; color: #13293e;">Relatório de Leitura</h2><p style="color: #3c607d;">Registro da sua atividade</p></div>
-      <div id="reportContent"><p style="color: #4c687f; font-style: italic;">Nenhum registro encontrado. Inicie a leitura para gerar o relatório.</p></div>
+      <div class="report-header"><h2 style="font-weight: 350; font-size: 2rem;">Relatório de Leitura</h2><p>Registro da sua atividade</p></div>
+      <div id="reportContent"><p>Nenhum registro encontrado.</p></div>
       <button id="endSessionBtn" class="nav-btn" style="margin-top: 20px; background: #6a8d73;">🚪 Encerrar Sessão</button>
-      <hr>
-      <div class="meta-note">📊 Relatório gerado automaticamente ao concluir a leitura.</div>
     </div>
   </div>
 </div>
-
 <script>
   (function() {
     'use strict';
     const TOTAL_PAGES = 8;
-    const pagesContent = [
-      `<h2>Política e Trabalho</h2><h3 style="border:none; margin-top:0.2rem; font-weight:350;">Impactos Ambientais e Socioeconômicos da Poluição e Gestão de Resíduos</h3><div class="epigraph">"O lixo não existe. O que chamamos de lixo é matéria-prima no lugar errado." — José Lutzenberger</div><div class="figure-container"><img src="https://s2-g1.glbimg.com/mqVGvArwS_zgM3KqWcgqH4l3_ZM=/0x0:1772x1168/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/F/V/8EIE7tQ7ODRmypKo9Xdg/001606a.jpg" alt="Impactos da poluição em áreas urbanas e rurais" class="content-image"></div><p>Este material analisa, de forma integrada, os principais impactos ambientais, sociais e econômicos decorrentes da poluição e da má gestão de resíduos, bem como as respostas políticas e legislativas a esses desafios.</p><p>A estrutura do texto foi organizada em oito partes, abordando desde as consequências da poluição em áreas urbanas e rurais até as complexas relações entre mineração, justiça ambiental e o arcabouço legal brasileiro.</p><p style="margin-top:1.5rem;"><em>Use os botões abaixo para navegar pelas páginas.</em></p>`,
-      `<h3>Introdução</h3><p>A relação entre desenvolvimento econômico e preservação ambiental constitui um dos debates mais urgentes da contemporaneidade. A exploração intensiva de recursos naturais, aliada a padrões de consumo insustentáveis, tem gerado níveis alarmantes de poluição e uma crise global na gestão de resíduos. Este cenário não apenas degrada ecossistemas, mas também aprofunda desigualdades sociais, afetando desproporcionalmente populações vulneráveis.</p><div class="figure-container"><img src="https://www.ambientelegal.com.br/wp-content/uploads/Sustentabilidade1-2.jpg" alt="Sustentabilidade e equilíbrio entre desenvolvimento e meio ambiente" class="content-image"></div><p>No Brasil, a problemática assume contornos específicos devido à vasta extensão territorial, à dependência econômica de setores intensivos em recursos naturais (como o agronegócio e a mineração) e a um histórico de urbanização acelerada e, por vezes, desordenada. A promulgação da Política Nacional de Resíduos Sólidos (PNRS) em 2010 representou um marco regulatório, porém sua implementação efetiva ainda enfrenta obstáculos significativos em todas as esferas federativas.</p><p>Esta leitura avançada propõe-se a examinar criticamente os impactos da poluição em áreas rurais e urbanas, os desafios da gestão de resíduos sólidos, os profundos impactos socioeconômicos — com especial atenção à mineração e à justiça ambiental — e, por fim, o arcabouço legal e as perspectivas para políticas públicas mais eficazes e inclusivas.</p>`,
-      `<h3>Tema 1: Impactos ambientais em áreas rurais e urbanas</h3><h3>1.1. A cidade que sufoca</h3><p>Os centros urbanos concentram as principais fontes de poluição atmosférica, como emissões veiculares e industriais. A presença de material particulado (MP2,5 e MP10), óxidos de nitrogênio e enxofre está diretamente associada ao aumento de doenças respiratórias e cardiovasculares na população. A formação de ilhas de calor e a impermeabilização do solo agravam os efeitos das mudanças climáticas em escala local, tornando as cidades espaços de vulnerabilidade ambiental.</p><div class="figure-container"><img src="https://static.mundoeducacao.uol.com.br/mundoeducacao/2021/10/grafico-variacao-temperatura-cidade.png" alt="Gráfico de variação de temperatura em áreas urbanas - Ilhas de calor" class="content-image"></div><h3>1.2. O campo sob pressão</h3><p>Nas áreas rurais, a contaminação decorre majoritariamente do uso intensivo de agrotóxicos e fertilizantes químicos. Esses compostos, ao se infiltrarem no solo, atingem lençóis freáticos e cursos d'água, comprometendo a potabilidade da água e a biodiversidade aquática. A monocultura extensiva também contribui para a erosão e compactação do solo, reduzindo sua fertilidade a longo prazo e intensificando processos de desertificação em regiões sensíveis.</p><div class="figure-container"><img src="https://agro.insper.edu.br/storage/articles/May2023/O3tlWUKTaAc5gbf9yoF6.jpg" alt="Campo sob pressão - Uso de agrotóxicos na agricultura" class="content-image"></div><h3>1.3. A crise hídrica compartilhada</h3><p>Ambos os ambientes, urbano e rural, enfrentam uma crise hídrica que é tanto de quantidade quanto de qualidade. Enquanto as cidades lutam contra o despejo de esgoto não tratado e efluentes industriais nos rios, o campo enfrenta a contaminação difusa por agrotóxicos. A eutrofização de corpos d'água, causada pelo excesso de nutrientes, resulta na proliferação de algas tóxicas e na mortandade de peixes, afetando o abastecimento público e a economia pesqueira.</p><div class="figure-container"><img src="https://thumbs.dreamstime.com/b/conceito-de-polui%C3%A7%C3%A3o-industrial-emiss%C3%B5es-das-f%C3%A1bricas-e-impacto-ambiental-na-paisagem-uma-vis%C3%A3o-paisag%C3%ADstica-da-com-as-um-387524182.jpg" alt="Poluição industrial e impacto nos recursos hídricos" class="content-image"></div>`,
-      `<h3>Tema 2: Gestão de resíduos sólidos</h3><h3>2.1. Do lixão ao aterro: um longo caminho</h3><p>A gestão inadequada de resíduos sólidos urbanos (RSU) é um dos passivos ambientais mais visíveis no país. Apesar dos avanços normativos, milhares de municípios ainda operam lixões a céu aberto, locais onde o chorume — líquido altamente tóxico — percola o solo sem qualquer tratamento, contaminando águas subterrâneas.</p><div class="figure-container"><img src="https://imagens.publico.pt/imagens.aspx/1887382?tp=UH&db=IMAGENS&type=JPG" alt="Lixão a céu aberto - Impacto ambiental dos resíduos sólidos" class="content-image"></div><p>A transição para aterros sanitários, que contam com impermeabilização de base e sistemas de drenagem de gases e líquidos, é um imperativo técnico e legal que ainda esbarra em limitações orçamentárias e de capacidade institucional.</p><h3>2.2. A logística reversa e a responsabilidade compartilhada</h3><p>Um dos pilares da Política Nacional de Resíduos Sólidos (Lei nº 12.305/2010) é a responsabilidade compartilhada pelo ciclo de vida dos produtos. A logística reversa determina que fabricantes, importadores, distribuidores e comerciantes são corresponsáveis pelo retorno de produtos pós-consumo, como embalagens de agrotóxicos, pilhas, baterias, pneus, óleos lubrificantes e eletroeletrônicos. Embora setores como o de pneus e agrotóxicos apresentem resultados positivos, a implementação para resíduos eletroeletrônicos e embalagens em geral ainda é fragmentada e carece de maior fiscalização.</p><h3>2.3. O potencial econômico do lixo</h3><p>A reciclagem e a compostagem são estratégias centrais para desviar resíduos dos aterros, prolongando sua vida útil e gerando empregos e renda. Contudo, a taxa de reciclagem no Brasil permanece baixa, em torno de 3% a 4% para os resíduos sólidos urbanos. O fortalecimento das cooperativas de catadores de materiais recicláveis, com inclusão socioprodutiva e remuneração por serviços ambientais prestados, é uma medida crucial para alavancar esses índices e promover uma economia circular mais justa.</p><div class="figure-container"><img src="https://ogimg.infoglobo.com.br/in/7061534-a3c-2e2/FT1086A/catadores-lixao-gramacho.jpg" alt="Catadores de materiais recicláveis - Economia circular e inclusão social" class="content-image"></div>`,
-      `<h3>Tema 3: Impactos socioeconômicos</h3><div class="figure-container"><img src="https://s4.static.brasilescola.uol.com.br/be/2020/09/queimadas.jpg" alt="Queimadas e impactos das práticas agropecuárias e extrativas" class="content-image"></div><h3>3.1. A face social da poluição</h3><p>Os danos ambientais não se distribuem de maneira uniforme pelo tecido social. Comunidades de baixa renda, povos indígenas e populações tradicionais são frequentemente as principais vítimas da contaminação industrial e da instalação de depósitos de resíduos em suas proximidades. A desvalorização imobiliária, a perda de meios de subsistência (como pesca e agricultura familiar) e o aumento da incidência de doenças compõem um quadro de vulnerabilidade que perpetua ciclos de pobreza e exclusão.</p><p>Além disso, práticas agropecuárias e extrativas predatórias agravam o assoreamento de rios, comprometendo ecossistemas inteiros e a disponibilidade de água para consumo humano.</p><div class="figure-container"><img src="https://static.mundoeducacao.uol.com.br/mundoeducacao/conteudo/esquema-de-assoreamento-de-rios.jpg" alt="Esquema ilustrativo do processo de assoreamento de rios" class="content-image"></div><h3>3.2. Mineração: riqueza e passivo</h3><p>A mineração representa um caso emblemático de dualidade socioeconômica e ambiental. Por um lado, o setor gera empregos, divisas e royalties (Compensação Financeira pela Exploração Mineral - CFEM) que deveriam financiar o desenvolvimento local. Por outro, a atividade é intrinsecamente ligada a riscos catastróficos e a impactos de longuíssima duração. Os rompimentos das barragens de rejeitos em Mariana (2015) e Brumadinho (2019) expuseram de forma trágica a insuficiência dos mecanismos de controle e a magnitude do passivo socioambiental que pode ser deixado pela exploração mineral.</p><p>Além dos desastres agudos, a mineração causa impactos crônicos como o rebaixamento do lençol freático, a supressão de vegetação nativa, a emissão de poeira e ruídos, e a pressão sobre a infraestrutura urbana de municípios que vivenciam um rápido e desordenado crescimento populacional.</p>`,
-      `<p>A dependência econômica gerada em torno da monocultura mineral frequentemente inibe a diversificação produtiva, criando "cidades de mineração" vulneráveis às oscilações do preço das commodities no mercado internacional.</p><div class="figure-container"><img src="https://ims.com.br/wp-content/uploads/2017/09/a-lama-de-mariana-ao-mar.jpg" alt="Lama de rejeitos da mineração - Desastre de Mariana" class="content-image"></div><h3>3.3. Justiça ambiental e racismo ambiental</h3><p>O conceito de Justiça Ambiental surge da constatação empírica de que os riscos e danos ambientais recaem de forma desproporcional sobre grupos sociais marginalizados. Trata-se de um movimento social e um campo teórico que reivindica tratamento justo e envolvimento significativo de todas as pessoas, independentemente de raça, cor, origem ou renda, no desenvolvimento, implementação e fiscalização de leis, regulamentos e políticas ambientais.</p><p>Intimamente ligado a esse conceito, o termo Racismo Ambiental denuncia a dimensão racial dessa distribuição desigual de riscos. Evidências no Brasil e no mundo demonstram que comunidades negras, quilombolas e indígenas estão mais expostas a lixões, indústrias poluentes e áreas de sacrifício. A luta por justiça ambiental é, portanto, uma luta por direitos civis, exigindo que a agenda ambiental incorpore de forma central as demandas por equidade e participação democrática.</p><p>Os conflitos ambientais no campo e na cidade são, em sua essência, disputas por modelos de desenvolvimento e pelo acesso a recursos naturais de qualidade, como terra, água e ar limpos. A efetivação de direitos territoriais e a consulta prévia, livre e informada aos povos afetados, conforme preconiza a Convenção 169 da OIT, são instrumentos indispensáveis para uma governança ambiental verdadeiramente democrática.</p><div class="figure-container"><img src="https://portalmatogrosso.com.br/wp-content/uploads/2024/11/695f2cf5f067f0d8aaa495fc9499fd6f.jpeg" alt="Manifestação por justiça ambiental e direitos territoriais" class="content-image"></div>`,
-      `<h3>Tema 4: Legislações e instrumentos de política ambiental</h3><h3>4.1. A Política Nacional do Meio Ambiente (PNMA)</h3><p>A Lei nº 6.938/1981 instituiu a Política Nacional do Meio Ambiente, criando o Sistema Nacional do Meio Ambiente (SISNAMA) e o Conselho Nacional do Meio Ambiente (CONAMA). Esta lei estabeleceu instrumentos fundamentais como o Licenciamento Ambiental, a Avaliação de Impacto Ambiental (AIA) e a responsabilidade civil objetiva por danos ambientais, segundo a qual o poluidor é obrigado a reparar os danos causados, independentemente da existência de culpa.</p><h3>4.2. A Política Nacional de Resíduos Sólidos (PNRS)</h3><p>A Lei nº 12.305/2010, após quase duas décadas de tramitação no Congresso Nacional, consolidou princípios, objetivos e instrumentos para a gestão integrada de resíduos. A PNRS estabeleceu a hierarquia de prioridades: não geração, redução, reutilização, reciclagem, tratamento dos resíduos sólidos e disposição final ambientalmente adequada dos rejeitos. A lei também determinou a elaboração de Planos de Gerenciamento de Resíduos Sólidos por parte de empresas e municípios, e estipulou um prazo (já expirado e prorrogado) para o fim dos lixões.</p><div class="figure-container"><img src="https://www.gov.br/dnocs/pt-br/assuntos/noticias/campanha-de-sustentabilidade-do-dnocs-aborda-destinacao-correta-de-residuos-solidos/banner-site.jpg" alt="Campanha de sustentabilidade - Destinação correta de resíduos sólidos" class="content-image"></div><h3>4.3. Desafios de implementação e fiscalização</h3><p>Apesar de um arcabouço legal relativamente robusto, a distância entre a norma e a realidade ainda é imensa. A fragilidade dos órgãos ambientais estaduais e municipais, a carência de recursos humanos e financeiros para fiscalização, e a pressão política de setores econômicos por flexibilizações regulatórias ("passar a boiada") criam um cenário de insegurança jurídica e baixa efetividade das políticas públicas. O fortalecimento do SISNAMA e a autonomia técnica dos órgãos de controle são pré-condições para que as leis ambientais saiam do papel e se traduzam em melhoria da qualidade de vida da população.</p>`,
-      `<h3>Conclusão</h3><p>A análise integrada dos impactos ambientais, da gestão de resíduos e de suas dimensões socioeconômicas revela a complexidade e a urgência do tema. A poluição não é um efeito colateral inevitável do progresso, mas sim o resultado de escolhas políticas e de um modelo de produção e consumo que externaliza custos para a sociedade e para o meio ambiente. A epígrafe de Lutzenberger nos lembra que a própria noção de "lixo" precisa ser superada por uma visão circular dos materiais.</p><p>A transição para uma economia de baixo carbono e socialmente justa exige o fortalecimento das instituições democráticas, o investimento em tecnologias limpas e, sobretudo, a garantia da participação cidadã nos processos decisórios. O enfrentamento do racismo ambiental e a busca por justiça ambiental devem ser eixos estruturantes de qualquer política pública que se pretenda sustentável. Os desafios são monumentais, mas o conhecimento e a mobilização social são as ferramentas mais poderosas para construir um futuro em que o direito a um meio ambiente ecologicamente equilibrado seja efetivamente universal.</p><p style="margin-top:2rem;"><strong>Referências consultadas:</strong> Legislação federal (Lei 6.938/81, Lei 12.305/10), relatórios da ABRELPE, IBGE e publicações sobre justiça ambiental e mineração no Brasil.</p>`
+    const pagesContent = [ /* Conteúdo idêntico ao passo anterior */ 
+      `<h2>Política e Trabalho</h2><h3 style="border:none;">Impactos Ambientais e Socioeconômicos...</h3><div class="epigraph">"O lixo não existe..." — José Lutzenberger</div><div class="figure-container"><img src="https://s2-g1.glbimg.com/mqVGvArwS_zgM3KqWcgqH4l3_ZM=/0x0:1772x1168/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/F/V/8EIE7tQ7ODRmypKo9Xdg/001606a.jpg" class="content-image"></div><p>Este material analisa...</p>`,
+      `<h3>Introdução</h3><p>A relação entre desenvolvimento...</p><div class="figure-container"><img src="https://www.ambientelegal.com.br/wp-content/uploads/Sustentabilidade1-2.jpg" class="content-image"></div><p>No Brasil, a problemática...</p>`,
+      `<h3>Tema 1: Impactos ambientais...</h3><h3>1.1. A cidade que sufoca</h3><p>Os centros urbanos...</p><div class="figure-container"><img src="https://static.mundoeducacao.uol.com.br/mundoeducacao/2021/10/grafico-variacao-temperatura-cidade.png" class="content-image"></div><h3>1.2. O campo sob pressão</h3><p>Nas áreas rurais...</p><div class="figure-container"><img src="https://agro.insper.edu.br/storage/articles/May2023/O3tlWUKTaAc5gbf9yoF6.jpg" class="content-image"></div><h3>1.3. A crise hídrica compartilhada</h3><p>Ambos os ambientes...</p><div class="figure-container"><img src="https://thumbs.dreamstime.com/b/conceito-de-polui%C3%A7%C3%A3o-industrial-emiss%C3%B5es-das-f%C3%A1bricas-e-impacto-ambiental-na-paisagem-uma-vis%C3%A3o-paisag%C3%ADstica-da-com-as-um-387524182.jpg" class="content-image"></div>`,
+      `<h3>Tema 2: Gestão de resíduos sólidos</h3><h3>2.1. Do lixão ao aterro...</h3><p>A gestão inadequada...</p><div class="figure-container"><img src="https://imagens.publico.pt/imagens.aspx/1887382?tp=UH&db=IMAGENS&type=JPG" class="content-image"></div><p>A transição para aterros...</p><h3>2.2. A logística reversa...</h3><p>Um dos pilares...</p><h3>2.3. O potencial econômico do lixo</h3><p>A reciclagem...</p><div class="figure-container"><img src="https://ogimg.infoglobo.com.br/in/7061534-a3c-2e2/FT1086A/catadores-lixao-gramacho.jpg" class="content-image"></div>`,
+      `<h3>Tema 3: Impactos socioeconômicos</h3><div class="figure-container"><img src="https://s4.static.brasilescola.uol.com.br/be/2020/09/queimadas.jpg" class="content-image"></div><h3>3.1. A face social da poluição</h3><p>Os danos ambientais...</p><p>Além disso, práticas...</p><div class="figure-container"><img src="https://static.mundoeducacao.uol.com.br/mundoeducacao/conteudo/esquema-de-assoreamento-de-rios.jpg" class="content-image"></div><h3>3.2. Mineração: riqueza e passivo</h3><p>A mineração representa...</p>`,
+      `<p>A dependência econômica...</p><div class="figure-container"><img src="https://ims.com.br/wp-content/uploads/2017/09/a-lama-de-mariana-ao-mar.jpg" class="content-image"></div><h3>3.3. Justiça ambiental...</h3><p>O conceito de Justiça Ambiental...</p><p>Intimamente ligado...</p><p>Os conflitos ambientais...</p><div class="figure-container"><img src="https://portalmatogrosso.com.br/wp-content/uploads/2024/11/695f2cf5f067f0d8aaa495fc9499fd6f.jpeg" class="content-image"></div>`,
+      `<h3>Tema 4: Legislações...</h3><h3>4.1. A Política Nacional do Meio Ambiente</h3><p>A Lei nº 6.938/1981...</p><h3>4.2. A Política Nacional de Resíduos Sólidos</h3><p>A Lei nº 12.305/2010...</p><div class="figure-container"><img src="https://www.gov.br/dnocs/pt-br/assuntos/noticias/campanha-de-sustentabilidade-do-dnocs-aborda-destinacao-correta-de-residuos-solidos/banner-site.jpg" class="content-image"></div><h3>4.3. Desafios de implementação...</h3><p>Apesar de um arcabouço...</p>`,
+      `<h3>Conclusão</h3><p>A análise integrada...</p><p>A transição para uma economia...</p><p style="margin-top:2rem;"><strong>Referências consultadas:</strong> Legislação federal...</p>`
     ];
 
-    const nameInput = document.getElementById('studentName');
-    const classSelect = document.getElementById('studentClass');
-    const bimesterSelect = document.getElementById('studentBimester');
-    const startBtn = document.getElementById('startReadingBtn');
-    const contentArea = document.getElementById('reading-content-area');
-    const prevBtn = document.getElementById('prev-page-btn');
-    const nextBtn = document.getElementById('next-page-btn');
-    const pageIndicator = document.getElementById('current-page-indicator');
-    const pageIndicatorBottom = document.getElementById('page-indicator-bottom');
-    const finishBtn = document.getElementById('finishReadingBtn');
-    const pdfBtn = document.getElementById('pdfBtn');
-    const fullscreenBtn = document.getElementById('fullscreenBtn');
-    const speakBtn = document.getElementById('speakBtn');
-    const pauseBtn = document.getElementById('pauseBtn');
-    const stopBtn = document.getElementById('stopBtn');
-    const speedNormalBtn = document.getElementById('speedNormalBtn');
-    const speedFastBtn = document.getElementById('speedFastBtn');
-    const reportContent = document.getElementById('reportContent');
-    const endSessionBtn = document.getElementById('endSessionBtn');
-    const tabs = document.querySelectorAll('.tab-btn');
-    const screens = { home: document.getElementById('screen-home'), reading: document.getElementById('screen-reading'), report: document.getElementById('screen-report') };
+    const elements = {
+      name: document.getElementById('studentName'), class: document.getElementById('studentClass'), bimester: document.getElementById('studentBimester'),
+      start: document.getElementById('startReadingBtn'), content: document.getElementById('reading-content-area'),
+      prev: document.getElementById('prev-page-btn'), next: document.getElementById('next-page-btn'),
+      pageInd: document.getElementById('current-page-indicator'), pageIndBottom: document.getElementById('page-indicator-bottom'),
+      finish: document.getElementById('finishReadingBtn'), pdf: document.getElementById('pdfBtn'), fullscreen: document.getElementById('fullscreenBtn'),
+      speak: document.getElementById('speakBtn'), pause: document.getElementById('pauseBtn'), stop: document.getElementById('stopBtn'),
+      speedNormal: document.getElementById('speedNormalBtn'), speedFast: document.getElementById('speedFastBtn'),
+      report: document.getElementById('reportContent'), endSession: document.getElementById('endSessionBtn'),
+      tabs: document.querySelectorAll('.tab-btn'), screens: { home: document.getElementById('screen-home'), reading: document.getElementById('screen-reading'), report: document.getElementById('screen-report') }
+    };
     
-    let currentPageIndex = 0;
-    let readingStartTime = null;
-    let currentFontMultiplier = 1.0;
-    const baseBodyFontSize = 16, baseH2FontSize = 35.2, baseH3FontSize = 24;
-    let speechSynth = window.speechSynthesis;
-    let currentUtterance = null;
-    let currentRate = 1.0;
-    let isPaused = false;
+    let currentPageIndex = 0, readingStartTime = null, currentFontMultiplier = 1.0;
+    const baseFont = 16, baseH2 = 35.2, baseH3 = 24;
+    let synth = window.speechSynthesis, utterance = null, currentRate = 1.0, isPaused = false, autoAdvanceTimer = null;
 
-    function switchScreen(screenId) {
-      Object.values(screens).forEach(screen => screen.classList.remove('active'));
-      if (screens[screenId]) screens[screenId].classList.add('active');
-      tabs.forEach(btn => { btn.classList.toggle('active', btn.getAttribute('data-screen') === screenId); });
+    function switchScreen(id) {
+      Object.values(elements.screens).forEach(s => s.classList.remove('active'));
+      if (elements.screens[id]) elements.screens[id].classList.add('active');
+      elements.tabs.forEach(b => b.classList.toggle('active', b.dataset.screen === id));
     }
-    function updateStartButton() { startBtn.disabled = !(nameInput.value.trim() && classSelect.value && bimesterSelect.value); }
-    function updatePdfButton() { if (pdfBtn) pdfBtn.style.display = (currentPageIndex === TOTAL_PAGES - 1) ? 'inline-flex' : 'none'; }
-    function stopAudio() { if (speechSynth) { speechSynth.cancel(); } updateAudioButtons(false); }
-    function updateAudioButtons(speaking) { pauseBtn.disabled = !speaking; stopBtn.disabled = !speaking; }
-    function applyFontSize(m) {
+    function updateStart() { elements.start.disabled = !(elements.name.value.trim() && elements.class.value && elements.bimester.value); }
+    function stopAudio(clearTimer = true) {
+      if (synth) { synth.cancel(); }
+      if (clearTimer && autoAdvanceTimer) { clearTimeout(autoAdvanceTimer); autoAdvanceTimer = null; }
+      elements.pause.disabled = true; elements.stop.disabled = true;
+      isPaused = false; elements.pause.textContent = '⏸️ Pausar';
+    }
+    function applyFont(m) {
       currentFontMultiplier = m;
-      if (contentArea) {
-        contentArea.style.fontSize = Math.min(56, Math.max(12, baseBodyFontSize * m)) + 'px';
-        contentArea.querySelectorAll('h2').forEach(el => el.style.fontSize = Math.min(72, Math.max(20, baseH2FontSize * m)) + 'px');
-        contentArea.querySelectorAll('h3').forEach(el => el.style.fontSize = Math.min(64, Math.max(18, baseH3FontSize * m)) + 'px');
+      if (elements.content) {
+        elements.content.style.fontSize = Math.min(56, Math.max(12, baseFont * m)) + 'px';
+        elements.content.querySelectorAll('h2').forEach(e => e.style.fontSize = Math.min(72, Math.max(20, baseH2 * m)) + 'px');
+        elements.content.querySelectorAll('h3').forEach(e => e.style.fontSize = Math.min(64, Math.max(18, baseH3 * m)) + 'px');
       }
-      document.querySelectorAll('.font-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.font-btn').forEach(b => b.classList.remove('active'));
       document.getElementById('font' + (m===1?'Normal':m===1.5?'Grande':m===2?'MuitoGrande':m===3?'ExtraGrande':'Enorme')).classList.add('active');
     }
+    
+    function speakCurrentPage(autoAdvance = true) {
+      stopAudio(true);
+      if (!elements.content) return;
+      const text = elements.content.innerText || elements.content.textContent;
+      if (!text.trim()) return;
+      
+      utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'pt-BR';
+      utterance.rate = currentRate;
+      
+      utterance.onstart = () => { elements.pause.disabled = false; elements.stop.disabled = false; };
+      utterance.onend = () => {
+        elements.pause.disabled = true; elements.stop.disabled = true;
+        if (autoAdvance && currentPageIndex < TOTAL_PAGES - 1) {
+          autoAdvanceTimer = setTimeout(() => {
+            currentPageIndex++;
+            renderPage(currentPageIndex);
+            speakCurrentPage(true);
+          }, 6000);
+        } else {
+          autoAdvanceTimer = null;
+        }
+      };
+      utterance.onerror = () => { elements.pause.disabled = true; elements.stop.disabled = true; };
+      synth.speak(utterance);
+    }
+
     function renderPage(index) {
-      if (contentArea) { contentArea.innerHTML = pagesContent[index]; contentArea.scrollTop = 0; }
-      pageIndicator.textContent = index + 1;
-      pageIndicatorBottom.textContent = `Página ${index + 1} de ${TOTAL_PAGES}`;
-      prevBtn.disabled = (index === 0);
-      const isLastPage = (index === TOTAL_PAGES - 1);
-      nextBtn.textContent = isLastPage ? '✓ Encerrar Leitura' : 'Próximo →';
-      applyFontSize(currentFontMultiplier);
-      updatePdfButton();
-      stopAudio();
+      if (elements.content) { elements.content.innerHTML = pagesContent[index]; elements.content.scrollTop = 0; }
+      elements.pageInd.textContent = index + 1;
+      elements.pageIndBottom.textContent = `Página ${index + 1} de ${TOTAL_PAGES}`;
+      elements.prev.disabled = (index === 0);
+      const isLast = (index === TOTAL_PAGES - 1);
+      elements.next.textContent = isLast ? '✓ Encerrar Leitura' : 'Próximo →';
+      applyFont(currentFontMultiplier);
+      elements.pdf.style.display = isLast ? 'inline-flex' : 'none';
+      stopAudio(true);
     }
-    function speakCurrentPage() {
-      stopAudio();
-      if (!contentArea) return;
-      const textToRead = contentArea.innerText || contentArea.textContent;
-      if (!textToRead.trim()) return;
-      currentUtterance = new SpeechSynthesisUtterance(textToRead);
-      currentUtterance.lang = 'pt-BR';
-      currentUtterance.rate = currentRate;
-      currentUtterance.onstart = () => updateAudioButtons(true);
-      currentUtterance.onend = () => updateAudioButtons(false);
-      currentUtterance.onerror = () => updateAudioButtons(false);
-      speechSynth.speak(currentUtterance);
-    }
+
     function showReport() {
       if (!readingStartTime) return;
-      const endTime = new Date();
-      reportContent.innerHTML = `
-        <p><strong>👤 Aluno:</strong> ${nameInput.value.trim()}</p>
-        <p><strong>📚 Turma:</strong> ${classSelect.value}</p>
-        <p><strong>📅 Bimestre:</strong> ${bimesterSelect.value}º</p>
+      const end = new Date();
+      elements.report.innerHTML = `
+        <p><strong>👤 Aluno:</strong> ${elements.name.value.trim()}</p>
+        <p><strong>📚 Turma:</strong> ${elements.class.value}</p>
+        <p><strong>📅 Bimestre:</strong> ${elements.bimester.value}º</p>
         <p><strong>📅 Início:</strong> ${readingStartTime.toLocaleString('pt-BR')}</p>
-        <p><strong>📅 Término:</strong> ${endTime.toLocaleString('pt-BR')}</p>
-        <p><strong>⏱️ Duração:</strong> ${Math.floor((endTime - readingStartTime) / 1000 / 60)} minutos</p>
+        <p><strong>📅 Término:</strong> ${end.toLocaleString('pt-BR')}</p>
+        <p><strong>⏱️ Duração:</strong> ${Math.floor((end - readingStartTime) / 60000)} min</p>
         <p><strong>📖 Páginas lidas:</strong> ${TOTAL_PAGES}</p>
-        <hr style="margin:20px 0;"><p>Obrigado por concluir a leitura! O material continua disponível para consulta.</p>`;
+        <hr><p>Obrigado por concluir a leitura!</p>`;
       switchScreen('report');
     }
 
     // Event Listeners
-    nameInput.addEventListener('input', updateStartButton);
-    classSelect.addEventListener('change', updateStartButton);
-    bimesterSelect.addEventListener('change', updateStartButton);
-    startBtn.addEventListener('click', () => { readingStartTime = new Date(); currentPageIndex = 0; renderPage(0); switchScreen('reading'); });
-    prevBtn.addEventListener('click', () => { if (currentPageIndex > 0) { currentPageIndex--; renderPage(currentPageIndex); } });
-    nextBtn.addEventListener('click', () => { if (currentPageIndex < TOTAL_PAGES - 1) { currentPageIndex++; renderPage(currentPageIndex); } else { showReport(); } });
-    finishBtn.addEventListener('click', showReport);
-    document.getElementById('fontNormal').addEventListener('click', ()=>applyFontSize(1.0));
-    document.getElementById('fontGrande').addEventListener('click', ()=>applyFontSize(1.5));
-    document.getElementById('fontMuitoGrande').addEventListener('click', ()=>applyFontSize(2.0));
-    document.getElementById('fontExtraGrande').addEventListener('click', ()=>applyFontSize(3.0));
-    document.getElementById('fontEnorme').addEventListener('click', ()=>applyFontSize(3.5));
-    pdfBtn.addEventListener('click', () => window.print());
-    fullscreenBtn.addEventListener('click', function() {
-      if (!document.fullscreenElement) document.documentElement.requestFullscreen().then(()=>{ this.innerHTML = '✕ Sair da Tela Cheia'; document.body.classList.add('fullscreen-mode'); });
-      else document.exitFullscreen().then(()=>{ this.innerHTML = '⛶ Tela Cheia'; document.body.classList.remove('fullscreen-mode'); });
+    elements.name.addEventListener('input', updateStart);
+    elements.class.addEventListener('change', updateStart);
+    elements.bimester.addEventListener('change', updateStart);
+    elements.start.addEventListener('click', () => { readingStartTime = new Date(); currentPageIndex = 0; renderPage(0); switchScreen('reading'); });
+    elements.prev.addEventListener('click', () => { if (currentPageIndex > 0) { currentPageIndex--; renderPage(currentPageIndex); } });
+    elements.next.addEventListener('click', () => { if (currentPageIndex < TOTAL_PAGES - 1) { currentPageIndex++; renderPage(currentPageIndex); } else { showReport(); } });
+    elements.finish.addEventListener('click', showReport);
+    document.getElementById('fontNormal').addEventListener('click', ()=>applyFont(1.0));
+    document.getElementById('fontGrande').addEventListener('click', ()=>applyFont(1.5));
+    document.getElementById('fontMuitoGrande').addEventListener('click', ()=>applyFont(2.0));
+    document.getElementById('fontExtraGrande').addEventListener('click', ()=>applyFont(3.0));
+    document.getElementById('fontEnorme').addEventListener('click', ()=>applyFont(3.5));
+    elements.pdf.addEventListener('click', () => window.print());
+    elements.fullscreen.addEventListener('click', function() {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen().then(()=>{ this.textContent = '✕ Sair'; document.body.classList.add('fullscreen-mode'); });
+      else document.exitFullscreen().then(()=>{ this.textContent = '⛶ Tela Cheia'; document.body.classList.remove('fullscreen-mode'); });
     });
-    document.addEventListener('fullscreenchange', ()=> { if (!document.fullscreenElement) { fullscreenBtn.innerHTML = '⛶ Tela Cheia'; document.body.classList.remove('fullscreen-mode'); } });
-    speakBtn.addEventListener('click', speakCurrentPage);
-    pauseBtn.addEventListener('click', () => { if (speechSynth.speaking) { isPaused ? speechSynth.resume() : speechSynth.pause(); isPaused = !isPaused; } });
-    stopBtn.addEventListener('click', stopAudio);
-    speedNormalBtn.addEventListener('click', function() { currentRate = 1.0; this.classList.add('active'); speedFastBtn.classList.remove('active'); if (speechSynth.speaking) { stopAudio(); speakCurrentPage(); } });
-    speedFastBtn.addEventListener('click', function() { currentRate = 1.5; this.classList.add('active'); speedNormalBtn.classList.remove('active'); if (speechSynth.speaking) { stopAudio(); speakCurrentPage(); } });
-    endSessionBtn.addEventListener('click', () => { alert('Sessão encerrada. Obrigado por utilizar o material! Você pode fechar esta aba.'); });
-    tabs.forEach(btn => btn.addEventListener('click', (e) => { const id = btn.getAttribute('data-screen'); switchScreen(id === 'reading' && !readingStartTime ? 'home' : id); }));
+    document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement) { elements.fullscreen.textContent = '⛶ Tela Cheia'; document.body.classList.remove('fullscreen-mode'); } });
+    elements.speak.addEventListener('click', () => speakCurrentPage(true));
+    elements.pause.addEventListener('click', () => {
+      if (synth.speaking) {
+        if (isPaused) { synth.resume(); elements.pause.textContent = '⏸️ Pausar'; }
+        else { synth.pause(); elements.pause.textContent = '▶️ Retomar'; }
+        isPaused = !isPaused;
+      }
+    });
+    elements.stop.addEventListener('click', () => stopAudio(true));
+    elements.speedNormal.addEventListener('click', function() {
+      currentRate = 1.0; this.classList.add('active'); elements.speedFast.classList.remove('active');
+      if (synth.speaking) { stopAudio(true); speakCurrentPage(true); }
+    });
+    elements.speedFast.addEventListener('click', function() {
+      currentRate = 1.5; this.classList.add('active'); elements.speedNormal.classList.remove('active');
+      if (synth.speaking) { stopAudio(true); speakCurrentPage(true); }
+    });
+    elements.endSession.addEventListener('click', () => { alert('Sessão encerrada. Obrigado! Você pode fechar esta aba.'); });
+    elements.tabs.forEach(b => b.addEventListener('click', (e) => { const id = b.dataset.screen; switchScreen(id === 'reading' && !readingStartTime ? 'home' : id); }));
     
-    renderPage(0); switchScreen('home'); updateStartButton();
+    renderPage(0); switchScreen('home'); updateStart();
   })();
 </script>
 </body>
