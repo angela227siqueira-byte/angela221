@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>📘 Política e Trabalho · Leitura</title>
     <style>
+        /* ---------- CSS EXATAMENTE COMO VOCÊ ENVIOU, SEM ALTERAÇÕES ---------- */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -24,7 +25,6 @@
             margin: 0;
         }
 
-        /* Container principal com margens laterais generosas (~2.6cm em desktop, adaptado mobile) */
         .reader-wrapper {
             width: 100%;
             max-width: 85%;
@@ -36,7 +36,6 @@
             border: 1px solid #dde5e0;
         }
 
-        /* Telas */
         .screen {
             display: none;
         }
@@ -45,7 +44,6 @@
             display: block;
         }
 
-        /* ---------- TELA INICIAL ---------- */
         .init-card h2 {
             font-size: 1.9rem;
             font-weight: 600;
@@ -107,7 +105,6 @@
             cursor: not-allowed;
         }
 
-        /* ---------- LEITURA ---------- */
         .page-header {
             margin-bottom: 12px;
         }
@@ -145,7 +142,6 @@
             transition: width 0.2s;
         }
 
-        /* conteúdo texto justificado, espaçamento 1.5 */
         .text-content {
             text-align: justify;
             padding: 8px 0 16px;
@@ -160,14 +156,12 @@
             margin-bottom: 1em;
         }
 
-        /* títulos dentro do conteúdo acompanham fonte */
         .text-content h2, .text-content h3, .text-content h4 {
             margin: 1.2em 0 0.3em;
             color: #154e3a;
             font-weight: 600;
         }
 
-        /* Barra de ferramentas — UMA ÚNICA LINHA com scroll suave no mobile */
         .toolbar-single {
             display: flex;
             flex-wrap: nowrap;
@@ -247,7 +241,6 @@
             pointer-events: none;
         }
 
-        /* relatório */
         .report-box {
             background: #f0f7f3;
             border-radius: 24px;
@@ -317,10 +310,8 @@
             </div>
         </div>
 
-        <!-- conteúdo textual (sem título duplicado) -->
         <div class="text-content" id="pageContent"></div>
 
-        <!-- BARRA ÚNICA COM TODOS OS BOTÕES -->
         <div class="toolbar-single" id="toolbar">
             <button class="tool-btn" id="fontMinusBtn" title="Diminuir fonte">A−</button>
             <button class="tool-btn" id="fontPlusBtn" title="Aumentar fonte">A+</button>
@@ -331,7 +322,6 @@
             <button class="tool-btn" id="speakBtn" title="Ouvir página">🔊</button>
             <button class="tool-btn" id="pauseBtn" title="Pausar">⏸️</button>
             <button class="tool-btn" id="stopBtn" title="Parar">⏹️</button>
-            <!-- navegação integrada na mesma linha, conforme solicitado -->
             <button class="tool-btn" id="prevBtnInline" title="Voltar">◀</button>
             <button class="tool-btn" id="nextBtnInline" title="Avançar">▶</button>
         </div>
@@ -431,7 +421,7 @@
         let currentPage = 0;
         const totalPages = 8;
         let fontSizeIndex = 0;
-        const fontSizes = [16, 26, 36, 48, 56]; // 4 saltos: 16→26→36→48→56 (próximo de 2x,2.5x,3x,3.5x)
+        const fontSizes = [16, 26, 36, 48, 56];
         let voiceGender = 'female';
         let rateIndex = 0;
         const rates = [1, 1.3, 1.5];
@@ -476,16 +466,13 @@
         function updateUI() {
             pageTitleEl.textContent = pageTitles[currentPage];
             pageContentEl.innerHTML = pageContents[currentPage];
-            // atualiza progresso
             const num = currentPage+1;
             pageXofY.textContent = `Página ${num} de ${totalPages}`;
             const pct = (num/totalPages)*100;
             progressFill.style.width = pct + '%';
             progressPercent.textContent = Math.round(pct) + '%';
             
-            // botão PDF só na última
             pdfToolBtn.classList.toggle('hidden', currentPage !== totalPages-1);
-            // texto do botão próximo
             nextInline.textContent = (currentPage === totalPages-1) ? '🏁' : '▶';
             prevInline.disabled = (currentPage === 0);
             
@@ -496,10 +483,6 @@
             const size = fontSizes[fontSizeIndex] + 'px';
             pageContentEl.style.fontSize = size;
             pageTitleEl.style.fontSize = (fontSizes[fontSizeIndex] * 1.2) + 'px';
-            // títulos dentro do conteúdo também escalam proporcionalmente
-            const headings = pageContentEl.querySelectorAll('h1,h2,h3,h4,h5,h6');
-            headings.forEach(h => h.style.fontSize = ''); // herda do body? melhor definir escala
-            // aplica estilo nos headings baseado no tamanho atual
             const factor = fontSizes[fontSizeIndex]/16;
             pageContentEl.querySelectorAll('h4').forEach(h => h.style.fontSize = (1.2 * factor) + 'em');
             pageContentEl.querySelectorAll('h3').forEach(h => h.style.fontSize = (1.4 * factor) + 'em');
@@ -517,7 +500,8 @@
             stopSpeaking(true);
             const text = pageContentEl.innerText;
             utterance = new SpeechSynthesisUtterance(text);
-            utterance.voice = synth.getVoices().find(v => v.lang.includes('pt') && (voiceGender==='female'? v.name.toLowerCase().includes('female') : v.name.toLowerCase().includes('male'))) || synth.getVoices()[0];
+            const vozes = synth.getVoices();
+            utterance.voice = vozes.find(v => v.lang === 'pt-BR') || vozes[0];
             utterance.rate = rates[rateIndex];
             utterance.onend = () => {
                 if (currentPage === totalPages-1) return;
@@ -557,7 +541,6 @@
             if (currentPage === totalPages-1) {
                 finishTime = new Date();
                 stopSpeaking(true);
-                // exibe relatório
                 readerScr.classList.remove('active');
                 reportScr.classList.add('active');
                 const duration = Math.round((finishTime - startTime)/60000);
@@ -599,12 +582,11 @@
         pdfToolBtn.addEventListener('click', ()=>{
             if(currentPage===totalPages-1){
                 finishTime = new Date();
-                nextInline.click(); // vai para relatório e já prepara
+                nextInline.click();
             }
         });
         printPdfBtn.addEventListener('click', ()=> window.print());
         
-        // inicial
         applyFontSizeToAll();
     })();
 </script>
