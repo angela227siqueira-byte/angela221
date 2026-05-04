@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>📘 As Independências da América · Material de Leitura</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Verdana', 'Arial', sans-serif;
+            background: #f5f7f6;
+            color: #1a2e2a;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            margin: 0;
+        }
+        .reader-wrapper {
+            width: 100%;
+            max-width: 85%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.04);
+            padding: 20px 30px;
+            border: 1px solid #dde5e0;
+        }
+        .screen { display: none; }
+        .screen.active { display: block; }
+        .fixed-header {
+            margin-bottom: 12px;
+            border-bottom: 2px solid #dde5e0;
+            padding-bottom: 8px;
+        }
+        .fixed-header h1 {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #0f3d2e;
+            line-height: 1.2;
+            margin-bottom: 6px;
+        }
+        .progress-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #1a5e44;
+            margin-bottom: 6px;
+        }
+        .progress-bar-bg {
+            background: #dee6e1;
+            height: 7px;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: #1a7a58;
+            height: 7px;
+            width: 0%;
+            border-radius: 20px;
+            transition: width 0.2s;
+        }
+        .text-content {
+            text-align: justify;
+            padding: 8px 0 16px;
+            max-height: 58vh;
+            overflow-y: auto;
+            font-size: 18px;
+            line-height: 1.5;
+            margin: 0 2px;
+            scroll-behavior: smooth;
+        }
+        .text-content p { margin-bottom: 1em; }
+        .text-content h2, .text-content h3, .text-content h4 {
+            margin: 1.2em 0 0.3em;
+            color: #154e3a;
+            font-weight: 600;
+        }
+        .img-text-row {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .img-container {
+            flex: 0 0 auto;
+            max-width: 35vw;
+            text-align: center;
+        }
+        .img-container img {
+            height: 50vh;
+            max-height: 400px;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .text-container { flex: 1; min-width: 200px; }
+        .right-image .text-container { order: 1; }
+        .right-image .img-container { order: 2; }
+        .left-image .text-container { order: 2; }
+        .left-image .img-container { order: 1; }
+        .table-grid {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 16px;
+        }
+        .table-grid th, .table-grid td {
+            border: 2px solid #1a5e44;
+            padding: 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+        .table-grid th {
+            background: #1a5e44;
+            color: white;
+            font-weight: 700;
+        }
+        .table-grid tr:nth-child(even) { background: #ecf3ef; }
+        .toolbar-single {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+            margin: 18px 0 14px;
+            padding: 4px 0 8px;
+            border-top: 1px solid #dde5e0;
+            border-bottom: 1px solid #dde5e0;
+        }
+        .tool-btn {
+            background: #ecf3ef;
+            border: 1px solid #b3cdbf;
+            color: #134531;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 10px 14px;
+            border-radius: 48px;
+            min-width: 60px;
+            text-align: center;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .tool-btn:active { background: #d0e0d7; transform: scale(0.96); }
+        .tool-btn:disabled { opacity: 0.4; background: #e0e8e3; border-color: #b6ccc1; pointer-events: none; }
+        select.tool-btn { background: #ecf3ef; width: auto; }
+        .capa { text-align: center; padding: 40px 20px; }
+        .capa h1 { font-size: 36px; margin-bottom: 20px; color: #0f3d2e; }
+        .capa h2 { font-size: 28px; margin-bottom: 40px; color: #1a5e44; }
+        .capa p { font-size: 22px; color: #2a5e4a; }
+        .congrats-page {
+            text-align: center;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 50vh;
+        }
+        .congrats-page h2 { color: #1a5e44; margin-bottom: 10px; font-size: 2rem; }
+        .congrats-page p { margin: 20px 0; }
+        @media (max-width: 700px) {
+            .reader-wrapper { max-width: 98%; padding: 15px; }
+            .tool-btn { padding: 8px 10px; min-width: 50px; font-size: 0.9rem; }
+            .img-text-row { flex-direction: column; }
+            .img-container { max-width: 100%; text-align: center; }
+            .img-container img { height: auto; max-height: 300px; width: auto; max-width: 90%; }
+            .right-image .text-container, .right-image .img-container,
+            .left-image .text-container, .left-image .img-container { order: unset; }
+            .capa h1 { font-size: 28px; }
+            .capa h2 { font-size: 24px; }
+            .capa p { font-size: 18px; }
+            .table-grid { font-size: 14px; }
+            .table-grid th, .table-grid td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+<div class="reader-wrapper">
+    <div id="readerScreen" class="screen active">
+        <div class="fixed-header">
+            <h1>As Independências da América</h1>
+            <div class="progress-row">
+                <span id="pageXofY">Página 1 de 15</span>
+                <span id="progressPercent">7%</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+        </div>
+        <div class="text-content" id="pageContent"></div>
+        <div class="toolbar-single">
+            <button class="tool-btn" id="fontMinusBtn" title="Diminuir fonte">A−</button>
+            <button class="tool-btn" id="fontPlusBtn" title="Aumentar fonte">A+</button>
+            <button class="tool-btn" id="fullscreenBtn" title="Tela cheia">⛶</button>
+            <button class="tool-btn" id="prevBtnInline" title="Página anterior">◀</button>
+            <button class="tool-btn" id="nextBtnInline" title="Próxima página">▶</button>
+            <button class="tool-btn" id="speakBtn" title="Ouvir/Parar">🔊</button>
+            <select id="rateSelect" class="tool-btn" style="width: auto;">
+                <option value="0.75">0.75x</option>
+                <option value="1" selected>1x</option>
+                <option value="1.25">1.25x</option>
+                <option value="1.5">1.5x</option>
+                <option value="2">2x</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function(){
+        const pageContents = [
+            // PÁGINA 0 - CAPA
+            `<div class="capa">
+                <h1>As Independências da América</h1>
+                <h2>EUA, América Espanhola e Brasil<br>(séculos XVIII–XIX)</h2>
+                <p>Material de leitura · Ensino Médio<br>Prof.ª Angela Siqueira</p>
+            </div>`,
+
+            // PÁGINA 1 - SUMÁRIO
+            `<div class="text-container" style="max-width:100%;">
+                <h3>📌 Sumário</h3>
+                <ol>
+                    <li>1. Os ventos liberais – ideias iluministas na América</li>
+                    <li>2. Por que as colônias se rebelaram?</li>
+                    <li>3. A independência e a formação dos Estados Unidos</li>
+                    <li>4. A construção dos EUA: república e limitações</li>
+                    <li>5. Independências na América Espanhola</li>
+                    <li>6. Bolívar e San Martín: os "Libertadores"</li>
+                    <li>7. A independência do Brasil</li>
+                    <li>8. O que (não) mudou com a independência do Brasil?</li>
+                    <li>9. Tabela comparativa dos três processos</li>
+                    <li>10. Legado das independências</li>
+                    <li>11. Questões para reflexão e debate</li>
+                </ol>
+            </div>`,
+
+            // SLIDE 1 – Mapa da América
+            `<div class="img-text-row left-image">
+                <div class="img-container">
+                    <img src="https://fernandonogueiracosta.wordpress.com/wp-content/uploads/2013/04/america1794.jpg" alt="Mapa da América em 1794" aria-hidden="true">
+                </div>
+                <div class="text-container">
+                    <h3>📌 As Independências da América</h3>
+                    <p>Nos séculos XVIII e XIX, as colônias americanas se tornaram nações independentes, rompendo os laços com suas metrópoles europeias. Estudaremos três grandes processos: o dos Estados Unidos, o da América Espanhola e o do Brasil. Cada um tem suas particularidades, mas todos compartilham influências comuns: as ideias iluministas, a insatisfação com o domínio colonial e a crise das metrópoles europeias.</p>
+                    <p>Observe no mapa a configuração das possessões coloniais na América em 1794: a cor rosa representa as possessões britânicas, o verde as possessões espanholas, e o azul as possessões portuguesas. Em poucas décadas, esse mapa mudaria completamente.</p>
+                </div>
+            </div>`,
+
+            // SLIDE 2 – Iluminismo
+            `<div class="img-text-row right-image">
+                <div class="text-container">
+                    <h3>1. Os ventos liberais – ideias iluministas na América</h3>
+                    <p>Os filósofos iluministas — Locke, Rousseau, Montesquieu — criticavam o poder absoluto dos reis, o mercantilismo e a divisão social em estamentos. Defendiam a <strong>liberdade individual</strong>, a <strong>igualdade jurídica</strong>, a <strong>soberania popular</strong> e a <strong>divisão dos poderes</strong>. Essas ideias atravessaram o Atlântico por meio de livros, jornais e panfletos.</p>
+                    <p>Nas Treze Colônias e na América Espanhola, as universidades e a imprensa facilitaram sua difusão. No Brasil colonial, a imprensa era proibida e não havia universidades, mas as ideias iluministas circularam clandestinamente por meio de livros e panfletos contrabandeados.</p>
+                    <p>O Iluminismo questionava o absolutismo monárquico e defendia que o poder emana do povo, não de Deus. Essas ideias forneceram a base ideológica para os movimentos de independência em todo o continente americano.</p>
+                </div>
+                <div class="img-container">
+                    <img src="https://i.ytimg.com/vi/zY2Ir2F90Q0/sddefault.jpg" alt="Iluminismo" aria-hidden="true">
+                </div>
+            </div>`,
+
+            // SLIDE 3 – Por que as colônias se rebelaram?
+            `<div class="img-text-row left-image">
+                <div class="img-container">
+                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEihomq8MxUIaWlv_TBOvLNpPlBTmJNEVCKfVrBsH-IvW54o_WO1pCMpDQTbnxgERMaqgKP2yyDwj69Aouz-kVznuXuiJi9ThxKySRTs9ROlM6Fq7oxZSMCD-uMNhHrhz2LBy6wEC_L14MXj/s400/rev+francesa+2.jpg" alt="Charge sobre a opressão colonial" aria-hidden="true">
+                </div>
+                <div class="text-container">
+                    <h3>2. Por que as colônias se rebelaram?</h3>
+                    <p>O estopim para as independências foi o aumento da pressão fiscal, mas as causas eram mais profundas. As metrópoles europeias estavam endividadas após guerras como a dos Sete Anos e passaram a cobrar mais impostos e reforçar o controle sobre as colônias.</p>
+                    <p>As <strong>elites coloniais</strong> queriam mais autonomia política e liberdade para comerciar. Os <strong>setores populares</strong> (mestiços, indígenas, escravizados) viam nas revoltas uma chance de melhorar suas condições de vida. Além disso, as <strong>invasões napoleônicas</strong> na Espanha e em Portugal enfraqueceram as metrópoles e abriram espaço para as lutas de independência.</p>
+                </div>
+            </div>`,
+
+            // SLIDE 4 – Independência dos EUA
+            `<div class="img-text-row right-image">
+                <div class="text-container">
+                    <h3>3. A independência e a formação dos Estados Unidos (1776)</h3>
+                    <p>Após a <strong>Guerra dos Sete Anos</strong> (1756-1763), a Inglaterra, endividada, impôs às Treze Colônias leis cada vez mais duras: <strong>Lei do Açúcar</strong> (1764), que aumentava impostos sobre produtos não britânicos; <strong>Lei do Selo</strong> (1765), que taxava todos os documentos impressos; <strong>Leis Townshend</strong> (1767), que criavam impostos sobre vidro, chá e outros produtos.</p>
+                    <p>Os colonos reagiram com protestos e boicotes sob o lema <em>"sem representação, não há taxação"</em>. Eventos como o <strong>Massacre de Boston</strong> (1770) e a <strong>Festa do Chá de Boston</strong> (1773), quando colonos destruíram carregamentos de chá britânico, radicalizaram o conflito. Em resposta, a Inglaterra aprovou as <strong>Leis Intoleráveis</strong> (1774), que fecharam o porto de Boston e restringiram a autonomia colonial.</p>
+                    <p>Em <strong>4 de julho de 1776</strong>, o Segundo Congresso Continental aprovou a <strong>Declaração de Independência</strong>, redigida por Thomas Jefferson e inspirada nas ideias de John Locke. A guerra contra a metrópole terminou em 1781, com a vitória dos colonos apoiados pela França e pela Espanha. O reconhecimento formal veio com o <strong>Tratado de Paris</strong> (1783).</p>
+                </div>
+                <div class="img-container">
+                    <img src="https://png.pngtree.com/png-clipart/20241008/original/pngtree-boston-tea-party-vintage-png-image_16248339.png" alt="Festa do Chá de Boston" aria-hidden="true">
+                </div>
+            </div>`,
+
+            // SLIDE 5 – Construção dos EUA
+            `<div class="img-text-row left-image">
+                <div class="img-container">
+                    <img src="https://static.planejativo.com/uploads/images/2023/07/ZhFSxJLsFyhIftz6.png" alt="Divisão dos três poderes dos EUA" aria-hidden="true">
+                </div>
+                <div class="text-container">
+                    <h3>4. A construção dos EUA: república e limitações</h3>
+                    <p>Após a guerra, as Treze Colônias formaram inicialmente uma confederação frágil. A <strong>Constituição de 1787</strong> criou uma <strong>república federativa</strong> com três poderes independentes: Executivo (presidente), Legislativo (Congresso) e Judiciário (tribunais). O primeiro presidente foi George Washington.</p>
+                    <p>No entanto, a cidadania era profundamente restrita. O <strong>voto era censitário</strong>: somente homens brancos proprietários podiam votar. A <strong>escravidão</strong> foi mantida e até ampliada nas décadas seguintes, concentrada nos estados do Sul. <strong>Mulheres</strong>, <strong>indígenas</strong> e <strong>escravizados</strong> estavam totalmente excluídos dos direitos políticos. A Declaração de Independência proclamava que "todos os homens são criados iguais", mas essa igualdade não se aplicava à maioria da população.</p>
+                </div>
+            </div>`,
+
+            // SLIDE 6 – América Espanhola
+            `<div class="img-text-row right-image">
+                <div class="text-container">
+                    <h3>5. Independências na América Espanhola (1810-1825)</h3>
+                    <p>A sociedade colonial espanhola era rigidamente hierarquizada. No topo estavam os <strong>criollos</strong> (descendentes de espanhóis nascidos na América), que, apesar de ricos, não podiam ocupar os cargos mais altos da administração, reservados aos espanhóis peninsulares. Abaixo deles, estavam os mestiços, os indígenas e os escravizados africanos.</p>
+                    <p>As <strong>Reformas Bourbônicas</strong> (século XVIII) aumentaram os impostos e o controle metropolitano, gerando descontentamento. A situação se agravou quando <strong>Napoleão Bonaparte invadiu a Espanha</strong> em 1808, prendeu o rei Fernando VII e colocou seu irmão José Bonaparte no trono espanhol.</p>
+                    <p>Diante do vácuo de poder, as colônias formaram <strong>juntas de governo</strong> que, inicialmente, juravam lealdade ao rei deposto. Com o tempo, porém, essas juntas passaram a reivindicar autonomia e declararam independência, aproveitando o enfraquecimento da metrópole.</p>
+                </div>
+                <div class="img-container">
+                    <img src="https://www.coladaweb.com/wp-content/uploads/2014/12/20190705-america-espanhola.jpg" alt="Mapa da América Espanhola" aria-hidden="true">
+                </div>
+            </div>`,
+
+            // SLIDE 7 – Bolívar e San Martín
+            `<div class="img-text-row left-image">
+                <div class="img-container">
+                    <img src="https://i0.wp.com/sga.uniube.br/aulas/ftp/c700/d700082/a02/imgs/t3.1.jpg" alt="Campanhas de Bolívar e San Martín" aria-hidden="true">
+                </div>
+                <div class="text-container">
+                    <h3>6. Bolívar e San Martín: os "Libertadores"</h3>
+                    <p><strong>Simón Bolívar</strong> (1783-1830), nascido em Caracas na elite criolla, liderou a independência das atuais Venezuela, Colômbia, Equador, Panamá e Bolívia. Inspirado pelas ideias iluministas, sonhava com uma grande confederação americana — a <strong>Grã-Colômbia</strong> — que se fragmentou entre 1830 e 1831. Mesmo derrotado politicamente, tornou-se símbolo da unidade latino-americana.</p>
+                    <p><strong>José de San Martín</strong> (1778-1850), militar argentino, liderou a independência no sul do continente (Argentina, Chile, Peru), realizando a épica travessia da Cordilheira dos Andes com o Exército dos Andes. No <strong>México</strong>, o movimento começou como revolta popular com os padres <strong>Miguel Hidalgo</strong> e <strong>José María Morelos</strong>, que mobilizaram indígenas e mestiços. Após serem derrotados, a elite criolla, liderada por Agustín de Iturbide, concluiu a independência em 1821.</p>
+                    <p>A grande exceção foi o <strong>Haiti</strong> (1804), onde os próprios escravizados, liderados por Toussaint L'Ouverture e Jean-Jacques Dessalines, derrotaram os franceses e fundaram a primeira república negra do mundo.</p>
+                </div>
+            </div>`,
+
+            // SLIDE 8 – Independência do Brasil
+            `<div class="img-text-row right-image">
+                <div class="text-container">
+                    <h3>7. A independência do Brasil (1822)</h3>
+                    <p>Em 1808, fugindo das tropas de Napoleão, a família real portuguesa transferiu-se para o Rio de Janeiro. Esse evento transformou o Brasil de colônia em <strong>sede do Império Português</strong>. Os portos foram abertos às "nações amigas" (fim do pacto colonial) e foram criadas as primeiras instituições: Banco do Brasil, Imprensa Régia, Biblioteca Real e escolas superiores.</p>
+                    <p>Em 1815, o Brasil foi elevado à condição de <strong>Reino Unido a Portugal e Algarves</strong>, deixando oficialmente de ser colônia. Em 1820, porém, a <strong>Revolução Liberal do Porto</strong> exigiu o retorno de D. João VI a Portugal e tentou recolonizar o Brasil. D. Pedro, que ficou como regente, desobedeceu às Cortes portuguesas: em <strong>9 de janeiro de 1822</strong> (Dia do Fico), declarou que permaneceria no Brasil.</p>
+                    <p>O processo de ruptura avançou com o decreto do <strong>"Cumpra-se"</strong>, que subordinava as leis portuguesas à aprovação do regente. Em <strong>7 de setembro de 1822</strong>, às margens do riacho Ipiranga, D. Pedro proclamou a independência. A consolidação, porém, exigiu confrontos militares em províncias como Bahia, Piauí, Maranhão e Cisplatina.</p>
+                </div>
+                <div class="img-container">
+                    <img src="https://c.files.bbci.co.uk/58C0/production/_123902722_dompedro3.jpg" alt="Dom Pedro proclama a independência" aria-hidden="true">
+                </div>
+            </div>`,
+
+            // SLIDE 9 – O que (não) mudou no Brasil
+            `<div class="img-text-row left-image">
+                <div class="img-container">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/86/Jean-Baptiste_Debret_-_Negros_vendedores_de_aves%2C_1823.jpg" alt="Negros vendedores de aves - Debret" aria-hidden="true">
+                </div>
+                <div class="text-container">
+                    <h3>8. O que (não) mudou com a independência do Brasil?</h3>
+                    <p>A independência do Brasil é considerada "conservadora" porque preservou as estruturas sociais e econômicas herdadas do período colonial. Entre as <strong>continuidades</strong>: a monarquia como forma de governo (o Brasil foi o único país americano independente a adotar esse regime), o domínio das elites agrárias, o voto censitário (só para quem tinha renda), a manutenção da escravidão (que perdurou até 1888) e a economia agroexportadora baseada no latifúndio.</p>
+                    <p>Entre as <strong>rupturas</strong>: a separação política de Portugal, que permitiu a construção gradual de uma identidade nacional, expressa na literatura romântica indigenista, na pintura histórica e nos símbolos oficiais. A gravura de Jean-Baptiste Debret, de 1823 — um ano após a independência —, mostra a realidade da população negra no Rio de Janeiro: ainda escravizada, ainda marginalizada. A independência não significou liberdade para todos.</p>
+                </div>
+            </div>`,
+
+            // SLIDE 10 – Tabela comparativa
+            `<div class="text-container" style="max-width:100%;">
+                <h3>9. Tabela comparativa dos três processos</h3>
+                <table class="table-grid">
+                    <thead>
+                        <tr>
+                            <th>Característica</th>
+                            <th>Estados Unidos</th>
+                            <th>América Espanhola</th>
+                            <th>Brasil</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Data</strong></td>
+                            <td>1776</td>
+                            <td>1810–1825</td>
+                            <td>1822</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Liderança</strong></td>
+                            <td>Elite colonial (fazendeiros, advogados)</td>
+                            <td>Elite <em>criolla</em> com participação popular</td>
+                            <td>Elite agrária e príncipe regente</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Forma de governo</strong></td>
+                            <td>República Federativa</td>
+                            <td>Repúblicas (com exceções curtas)</td>
+                            <td>Monarquia Constitucional</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Escravidão</strong></td>
+                            <td>Mantida</td>
+                            <td>Abolida gradualmente na maioria dos países</td>
+                            <td>Mantida</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fragmentação territorial</strong></td>
+                            <td>União das 13 colônias</td>
+                            <td>Fragmentação em vários países</td>
+                            <td>Unidade territorial mantida</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>`,
+
+            // SLIDE 11 – Legado
+            `<div class="img-text-row right-image">
+                <div class="text-container">
+                    <h3>10. Legado das independências</h3>
+                    <p>A América se libertou do domínio colonial europeu, mas passou a orbitar a influência econômica da <strong>Inglaterra</strong> (nova dependência). As <strong>desigualdades sociais</strong> — racismo, exclusão indígena, concentração de terras — foram mantidas e, em muitos casos, aprofundadas. O sonho de unidade de Bolívar fracassou, e a América Latina se dividiu em diversos países marcados pelo <strong>caudilhismo</strong> (líderes locais autoritários).</p>
+                    <p>Apesar das limitações, os ideais de liberdade e igualdade proclamados nas independências não foram esquecidos. Eles serviram de base para as lutas sociais dos séculos XIX e XX: o movimento abolicionista, a luta pelo sufrágio feminino, os movimentos trabalhistas e as reivindicações indígenas. O monumento a Simón Bolívar, presente em tantas cidades latino-americanas, simboliza tanto o ideal de liberdade quanto a consciência de que ele ainda não se realizou plenamente.</p>
+                </div>
+                <div class="img-container">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/71/Simon_Bolivar_statue_in_San_Francisco_%282013%29_-_2.JPG" alt="Estátua de Simón Bolívar" aria-hidden="true">
+                </div>
+            </div>`,
+
+            // SLIDE 12 – Questões
+            `<div class="text-container" style="max-width:100%;">
+                <h3>11. Questões para reflexão e debate</h3>
+                <p>Agora que você estudou os três processos, reflita sobre estas questões e debata com seus colegas e professor:</p>
+                <ol>
+                    <li><strong>Por que podemos afirmar que as independências americanas foram "lideradas por elites"?</strong> Quais evidências sustentam essa afirmação em cada um dos três processos?</li>
+                    <li><strong>Compare as consequências da independência para as populações indígenas nos EUA e na América Espanhola.</strong> Em qual dos dois contextos elas foram mais afetadas pela expansão dos novos Estados nacionais?</li>
+                    <li><strong>De que forma a manutenção da escravidão no Brasil e nos EUA contradizia os ideais iluministas de liberdade e igualdade</strong> que inspiraram as respectivas declarações de independência?</li>
+                    <li><strong>O que explica o Brasil ter se mantido como um único país, enquanto a América Espanhola se fragmentou</strong> em diversas repúblicas independentes?</li>
+                </ol>
+                <p>A história não é apenas sobre o passado, mas sobre como entendemos o nosso presente. As contradições do século XIX ainda ecoam nas desigualdades que enfrentamos hoje.</p>
+            </div>`,
+
+            // PÁGINA FINAL
+            `<div class="congrats-page">
+                <h2>📚 Material concluído!</h2>
+                <p>Este documento reúne os conteúdos do capítulo 9 sobre as independências da América.</p>
+                <p>Consulte o livro didático para aprofundar cada tema e revisar as atividades propostas.</p>
+                <p>Bons estudos!</p>
+            </div>`
+        ];
+
+        const totalPages = pageContents.length;
+        let currentPage = 0;
+        let fontSizeIndex = 4;
+        const fontSizes = [12, 14, 16, 18, 20, 24, 28, 32, 38, 42];
+
+        const pageContentDiv = document.getElementById('pageContent');
+        const pageXofY = document.getElementById('pageXofY');
+        const progressFill = document.getElementById('progressFill');
+        const progressPercent = document.getElementById('progressPercent');
+        const fontMinus = document.getElementById('fontMinusBtn');
+        const fontPlus = document.getElementById('fontPlusBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const prevBtn = document.getElementById('prevBtnInline');
+        const nextBtn = document.getElementById('nextBtnInline');
+        const speakBtn = document.getElementById('speakBtn');
+        const rateSelect = document.getElementById('rateSelect');
+
+        let synth = window.speechSynthesis;
+        let currentUtterance = null;
+        let isSpeaking = false;
+
+        function getFemaleVoice() {
+            const voices = synth.getVoices();
+            const ptVoices = voices.filter(v => v.lang === 'pt-BR');
+            const female = ptVoices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('mulher') || v.name.includes('Samantha') || v.name.includes('Maria'));
+            return female || ptVoices[0] || voices[0];
+        }
+
+        function updateUI() {
+            pageContentDiv.innerHTML = pageContents[currentPage];
+            const num = currentPage + 1;
+            pageXofY.textContent = `Página ${num} de ${totalPages}`;
+            const pct = (num / totalPages) * 100;
+            progressFill.style.width = pct + '%';
+            progressPercent.textContent = Math.round(pct) + '%';
+            prevBtn.disabled = (currentPage === 0);
+            nextBtn.disabled = (currentPage === totalPages - 1);
+            stopReading();
+            if (pageContentDiv.scrollTop) pageContentDiv.scrollTop = 0;
+        }
+
+        function applyFontSize() {
+            const size = fontSizes[fontSizeIndex] + 'px';
+            pageContentDiv.style.fontSize = size;
+            fontMinus.disabled = (fontSizeIndex === 0);
+            fontPlus.disabled = (fontSizeIndex === fontSizes.length-1);
+        }
+
+        function changePage(delta) {
+            const newPage = currentPage + delta;
+            if (newPage >= 0 && newPage < totalPages) {
+                currentPage = newPage;
+                updateUI();
+            }
+        }
+
+        function startReading() {
+            if (!synth) { alert('Seu navegador não suporta síntese de voz.'); return; }
+            if (isSpeaking) { stopReading(); return; }
+            const text = pageContentDiv.innerText;
+            if (!text.trim()) return;
+            currentUtterance = new SpeechSynthesisUtterance(text);
+            const voice = getFemaleVoice();
+            if (voice) currentUtterance.voice = voice;
+            currentUtterance.rate = parseFloat(rateSelect.value);
+            currentUtterance.onend = function() {
+                isSpeaking = false;
+                currentUtterance = null;
+                speakBtn.textContent = '🔊';
+            };
+            synth.speak(currentUtterance);
+            isSpeaking = true;
+            speakBtn.textContent = '⏹️';
+        }
+
+        function stopReading() {
+            if (synth && synth.speaking) synth.cancel();
+            if (currentUtterance) {
+                currentUtterance.onend = null;
+                currentUtterance = null;
+            }
+            isSpeaking = false;
+            speakBtn.textContent = '🔊';
+        }
+
+        fontMinus.addEventListener('click', () => { if (fontSizeIndex > 0) fontSizeIndex--; applyFontSize(); });
+        fontPlus.addEventListener('click', () => { if (fontSizeIndex < fontSizes.length-1) fontSizeIndex++; applyFontSize(); });
+        fullscreenBtn.addEventListener('click', () => {
+            if (document.fullscreenElement) document.exitFullscreen();
+            else document.documentElement.requestFullscreen();
+        });
+        prevBtn.addEventListener('click', () => changePage(-1));
+        nextBtn.addEventListener('click', () => changePage(1));
+        speakBtn.addEventListener('click', startReading);
+        rateSelect.addEventListener('change', () => {
+            if (isSpeaking && currentUtterance) currentUtterance.rate = parseFloat(rateSelect.value);
+        });
+
+        applyFontSize();
+        updateUI();
+        if (synth) synth.getVoices();
+    })();
+</script>
+</body>
+</html>
